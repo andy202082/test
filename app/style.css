@@ -246,6 +246,85 @@ button {
 
 button.danger { border-color: var(--danger); background: var(--danger); color: #fff; }
 
+.header-side {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 14px;
+}
+
+#account { display: flex; align-items: center; gap: 8px; }
+#welcome { font-weight: 600; }
+
+button.primary { border-color: var(--accent); background: var(--accent); color: var(--on-accent); font-weight: 600; }
+button.danger-outline { border-color: var(--danger); color: var(--danger); }
+
+#members {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+#members h2 { margin: 0 0 8px; font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; }
+#member-count { font-variant-numeric: tabular-nums; }
+#members-empty { margin: 0; color: var(--muted); }
+
+#member-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#member-list li {
+  min-width: 0;
+  max-width: 100%;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+#member-list li.me { border-color: var(--accent); background: var(--accent-soft); }
+#member-list .nick { font-weight: 600; }
+#member-list .intro { color: var(--muted); margin-left: 6px; overflow-wrap: anywhere; }
+#member-list .badge { margin-left: 6px; font-size: 0.75rem; color: var(--accent); }
+
+#signup { width: min(420px, calc(100vw - 32px)); }
+
+#signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px;
+}
+
+#signup-form h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 1.5rem; }
+#signup-form .hint { margin: 0 0 8px; color: var(--muted); font-size: 0.88rem; }
+#signup-form label small { color: var(--muted); font-weight: 400; }
+#signup-form > label { font-weight: 600; margin-top: 6px; }
+#signup-form .check { display: flex; gap: 8px; align-items: flex-start; font-weight: 400; font-size: 0.9rem; }
+#signup-form .check input { margin-top: 4px; }
+
+#signup-form input:not([type="checkbox"]) {
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+}
+
+#signup-form input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+#signup-error { min-height: 1.2em; margin: 4px 0 0; color: var(--danger); font-size: 0.9rem; }
+
+.form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; }
+.form-actions .spacer { flex: 1; }
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }

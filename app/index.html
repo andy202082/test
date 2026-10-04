@@ -10,7 +10,14 @@
 <body>
   <header>
     <h1>사진통</h1>
-    <p id="count">사진 0장</p>
+    <div class="header-side">
+      <p id="count">사진 0장</p>
+      <div id="account" hidden>
+        <span id="welcome"></span>
+        <button id="signup-btn" class="primary">회원가입</button>
+        <button id="edit-btn" hidden>내 정보</button>
+      </div>
+    </div>
   </header>
 
   <main>
@@ -32,6 +39,12 @@
       <p>위의 상자를 눌러 사진을 고르거나, 폴더를 통째로 불러와 보세요.</p>
     </div>
     <ul id="gallery"></ul>
+
+    <section id="members" hidden>
+      <h2>회원 <span id="member-count">0</span>명</h2>
+      <p id="members-empty">아직 가입한 사람이 없어요. 첫 회원이 되어 보세요.</p>
+      <ul id="member-list"></ul>
+    </section>
   </main>
 
   <dialog id="viewer">
@@ -48,6 +61,31 @@
         <button id="cancel-delete-btn">취소</button>
       </div>
     </div>
+  </dialog>
+
+  <dialog id="signup">
+    <form id="signup-form" novalidate>
+      <h2 id="signup-title">회원가입</h2>
+      <p class="hint">claude.ai 계정으로 이미 본인 확인이 되어 있어서 비밀번호는 필요 없어요.</p>
+      <label for="nickname">닉네임 <small>2~12자</small></label>
+      <input id="nickname" maxlength="12" autocomplete="nickname">
+      <label for="intro">한 줄 소개 <small>선택, 40자까지</small></label>
+      <input id="intro" maxlength="40">
+      <label class="check"><input id="agree" type="checkbox"> 닉네임과 소개가 이 페이지를 여는 사람들에게 보이는 데 동의해요</label>
+      <p id="signup-error" role="alert"></p>
+      <div id="form-actions" class="form-actions">
+        <button type="button" id="withdraw-btn" class="danger-outline" hidden>탈퇴</button>
+        <span class="spacer"></span>
+        <button type="button" id="signup-cancel">취소</button>
+        <button type="submit" id="signup-submit" class="primary">가입하기</button>
+      </div>
+      <div id="withdraw-confirm" class="form-actions" hidden>
+        <span>탈퇴하면 회원 명단에서 빠져요. 탈퇴할까요?</span>
+        <span class="spacer"></span>
+        <button type="button" id="withdraw-cancel">취소</button>
+        <button type="button" id="withdraw-ok" class="danger">탈퇴</button>
+      </div>
+    </form>
   </dialog>
 
   <script src="app.js"></script>
