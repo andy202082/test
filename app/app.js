@@ -28,6 +28,8 @@ const empty = document.getElementById('empty');
 const count = document.getElementById('count');
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('file-input');
+const folderInput = document.getElementById('folder-input');
+const statusText = document.getElementById('status');
 const viewer = document.getElementById('viewer');
 const viewerImg = document.getElementById('viewer-img');
 const viewerName = document.getElementById('viewer-name');
@@ -66,7 +68,36 @@ async function addFiles(files) {
       s.add({ name: file.name, blob: file, addedAt: Date.now() })
     );
   }
+  statusText.textContent = images.length
+    ? `사진 ${images.length}장을 불러왔어요.`
+    : '불러올 사진이 없어요.';
   await render();
+}
+
+// 끌어다 놓은 폴더 안의 파일을 하위 폴더까지 모두 꺼냄
+async function filesFromEntry(entry) {
+  if (entry.isFile) {
+    return [await new Promise((resolve, reject) => entry.file(resolve, reject))];
+  }
+  const reader = entry.createReader();
+  const files = [];
+  // readEntries는 한 번에 일부만 돌려주므로 빈 배열이 나올 때까지 반복
+  while (true) {
+    const entries = await new Promise((resolve, reject) => reader.readEntries(resolve, reject));
+    if (!entries.length) break;
+    for (const child of entries) files.push(...(await filesFromEntry(child)));
+  }
+  return files;
+}
+
+async function filesFromDrop(dataTransfer) {
+  const entries = [...dataTransfer.items]
+    .map((item) => item.webkitGetAsEntry && item.webkitGetAsEntry())
+    .filter(Boolean);
+  if (!entries.length) return [...dataTransfer.files];
+  const files = [];
+  for (const entry of entries) files.push(...(await filesFromEntry(entry)));
+  return files;
 }
 
 function openViewer(photo, url) {
@@ -82,6 +113,11 @@ fileInput.addEventListener('change', () => {
   fileInput.value = '';
 });
 
+folderInput.addEventListener('change', () => {
+  addFiles(folderInput.files);
+  folderInput.value = '';
+});
+
 dropzone.addEventListener('dragover', (e) => {
   e.preventDefault();
   dropzone.classList.add('over');
@@ -90,7 +126,8 @@ dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
 dropzone.addEventListener('drop', (e) => {
   e.preventDefault();
   dropzone.classList.remove('over');
-  addFiles(e.dataTransfer.files);
+  // 이벤트가 끝나면 dataTransfer를 못 읽으므로 먼저 꺼내 둠
+  filesFromDrop(e.dataTransfer).then(addFiles);
 });
 
 document.getElementById('close-btn').addEventListener('click', () => viewer.close());

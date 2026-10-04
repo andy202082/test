@@ -34,6 +34,19 @@ main { max-width: 960px; margin: 0 auto; padding: 16px; }
 
 #dropzone.over { border-color: #0a7cff; background: #eef6ff; }
 
+.actions { margin-top: 8px; text-align: center; }
+
+.button {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #0a7cff;
+  color: #fff;
+  cursor: pointer;
+}
+
+#status { min-height: 1.2em; text-align: center; color: #0a7cff; }
+
 #empty { text-align: center; color: #888; }
 
 #gallery {

@@ -14,9 +14,15 @@
 
   <main>
     <label id="dropzone" for="file-input">
-      <span>여기를 눌러 사진을 고르거나, 사진을 끌어다 놓으세요</span>
+      <span>여기를 눌러 사진을 고르거나, 사진이나 폴더를 끌어다 놓으세요</span>
       <input id="file-input" type="file" accept="image/*" multiple hidden>
     </label>
+
+    <div class="actions">
+      <label id="folder-btn" class="button" for="folder-input">📁 폴더째로 불러오기</label>
+      <input id="folder-input" type="file" webkitdirectory multiple hidden>
+    </div>
+    <p id="status" role="status"></p>
 
     <p id="empty">아직 사진이 없어요.</p>
     <ul id="gallery"></ul>
