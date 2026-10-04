@@ -23,9 +23,32 @@ function run(db, mode, action) {
   });
 }
 
+function dbStore(db) {
+  return {
+    getAll: () => run(db, 'readonly', (s) => s.getAll()),
+    add: (photo) => run(db, 'readwrite', (s) => s.add(photo)),
+    remove: (id) => run(db, 'readwrite', (s) => s.delete(id)),
+  };
+}
+
+// IndexedDB를 쓸 수 없는 브라우저(사생활 보호 모드 등)에서는 메모리에만 보관
+function memoryStore() {
+  const photos = [];
+  let nextId = 1;
+  return {
+    getAll: async () => photos.slice(),
+    add: async (photo) => { photos.push({ ...photo, id: nextId++ }); },
+    remove: async (id) => {
+      const i = photos.findIndex((p) => p.id === id);
+      if (i >= 0) photos.splice(i, 1);
+    },
+  };
+}
+
 const gallery = document.getElementById('gallery');
 const empty = document.getElementById('empty');
 const count = document.getElementById('count');
+const notice = document.getElementById('notice');
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('file-input');
 const folderInput = document.getElementById('folder-input');
@@ -33,27 +56,35 @@ const statusText = document.getElementById('status');
 const viewer = document.getElementById('viewer');
 const viewerImg = document.getElementById('viewer-img');
 const viewerName = document.getElementById('viewer-name');
+const viewerActions = document.getElementById('viewer-actions');
+const confirmActions = document.getElementById('confirm-actions');
 
-let db;
+let store;
 let urls = [];
 let current = null;
 
 async function render() {
-  const photos = await run(db, 'readonly', (s) => s.getAll());
+  const photos = await store.getAll();
   urls.forEach(URL.revokeObjectURL);
   urls = [];
   gallery.innerHTML = '';
 
-  // 최근에 넣은 사진이 앞에 오도록
+  // 최근에 넣은 사진이 앞에 오도록. 번호는 넣은 순서
+  photos.forEach((photo, i) => { photo.no = i + 1; });
   for (const photo of photos.reverse()) {
     const url = URL.createObjectURL(photo.blob);
     urls.push(url);
     const li = document.createElement('li');
-    const img = document.createElement('img');
-    img.src = url;
-    img.alt = photo.name;
-    img.addEventListener('click', () => openViewer(photo, url));
-    li.appendChild(img);
+    li.tabIndex = 0;
+    li.innerHTML = '<img alt=""><div class="caption"><span class="no"></span><span class="name"></span></div>';
+    li.querySelector('img').src = url;
+    li.querySelector('img').alt = photo.name;
+    li.querySelector('.no').textContent = '#' + String(photo.no).padStart(2, '0');
+    li.querySelector('.name').textContent = photo.name;
+    li.addEventListener('click', () => openViewer(photo, url));
+    li.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') openViewer(photo, url);
+    });
     gallery.appendChild(li);
   }
 
@@ -64,9 +95,7 @@ async function render() {
 async function addFiles(files) {
   const images = [...files].filter((f) => f.type.startsWith('image/'));
   for (const file of images) {
-    await run(db, 'readwrite', (s) =>
-      s.add({ name: file.name, blob: file, addedAt: Date.now() })
-    );
+    await store.add({ name: file.name, blob: file, addedAt: Date.now() });
   }
   statusText.textContent = images.length
     ? `사진 ${images.length}장을 불러왔어요.`
@@ -100,11 +129,17 @@ async function filesFromDrop(dataTransfer) {
   return files;
 }
 
+function showConfirm(show) {
+  viewerActions.hidden = show;
+  confirmActions.hidden = !show;
+}
+
 function openViewer(photo, url) {
   current = photo;
   viewerImg.src = url;
   viewerImg.alt = photo.name;
   viewerName.textContent = photo.name;
+  showConfirm(false);
   viewer.showModal();
 }
 
@@ -131,14 +166,24 @@ dropzone.addEventListener('drop', (e) => {
 });
 
 document.getElementById('close-btn').addEventListener('click', () => viewer.close());
-document.getElementById('delete-btn').addEventListener('click', async () => {
-  if (!current || !confirm(`"${current.name}" 사진을 삭제할까요?`)) return;
-  await run(db, 'readwrite', (s) => s.delete(current.id));
+document.getElementById('delete-btn').addEventListener('click', () => showConfirm(true));
+document.getElementById('cancel-delete-btn').addEventListener('click', () => showConfirm(false));
+document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
+  if (!current) return;
+  const name = current.name;
+  await store.remove(current.id);
   viewer.close();
+  statusText.textContent = `"${name}" 사진을 삭제했어요.`;
   await render();
 });
 
-openDB().then((d) => {
-  db = d;
+(async () => {
+  try {
+    store = dbStore(await openDB());
+    await store.getAll();
+  } catch {
+    store = memoryStore();
+    notice.hidden = false;
+  }
   render();
-});
+})();

@@ -4,27 +4,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>사진통</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;600&family=IBM+Plex+Mono:wght@400&display=swap">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>📷 사진통</h1>
+    <h1>사진통</h1>
     <p id="count">사진 0장</p>
   </header>
 
   <main>
-    <label id="dropzone" for="file-input">
-      <span>여기를 눌러 사진을 고르거나, 사진이나 폴더를 끌어다 놓으세요</span>
-      <input id="file-input" type="file" accept="image/*" multiple hidden>
-    </label>
+    <p id="notice" hidden>이 브라우저에서는 사진을 저장할 수 없어요. 새로고침하면 넣은 사진이 사라져요.</p>
 
-    <div class="actions">
-      <label id="folder-btn" class="button" for="folder-input">📁 폴더째로 불러오기</label>
+    <section class="intake">
+      <label id="dropzone" for="file-input">
+        <strong>사진 넣기</strong>
+        <span>눌러서 고르거나, 사진이나 폴더를 여기로 끌어다 놓으세요</span>
+        <input id="file-input" type="file" accept="image/*" multiple hidden>
+      </label>
+      <label id="folder-btn" class="button" for="folder-input">폴더째로 불러오기</label>
       <input id="folder-input" type="file" webkitdirectory multiple hidden>
-    </div>
+    </section>
     <p id="status" role="status"></p>
 
-    <p id="empty">아직 사진이 없어요.</p>
+    <div id="empty">
+      <p class="empty-title">통이 비어 있어요</p>
+      <p>위의 상자를 눌러 사진을 고르거나, 폴더를 통째로 불러와 보세요.</p>
+    </div>
     <ul id="gallery"></ul>
   </main>
 
@@ -32,8 +38,15 @@
     <img id="viewer-img" alt="">
     <div class="viewer-bar">
       <span id="viewer-name"></span>
-      <button id="delete-btn" class="danger">삭제</button>
-      <button id="close-btn">닫기</button>
+      <div id="viewer-actions">
+        <button id="delete-btn" class="danger">삭제</button>
+        <button id="close-btn">닫기</button>
+      </div>
+      <div id="confirm-actions" hidden>
+        <span>이 사진을 삭제할까요?</span>
+        <button id="confirm-delete-btn" class="danger">삭제</button>
+        <button id="cancel-delete-btn">취소</button>
+      </div>
     </div>
   </dialog>
 
