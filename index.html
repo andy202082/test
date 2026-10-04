@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사진 갤러리</title>
+<style>
+  :root {
+    --bg: #fafaf9;
+    --fg: #1c1917;
+    --muted: #78716c;
+    --card: #ffffff;
+    --line: #e7e5e4;
+    --accent: #2563eb;
+    --accent-fg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c0a09;
+      --fg: #f5f5f4;
+      --muted: #a8a29e;
+      --card: #1c1917;
+      --line: #292524;
+      --accent: #60a5fa;
+      --accent-fg: #0c0a09;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  }
+  header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 16px 8px;
+  }
+  h1 { margin: 0 0 4px; font-size: 1.75rem; }
+  .count { color: var(--muted); margin: 0; }
+  .albums {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .albums button {
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--fg);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font: inherit;
+    cursor: pointer;
+  }
+  .albums button[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-fg);
+  }
+  main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .grid button {
+    display: block;
+    padding: 0;
+    border: 0;
+    background: var(--card);
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 1;
+    cursor: zoom-in;
+  }
+  .grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .2s;
+  }
+  .grid button:hover img { transform: scale(1.04); }
+  .empty {
+    border: 2px dashed var(--line);
+    border-radius: 12px;
+    padding: 48px 16px;
+    text-align: center;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .empty code { background: var(--card); padding: 2px 6px; border-radius: 4px; }
+
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 92vw;
+    max-height: 82vh;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+  .lightbox .caption {
+    position: absolute;
+    bottom: 16px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #e7e5e4;
+    font-size: .95rem;
+  }
+  .lightbox .btn {
+    position: absolute;
+    background: rgba(255, 255, 255, .12);
+    color: #fff;
+    border: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  .lightbox .btn:hover { background: rgba(255, 255, 255, .25); }
+  .lightbox .close { top: 16px; right: 16px; }
+  .lightbox .prev { left: 16px; top: 50%; transform: translateY(-50%); }
+  .lightbox .next { right: 16px; top: 50%; transform: translateY(-50%); }
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+    .grid button { border-radius: 4px; }
+    .lightbox .prev, .lightbox .next { display: none; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>사진 갤러리</h1>
+  <p class="count" id="count">불러오는 중…</p>
+  <nav class="albums" id="albums" hidden></nav>
+</header>
+<main>
+  <div class="grid" id="grid"></div>
+</main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="사진 크게 보기">
+  <img id="lb-img" alt="">
+  <div class="caption" id="lb-caption"></div>
+  <button class="btn close" id="lb-close" aria-label="닫기">×</button>
+  <button class="btn prev" id="lb-prev" aria-label="이전 사진">‹</button>
+  <button class="btn next" id="lb-next" aria-label="다음 사진">›</button>
+</div>
+
+<script>
+  const grid = document.getElementById('grid');
+  const countEl = document.getElementById('count');
+  const albumsEl = document.getElementById('albums');
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  const lbCaption = document.getElementById('lb-caption');
+
+  let photos = [];
+  let shown = [];
+  let current = 0;
+
+  function showEmpty(message) {
+    countEl.textContent = '사진 0장';
+    grid.innerHTML = '';
+    const div = document.createElement('div');
+    div.className = 'empty';
+    div.innerHTML = message;
+    grid.replaceWith(div);
+  }
+
+  function render(album) {
+    shown = album === null ? photos : photos.filter(p => p.album === album);
+    countEl.textContent = `사진 ${shown.length}장`;
+    grid.innerHTML = '';
+    shown.forEach((p, i) => {
+      const btn = document.createElement('button');
+      btn.setAttribute('aria-label', p.name);
+      const img = document.createElement('img');
+      img.src = p.src;
+      img.alt = p.name;
+      img.loading = 'lazy';
+      btn.appendChild(img);
+      btn.addEventListener('click', () => open(i));
+      grid.appendChild(btn);
+    });
+    albumsEl.querySelectorAll('button').forEach(b => {
+      b.setAttribute('aria-pressed', String(b.dataset.album === String(album)));
+    });
+  }
+
+  function buildAlbums() {
+    const names = [...new Set(photos.map(p => p.album).filter(Boolean))];
+    if (names.length === 0) return;
+    const add = (label, value) => {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.dataset.album = String(value);
+      b.addEventListener('click', () => render(value));
+      albumsEl.appendChild(b);
+    };
+    add('전체', null);
+    names.forEach(n => add(n, n));
+    if (photos.some(p => !p.album)) add('기타', '');
+    albumsEl.hidden = false;
+  }
+
+  function open(i) {
+    current = i;
+    update();
+    lb.classList.add('open');
+  }
+  function close() { lb.classList.remove('open'); }
+  function move(step) {
+    current = (current + step + shown.length) % shown.length;
+    update();
+  }
+  function update() {
+    const p = shown[current];
+    lbImg.src = p.src;
+    lbImg.alt = p.name;
+    lbCaption.textContent = `${p.name}  ·  ${current + 1} / ${shown.length}`;
+  }
+
+  document.getElementById('lb-close').addEventListener('click', close);
+  document.getElementById('lb-prev').addEventListener('click', e => { e.stopPropagation(); move(-1); });
+  document.getElementById('lb-next').addEventListener('click', e => { e.stopPropagation(); move(1); });
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  document.addEventListener('keydown', e => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') move(-1);
+    if (e.key === 'ArrowRight') move(1);
+  });
+
+  let touchX = null;
+  lb.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) move(dx < 0 ? 1 : -1);
+    touchX = null;
+  });
+
+  fetch('photos.json', { cache: 'no-cache' })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(list => {
+      photos = list;
+      if (photos.length === 0) {
+        showEmpty('아직 사진이 없어요.<br><code>photos</code> 폴더에 사진을 넣고 Commit → Push 하면 여기에 나타납니다.');
+        return;
+      }
+      buildAlbums();
+      render(null);
+    })
+    .catch(() => {
+      showEmpty('사진 목록(<code>photos.json</code>)을 불러오지 못했어요.<br>GitHub Pages 주소로 접속했는지 확인해 주세요.');
+    });
+</script>
+</body>
+</html>
