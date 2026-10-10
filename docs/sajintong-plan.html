@@ -1,0 +1,811 @@
+<title>사진통 통합 기획서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Nanum+Pen+Script&display=swap">
+<style>
+/* Layout: 현장 사진대지(photo sheet)처럼 — 섹션마다 '공사 흑판' 라벨이 붙은 시트, 본문은 넓은 2단 그리드 */
+:root{
+  --bg:#EDF0EC;        /* 콘크리트, 녹색 기운 */
+  --paper:#FAFBF8;
+  --ink:#17201B;
+  --muted:#58655E;
+  --line:#D2D9D3;
+  --board:#22372D;     /* 공사 흑판 */
+  --board-2:#2D463A;
+  --chalk:#F1EFE4;
+  --hivis:#F2B705;     /* 안전 노랑 */
+  --hivis-ink:#1A1A12;
+  --ok:#2F7D4F;
+  --soft:#E3E8E2;
+  --f-display:"Black Han Sans","IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono","IBM Plex Sans KR",ui-monospace,Menlo,monospace;
+  --f-chalk:"Nanum Pen Script","IBM Plex Sans KR",cursive;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111713;--paper:#18201B;--ink:#E7ECE8;--muted:#9AA79F;--line:#2B3730;
+  --board:#1F3329;--board-2:#2A4436;--chalk:#EEEBDF;--hivis:#F5C02A;--hivis-ink:#17160E;--ok:#5DBB82;--soft:#202A24;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111713;--paper:#18201B;--ink:#E7ECE8;--muted:#9AA79F;--line:#2B3730;
+  --board:#1F3329;--board-2:#2A4436;--chalk:#EEEBDF;--hivis:#F5C02A;--hivis-ink:#17160E;--ok:#5DBB82;--soft:#202A24;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;word-break:keep-all;overflow-wrap:break-word}
+.wrap{max-width:1160px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;line-height:1.25;text-wrap:balance;margin:0}
+p{margin:0}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--hivis);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* ---------- top bar ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;height:56px}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-size:22px;text-decoration:none}
+.logo i{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:7px;background:var(--hivis);color:var(--hivis-ink);font-style:normal;font-size:15px}
+.top nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.top nav a{font-size:14px;text-decoration:none;color:var(--muted);padding:6px 10px;border-radius:6px;white-space:nowrap}
+.top nav a:hover{color:var(--ink);background:var(--soft)}
+
+/* ---------- hero ---------- */
+.hero{padding-block:56px 40px}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(36px,5.6vw,64px);letter-spacing:-.01em;margin-top:14px}
+.hero h1 mark{background:linear-gradient(transparent 62%,var(--hivis) 62%);color:inherit;padding:0 2px}
+.hero .lead{margin-top:20px;font-size:18px;color:var(--muted);max-width:34em}
+.flow{display:flex;flex-wrap:wrap;gap:6px;margin-top:28px;align-items:center}
+.flow span{font-size:13.5px;font-weight:500;padding:7px 12px;border:1px solid var(--line);background:var(--paper);border-radius:999px}
+.flow b{color:var(--muted);font-weight:400}
+
+/* 공사 흑판 */
+.board{background:var(--board);color:var(--chalk);border-radius:6px;padding:22px 24px 18px;position:relative;
+  box-shadow:inset 0 0 0 6px var(--board-2),0 18px 40px -20px rgba(0,0,0,.45)}
+.board::after{content:"";position:absolute;inset:6px;border-radius:2px;pointer-events:none;
+  background:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.06),transparent 60%)}
+.board table{width:100%;border-collapse:collapse}
+.board td{border-bottom:1px solid rgba(241,239,228,.28);padding:7px 4px;vertical-align:baseline}
+.board td:first-child{width:5.2em;font-size:14px;letter-spacing:.3em;white-space:nowrap;opacity:.85}
+.board td:last-child{font-family:var(--f-chalk);font-size:27px;line-height:1.15}
+.board .cap{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;opacity:.7;margin-top:12px}
+
+/* ---------- sections ---------- */
+section.sheet{padding-block:64px;border-top:1px solid var(--line)}
+.sheet-head{display:grid;grid-template-columns:auto 1fr;gap:18px 28px;align-items:end;margin-bottom:36px}
+.tag{background:var(--board);color:var(--chalk);border-radius:5px;padding:8px 14px;font-family:var(--f-mono);font-size:12px;line-height:1.5;letter-spacing:.06em;min-width:150px}
+.tag b{display:block;font-family:var(--f-chalk);font-weight:400;font-size:24px;letter-spacing:0;color:var(--hivis)}
+.sheet-head h2{font-size:clamp(28px,3.6vw,42px)}
+.sheet-head p{grid-column:2;color:var(--muted);max-width:44em;margin-top:-6px}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:24px;min-width:0}
+.card h3{font-size:22px;margin-bottom:10px}
+.card ul{margin:12px 0 0;padding-left:1.1em}
+.card li{margin-top:6px}
+.card li::marker{color:var(--hivis)}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+/* ---------- prototype ---------- */
+.proto{display:grid;grid-template-columns:1fr 340px;gap:48px;align-items:start}
+.steps{display:flex;flex-direction:column;gap:10px;counter-reset:s}
+.step{all:unset;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:14px;padding:16px 18px;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);transition:border-color .2s,transform .2s}
+.step:hover{border-color:var(--muted)}
+.step:focus-visible{outline:3px solid var(--hivis);outline-offset:2px}
+.step .n{font-family:var(--f-display);font-size:26px;line-height:1;color:var(--muted);padding-top:2px}
+.step strong{display:block;font-size:17px}
+.step span{display:block;font-size:14px;color:var(--muted);margin-top:2px}
+.step .time{font-family:var(--f-mono);font-size:12px;color:var(--ok);margin-top:6px}
+.step[aria-selected="true"]{border-color:var(--ink);box-shadow:inset 4px 0 0 var(--hivis)}
+.step[aria-selected="true"] .n{color:var(--ink)}
+.total{margin-top:6px;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-radius:var(--r);background:var(--hivis);color:var(--hivis-ink);font-weight:700}
+.total .mono{font-size:20px}
+
+.phone{width:100%;max-width:340px;margin:0 auto;aspect-ratio:9/18.5;border-radius:42px;background:#0d0f0e;padding:12px;box-shadow:0 30px 60px -30px rgba(0,0,0,.55),inset 0 0 0 2px #2a2e2c;position:sticky;top:90px}
+.screen{position:relative;width:100%;height:100%;border-radius:32px;overflow:hidden;background:#F6F7F4;color:#17201B;font-size:13px;line-height:1.5}
+.notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:90px;height:24px;background:#0d0f0e;border-radius:20px;z-index:5}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;padding:44px 14px 16px;gap:10px}
+.scr[hidden]{display:none!important}
+.scr.dark{background:#0F1210;color:#EEF0EC}
+.apphead{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:14px}
+.apphead small{font-weight:400;color:#6B7670;font-size:11px}
+.scr.dark .apphead small{color:#9BA59F}
+
+/* fake photos */
+.ph{position:relative;border-radius:8px;overflow:hidden;background-color:#cfd4cf}
+.ph.before{background:
+  radial-gradient(circle at 22% 70%,rgba(70,52,30,.55) 0 10%,transparent 11%),
+  radial-gradient(circle at 68% 40%,rgba(60,50,30,.45) 0 14%,transparent 15%),
+  radial-gradient(circle at 80% 82%,rgba(40,38,24,.5) 0 8%,transparent 9%),
+  repeating-linear-gradient(0deg,#8b8f80 0 2px,transparent 2px 26px),
+  repeating-linear-gradient(90deg,#8b8f80 0 2px,transparent 2px 26px),
+  #b9b8a6}
+.ph.after{background:
+  linear-gradient(115deg,rgba(255,255,255,.55),transparent 40%),
+  repeating-linear-gradient(0deg,#d9dcd8 0 2px,transparent 2px 26px),
+  repeating-linear-gradient(90deg,#d9dcd8 0 2px,transparent 2px 26px),
+  #f4f5f2}
+.ph.mid{background:
+  radial-gradient(circle at 60% 50%,rgba(70,52,30,.35) 0 12%,transparent 13%),
+  repeating-linear-gradient(0deg,#a9ab9e 0 2px,transparent 2px 26px),
+  repeating-linear-gradient(90deg,#a9ab9e 0 2px,transparent 2px 26px),
+  #d4d4c6}
+.ph .lbl{position:absolute;left:6px;top:6px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(15,18,16,.75);color:#fff}
+.ph .lbl.y{background:#F2B705;color:#1A1A12}
+.stamp{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;background:linear-gradient(transparent,rgba(0,0,0,.72));color:#fff;font-family:var(--f-mono);font-size:10.5px;line-height:1.45}
+.stamp b{color:#F2B705;font-weight:500}
+
+.viewfinder{flex:1;border-radius:14px}
+.viewfinder .grid-ov{position:absolute;inset:0;background:
+  linear-gradient(90deg,transparent 33%,rgba(255,255,255,.25) 33% calc(33% + 1px),transparent calc(33% + 1px) 66%,rgba(255,255,255,.25) 66% calc(66% + 1px),transparent calc(66% + 1px)),
+  linear-gradient(0deg,transparent 33%,rgba(255,255,255,.25) 33% calc(33% + 1px),transparent calc(33% + 1px) 66%,rgba(255,255,255,.25) 66% calc(66% + 1px),transparent calc(66% + 1px))}
+.seg{display:flex;background:#232825;border-radius:999px;padding:3px}
+.seg span{flex:1;text-align:center;padding:5px 0;border-radius:999px;font-size:12px;color:#BFC7C1}
+.seg span.on{background:#F2B705;color:#1A1A12;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:11.5px;padding:4px 9px;border-radius:999px;background:#E4E8E3;color:#2B342F;white-space:nowrap}
+.scr.dark .chip{background:#262C28;color:#DCE2DD}
+.chip.ai{background:#FFF3C8;color:#5A4500}
+.scr.dark .chip.ai{background:#3B3315;color:#F7D66A}
+.chip.on{background:#17201B;color:#fff}
+.shutter-row{display:flex;align-items:center;justify-content:space-between;padding:0 8px}
+.shutter{width:60px;height:60px;border-radius:50%;border:4px solid #fff;background:#fff;box-shadow:inset 0 0 0 3px #0F1210}
+.mic,.thumb{width:40px;height:40px;border-radius:12px;background:#262C28;display:grid;place-items:center;font-size:11px;color:#DCE2DD}
+.voice{background:#1F2521;border-radius:10px;padding:8px 10px;font-size:12px;display:flex;gap:8px;align-items:center}
+.voice i{width:8px;height:8px;border-radius:50%;background:#E5484D;flex:none;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+
+.thumbs{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.thumbs .ph{aspect-ratio:1}
+.btn{display:block;text-align:center;padding:11px;border-radius:10px;font-weight:700;font-size:13.5px;background:#17201B;color:#fff}
+.btn.y{background:#F2B705;color:#1A1A12}
+.btn.ghost{background:#E4E8E3;color:#17201B}
+.ai-note{font-size:11.5px;background:#FFF8DC;border:1px solid #F1DE96;color:#5A4500;padding:7px 9px;border-radius:8px}
+
+.sheetdoc{background:#fff;border:1px solid #D6DBD6;border-radius:6px;padding:10px;font-size:10.5px;box-shadow:0 6px 16px -10px rgba(0,0,0,.3)}
+.sheetdoc h4{margin:0 0 6px;font-size:12px;text-align:center;letter-spacing:.3em}
+.sheetdoc table{width:100%;border-collapse:collapse;margin-bottom:6px}
+.sheetdoc td{border:1px solid #C9CFC9;padding:3px 5px}
+.sheetdoc td:nth-child(odd){background:#F1F3F0;width:22%;white-space:nowrap}
+.sheetdoc .pair{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.sheetdoc .pair .ph{aspect-ratio:4/3}
+.sheetdoc .cap2{display:grid;grid-template-columns:1fr 1fr;gap:4px;text-align:center;margin-top:3px;color:#58655E}
+.sendrow{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.sendrow span{text-align:center;padding:9px 0;border-radius:10px;font-weight:700;font-size:12px;background:#E4E8E3}
+.sendrow span.kakao{background:#FEE500;color:#191600}
+.toast{background:#17201B;color:#fff;border-radius:10px;padding:9px 11px;font-size:12px;display:flex;gap:8px;align-items:center}
+.toast i{color:#5DBB82;font-style:normal;font-weight:700}
+
+.push{background:rgba(255,255,255,.96);color:#17201B;border-radius:16px;padding:11px 12px;box-shadow:0 10px 30px -10px rgba(0,0,0,.4);font-size:12px}
+.push .ph-head{display:flex;justify-content:space-between;font-size:10.5px;color:#6B7670;margin-bottom:3px}
+.push strong{display:block;font-size:12.5px}
+.tabs-mini{display:flex;gap:4px}
+.tabs-mini span{flex:1;text-align:center;font-size:11.5px;padding:6px 0;border-radius:8px;background:#262C28;color:#BFC7C1}
+.tabs-mini span.on{background:#fff;color:#17201B;font-weight:700}
+.post{background:#1A1F1C;border-radius:12px;padding:10px;font-size:12px;line-height:1.55;flex:1;overflow:hidden}
+.post .ba{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:8px}
+.post .ba .ph{aspect-ratio:1}
+.post .ht{color:#8FB6F0}
+
+.feed-item{background:#fff;border-radius:12px;border:1px solid #E1E5E0;overflow:hidden}
+.feed-item .ba{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.feed-item .ba .ph{aspect-ratio:4/3;border-radius:0}
+.feed-item .meta{padding:8px 10px;font-size:11.5px}
+.feed-item .meta b{font-size:12.5px}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:4px;background:#F2B705;color:#1A1A12;margin-right:4px;vertical-align:1px}
+.badge.g{background:#DDEBE2;color:#1E5A36}
+.cta-mini{font-size:12px;text-align:center;padding:9px;border-radius:10px;border:1.5px dashed #17201B;font-weight:700}
+
+/* ---------- feature specifics ---------- */
+.stamp-demo{aspect-ratio:4/3;border-radius:8px;margin-top:16px}
+.tpl{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.tpl span{font-size:13px;padding:5px 11px;border-radius:6px;border:1px solid var(--line);background:var(--bg)}
+.tpl span.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+
+.agent{display:grid;grid-template-columns:1fr 1.25fr;gap:28px;align-items:start}
+.agent-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.agent-tabs button{font:inherit;font-size:14px;font-weight:500;padding:8px 14px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.agent-tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.out{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:18px;white-space:pre-wrap;font-size:14.5px;line-height:1.75;min-height:250px}
+.out .ht{color:var(--ok)}
+.out-actions{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
+.out-actions button{font:inherit;font-size:13.5px;font-weight:700;padding:8px 14px;border-radius:8px;border:0;background:var(--hivis);color:var(--hivis-ink);cursor:pointer}
+.out-actions small{color:var(--muted)}
+.inputs{display:flex;flex-direction:column;gap:10px}
+.inrow{display:grid;grid-template-columns:88px 1fr;gap:10px;font-size:14px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.inrow dt{color:var(--muted)}
+.inrow dd{margin:0;font-weight:500}
+
+.timeline{position:relative;margin-top:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.timeline::before{content:"";position:absolute;left:0;right:0;top:9px;height:2px;background:var(--line)}
+.tl{position:relative;padding-top:28px;font-size:14px}
+.tl::before{content:"";position:absolute;top:2px;left:0;width:16px;height:16px;border-radius:50%;background:var(--paper);border:3px solid var(--muted)}
+.tl.hot::before{border-color:var(--hivis);background:var(--hivis)}
+.tl .mono{display:block;font-size:13px;color:var(--muted)}
+.tl strong{display:block}
+
+/* 자랑터 */
+.feedbox{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.feedbox .fh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);gap:10px;flex-wrap:wrap}
+.feedbox .fh strong{font-family:var(--f-display);font-weight:400;font-size:20px}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters span{font-size:12.5px;padding:4px 10px;border-radius:999px;background:var(--soft)}
+.filters span.on{background:var(--ink);color:var(--paper)}
+.frow{display:grid;grid-template-columns:120px 1fr;gap:16px;padding:16px 18px;border-bottom:1px solid var(--line);align-items:center}
+.frow .ba{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.frow .ba .ph{aspect-ratio:1;border-radius:5px}
+.frow .k{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.frow b{font-size:16px}
+.frow .stats{font-size:13px;color:var(--muted);margin-top:2px}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:5px;margin-right:6px}
+.pill.gold{background:var(--hivis);color:var(--hivis-ink)}
+.pill.live{background:var(--soft);color:var(--ok)}
+.feedbox .fcta{display:block;padding:16px 18px;background:var(--board);color:var(--chalk);font-weight:700;text-decoration:none}
+.feedbox .fcta span{color:var(--hivis)}
+
+.cycle{position:relative;aspect-ratio:1;max-width:420px;margin:0 auto;width:100%}
+.cycle svg{width:100%;height:100%;display:block}
+.cycle .node{position:absolute;transform:translate(-50%,-50%);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:8px 10px;text-align:center;width:34%;font-size:13.5px;line-height:1.45}
+.cycle .node b{display:block;font-size:15px}
+.cycle .center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;font-family:var(--f-display);font-size:22px;line-height:1.3}
+.cycle .center small{display:block;font-family:var(--f-body);font-size:12px;color:var(--muted)}
+
+.award{display:flex;flex-direction:column;gap:6px}
+.award .medal{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-size:18px;background:var(--board);color:var(--hivis);box-shadow:inset 0 0 0 4px var(--board-2);margin-bottom:8px}
+.award .crit{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px;margin-top:auto}
+
+/* 마케팅 */
+.slogan{background:var(--board);color:var(--chalk);border-radius:var(--r);padding:36px;display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center}
+.slogan h3{font-size:clamp(26px,3.4vw,40px);color:var(--chalk)}
+.slogan h3 em{font-style:normal;color:var(--hivis)}
+.slogan p{font-family:var(--f-chalk);font-size:26px;line-height:1.35;opacity:.95}
+.ad{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.ad .adtop{padding:6px 14px;font-family:var(--f-mono);font-size:11px;color:var(--muted);border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.ad .adbody{padding:22px}
+.ad .adbody strong{display:block;font-family:var(--f-display);font-weight:400;font-size:24px;line-height:1.35}
+.ad .adbody strong u{text-decoration:none;background:linear-gradient(transparent 60%,var(--hivis) 60%)}
+.ad .adbody .adbtn{display:inline-block;margin-top:16px;padding:10px 16px;border-radius:8px;background:var(--ink);color:var(--paper);font-weight:700;font-size:14px}
+.challenge{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.challenge div{border-top:3px solid var(--ink);padding-top:10px;font-size:14px}
+.challenge div b{display:block;font-size:15px}
+.challenge div .mono{font-size:12px;color:var(--muted)}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+table.t{width:100%;border-collapse:collapse;font-size:14.5px;min-width:640px}
+table.t th,table.t td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+table.t th{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:500;background:var(--soft)}
+table.t tr:last-child td{border-bottom:0}
+table.t td:first-child{font-weight:700;white-space:nowrap}
+table.t .num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.funnel{display:flex;flex-direction:column;gap:8px}
+.fbar{display:grid;grid-template-columns:110px 1fr 70px;gap:12px;align-items:center;font-size:14px}
+.fbar .track{height:26px;background:var(--soft);border-radius:5px;overflow:hidden}
+.fbar .fill{height:100%;background:var(--board);border-radius:5px;display:flex;align-items:center;padding-left:10px;color:var(--chalk);font-size:12px;white-space:nowrap}
+.fbar:last-child .fill{background:var(--hivis);color:var(--hivis-ink)}
+.fbar .num{font-family:var(--f-mono);text-align:right}
+
+/* 비전 */
+.effect{display:grid;grid-template-columns:auto 1fr;gap:18px}
+.effect .big{font-family:var(--f-display);font-size:48px;line-height:1;color:var(--hivis);-webkit-text-stroke:1px var(--ink)}
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--paper)}
+.road > div{padding:22px;border-right:1px solid var(--line);min-width:0}
+.road > div:last-child{border-right:0}
+.road .ph-k{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.road h3{font-size:20px;margin:6px 0 4px}
+.road .goal{display:inline-block;margin-top:12px;font-size:13px;font-weight:700;padding:3px 9px;border-radius:5px;background:var(--soft)}
+.road ul{margin:10px 0 0;padding-left:1.1em;font-size:14px}
+
+.closing{padding-block:72px;text-align:left}
+.closing .board{padding:40px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end}
+.closing h2{font-size:clamp(28px,4vw,48px);color:var(--chalk)}
+.closing h2 em{font-style:normal;color:var(--hivis)}
+.closing p{font-family:var(--f-chalk);font-size:28px;margin-top:10px}
+.closing .sig{font-family:var(--f-mono);font-size:12px;opacity:.7;text-align:right;white-space:nowrap}
+footer{padding-block:24px 40px;color:var(--muted);font-size:13px}
+
+/* ---------- responsive ---------- */
+@media (max-width:920px){
+  .hero-grid,.proto,.grid2,.agent,.slogan{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .phone{position:relative;top:0}
+  .road{grid-template-columns:1fr}
+  .road > div{border-right:0;border-bottom:1px solid var(--line)}
+  .road > div:last-child{border-bottom:0}
+  .closing .board{grid-template-columns:1fr}
+  .closing .sig{text-align:left}
+}
+@media (max-width:640px){
+  .wrap{padding-inline:16px}
+  .top nav{display:none}
+  .sheet-head{grid-template-columns:1fr}
+  .sheet-head p{grid-column:1}
+  .grid3,.challenge,.timeline{grid-template-columns:1fr 1fr}
+  .frow{grid-template-columns:88px 1fr}
+  .slogan{padding:24px}
+  .closing .board{padding:26px}
+  .fbar{grid-template-columns:84px 1fr 56px}
+  .card{padding:20px}
+}
+@media (max-width:420px){
+  .grid3{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top"><i>통</i>사진통</a>
+    <nav aria-label="섹션">
+      <a href="#flow">서비스 흐름</a>
+      <a href="#features">핵심 기능</a>
+      <a href="#showcase">자랑터</a>
+      <a href="#marketing">마케팅</a>
+      <a href="#vision">기대 효과</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<!-- ================= HERO ================= -->
+<div class="wrap hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">PO/PM × 마케팅 통합 기획서 · 2026.10</div>
+      <h1>현장 사진 한 장,<br><mark>보고서에서 SNS 홍보</mark>까지!</h1>
+      <p class="lead">작업의 기록을 사업의 자산으로 쌓으세요. 사진이 쌓일수록 반복 업무는 줄고 신뢰와 일감은 늘어납니다.</p>
+      <div class="flow" aria-label="핵심 흐름">
+        <span>현장 촬영</span><b>→</b><span>AI 라벨·사진대지</span><b>→</b><span>1초 보고서 전송</span><b>→</b><span>AI SNS 포스팅</span><b>→</b><span>자랑터 노출</span>
+      </div>
+    </div>
+    <div class="board" role="img" aria-label="공사 흑판 형식의 기획 요약">
+      <table>
+        <tr><td>공사명</td><td>사진통 서비스 통합 기획</td></tr>
+        <tr><td>공 종</td><td>기록 · 보고 · 홍보 · 일감</td></tr>
+        <tr><td>위 치</td><td>숨고·크몽·자영업 모든 현장</td></tr>
+        <tr><td>원 칙</td><td>귀찮지 않아야 한다</td></tr>
+        <tr><td>일 자</td><td>2026. 10. 10</td></tr>
+      </table>
+      <div class="cap"><span>SAJINTONG · PHOTO SHEET</span><span>No. 001</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 1. FLOW ================= -->
+<section class="sheet" id="flow">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div class="tag">SHEET 01 · PO/PM<b>서비스 흐름</b></div>
+      <h2>다섯 번의 터치로, 촬영에서 자산화까지</h2>
+      <p>작업자의 최우선 니즈는 "귀찮지 않아야 한다"입니다. 입력은 AI가 대신하고, 사용자는 확인 버튼만 누릅니다. 왼쪽 단계를 누르면 실제 화면 흐름을 볼 수 있습니다.</p>
+    </div>
+
+    <div class="proto">
+      <div>
+        <div class="steps" role="tablist" aria-label="서비스 단계">
+          <button class="step" role="tab" aria-selected="true" data-s="0" id="st0"><span class="n">1</span><div><strong>현장 촬영 / 업로드</strong><span>일시·위치·작업 단계가 사진에 자동 워터마크</span><span class="time">터치 1회 · 셔터</span></div></button>
+          <button class="step" role="tab" aria-selected="false" data-s="1" id="st1"><span class="n">2</span><div><strong>AI 자동 라벨링 & 사진대지 생성</strong><span>음성 한 마디 또는 칩 선택으로 라벨 완료</span><span class="time">터치 1회 · 추천 라벨 확정</span></div></button>
+          <button class="step" role="tab" aria-selected="false" data-s="2" id="st2"><span class="n">3</span><div><strong>1초 보고서 전송</strong><span>표준 사진대지 PDF를 카카오톡으로 바로 전송</span><span class="time">터치 1회 · 전송</span></div></button>
+          <button class="step" role="tab" aria-selected="false" data-s="3" id="st3"><span class="n">4</span><div><strong>AI SNS 원클릭 포스팅</strong><span>"오늘 한 작업, 자랑해 보세요!" 글감 자동 완성</span><span class="time">터치 1회 · 올리기</span></div></button>
+          <button class="step" role="tab" aria-selected="false" data-s="4" id="st4"><span class="n">5</span><div><strong>사진통 '자랑터' 자동 노출</strong><span>승인한 작업이 지역·업종별 포트폴리오로 공개</span><span class="time">터치 1회 · 공개 승인</span></div></button>
+        </div>
+        <div class="total"><span>현장 1건 기록 → 보고 → 홍보</span><span class="mono">5 TAP · 약 40초</span></div>
+      </div>
+
+      <div class="phone" aria-live="polite">
+        <div class="screen">
+          <div class="notch"></div>
+
+          <!-- 1 camera -->
+          <div class="scr dark" data-scr="0">
+            <div class="apphead"><span>망원동 욕실 리폼</span><small>현장 #0412</small></div>
+            <div class="ph after viewfinder"><div class="grid-ov"></div>
+              <span class="lbl y">작업 후</span>
+              <div class="stamp">2026.10.10 (토) 14:32<br>서울 마포구 망원동 · <b>작업 후</b><br>OO홈케어 · 욕실 실리콘 재시공</div>
+            </div>
+            <div class="seg"><span>작업 전</span><span>작업 중</span><span class="on">작업 후</span></div>
+            <div class="shutter-row"><div class="thumb">12장</div><div class="shutter" aria-hidden="true"></div><div class="mic">🎤</div></div>
+          </div>
+
+          <!-- 2 label -->
+          <div class="scr dark" data-scr="1" hidden>
+            <div class="apphead"><span>AI 라벨 확인</span><small>12장 · 전3 중5 후4</small></div>
+            <div class="voice"><i></i>"욕실 실리콘 재시공 완료, 곰팡이 제거"</div>
+            <div class="thumbs">
+              <div class="ph before"><span class="lbl">전</span></div>
+              <div class="ph mid"><span class="lbl">중</span></div>
+              <div class="ph mid"><span class="lbl">중</span></div>
+              <div class="ph after"><span class="lbl y">후</span></div>
+            </div>
+            <div class="chips">
+              <span class="chip ai">✓ #욕실</span><span class="chip ai">✓ #실리콘재시공</span><span class="chip ai">✓ #곰팡이제거</span><span class="chip">#줄눈</span><span class="chip">#방수</span><span class="chip">+ 직접</span>
+            </div>
+            <div class="ai-note">AI가 전·후 사진 2쌍을 찾아 비교 컷으로 묶었어요.</div>
+            <div style="margin-top:auto" class="btn y">사진대지 만들기</div>
+          </div>
+
+          <!-- 3 report -->
+          <div class="scr" data-scr="2" hidden>
+            <div class="apphead"><span>사진대지 미리보기</span><small>고객 제출용 · A4</small></div>
+            <div class="sheetdoc">
+              <h4>사 진 대 지</h4>
+              <table>
+                <tr><td>현장명</td><td>망원동 OO빌라 302호</td></tr>
+                <tr><td>작업일</td><td>2026.10.10</td></tr>
+                <tr><td>공 종</td><td>욕실 실리콘 재시공</td></tr>
+              </table>
+              <div class="pair"><div class="ph before"></div><div class="ph after"></div></div>
+              <div class="cap2"><span>작업 전</span><span>작업 후</span></div>
+            </div>
+            <div class="sendrow"><span class="kakao">카카오톡</span><span>PDF</span><span>문자</span></div>
+            <div class="toast"><i>✓</i>김OO 고객님께 사진대지를 보냈어요</div>
+            <div class="ai-note" style="margin-top:auto">고객 링크 하단에 "시공 사례로 소개해도 될까요?" 동의 버튼이 함께 전송됩니다.</div>
+          </div>
+
+          <!-- 4 sns -->
+          <div class="scr dark" data-scr="3" hidden>
+            <div class="push"><div class="ph-head"><span>사진통</span><span>18:30</span></div><strong>오늘 완료된 3건의 작업, 자랑해 보세요!</strong>인스타그램·블로그 글을 미리 써뒀어요. 올리고 신규 일감을 확보해 보세요.</div>
+            <div class="tabs-mini"><span class="on">인스타</span><span>블로그</span><span>카톡</span></div>
+            <div class="post">
+              <div class="ba"><div class="ph before"><span class="lbl">BEFORE</span></div><div class="ph after"><span class="lbl y">AFTER</span></div></div>
+              까맣게 번진 욕실 실리콘, 오늘 새것처럼 바꿔드렸어요 ✨ 곰팡이 원인부터 잡고 항균 실리콘으로 마감했습니다.<br><span class="ht">#망원동욕실 #마포실리콘시공 #욕실곰팡이제거</span>
+            </div>
+            <div class="btn y">인스타그램에 올리기</div>
+          </div>
+
+          <!-- 5 showcase -->
+          <div class="scr" data-scr="4" hidden>
+            <div class="apphead"><span>사진통 자랑터</span><small>마포구 · 욕실</small></div>
+            <div class="feed-item">
+              <div class="ba"><div class="ph before"></div><div class="ph after"></div></div>
+              <div class="meta"><span class="badge">이달의 우수 시공</span><b>OO홈케어</b><br>망원동 욕실 실리콘 재시공 · ♥ 128 · 스크랩 34</div>
+            </div>
+            <div class="feed-item">
+              <div class="meta"><span class="badge g">실시간 현장</span><b>XX소방</b> · 인천 연수구<br>알람밸브 점검 완료 · 방금 전</div>
+            </div>
+            <div class="cta-mini" style="margin-top:auto">나도 내 현장 사진 등록하고 무료 홍보 카드 받기</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 1-2. FEATURES ================= -->
+<section class="sheet" id="features">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div class="tag">SHEET 02 · PO/PM<b>핵심 기능</b></div>
+      <h2>입력은 최소로, 결과물은 바로 쓸 수 있게</h2>
+      <p>세 가지 핵심 기능이 하나의 사진에서 이어집니다. 사용자가 직접 쓰는 글자는 0자를 목표로 합니다.</p>
+    </div>
+
+    <div class="grid2">
+      <article class="card">
+        <div class="eyebrow">기능 1</div>
+        <h3>AI 현장 카메라 & 자동 라벨링</h3>
+        <ul>
+          <li><b>스마트 타임스탬프·GPS 자동 채록</b>: 촬영 순간 [일시 + 현장 위치 + 작업 단계(전/중/후)]가 오버레이 워터마크로 들어갑니다.</li>
+          <li><b>음성 라벨링</b>: "싱크대 수전 교체 완료"라고 말하면 라벨과 메모가 동시에 입력됩니다.</li>
+          <li><b>칩 버튼 라벨링</b>: #전기공사, #점검완료처럼 업종별 자주 쓰는 칩을 한 번 누르면 끝납니다.</li>
+          <li><b>현장 단위 자동 묶음</b>: 같은 위치·시간대 사진을 한 현장으로 정리해 갤러리 뒤섞임을 없앱니다.</li>
+        </ul>
+        <div class="ph mid stamp-demo"><span class="lbl">작업 중</span>
+          <div class="stamp">2026.10.10 (토) 11:05 · 인천 연수구 송도동<br><b>작업 중</b> · XX소방 · 알람밸브 정기점검</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="eyebrow">기능 2</div>
+        <h3>1초 자동 사진대지 & 보고서 변환</h3>
+        <ul>
+          <li>클릭 한 번으로 관공서·원청·고객 제출용 <b>표준 사진대지</b>(PDF/이미지)가 완성됩니다.</li>
+          <li>로고·상호·담당자 서명이 자동으로 들어가고, 2·4·6컷 레이아웃을 고를 수 있습니다.</li>
+          <li>카카오톡 링크로 보내면 고객은 앱 설치 없이 웹에서 바로 봅니다.</li>
+          <li>고객 링크에 <b>홍보 사용 동의 버튼</b>을 넣어 이후 SNS·자랑터 노출의 근거를 확보합니다.</li>
+        </ul>
+        <div class="eyebrow" style="margin-top:18px">업종별 B2B 보고서 템플릿 (전/후 비교 기본 제공)</div>
+        <div class="tpl">
+          <span class="on">숨고 집수리</span><span>입주·이사 청소</span><span>소방시설 점검</span><span>전기 안전점검</span><span>설비·배관</span><span>인테리어 공정</span><span>방역·해충</span><span>에어컨·덕트 청소</span><span>외벽·방수</span>
+        </div>
+      </article>
+    </div>
+
+    <article class="card" style="margin-top:28px">
+      <div class="eyebrow">기능 3</div>
+      <h3>AI 기반 SNS 포스팅 에이전트 — "오늘 한 작업, 자랑해 보세요!"</h3>
+      <p class="muted" style="max-width:52em">라벨링된 사진과 음성 메모를 근거로, 채널마다 맞는 형식의 글을 키워드 맞춤으로 작성합니다. 사용자는 채널을 고르고 확인만 하면 됩니다.</p>
+
+      <div class="agent" style="margin-top:22px">
+        <div>
+          <div class="eyebrow">AI가 읽는 재료 (예시 현장)</div>
+          <dl class="inputs">
+            <div class="inrow"><dt>현장</dt><dd>서울 마포구 망원동 빌라 욕실</dd></div>
+            <div class="inrow"><dt>라벨</dt><dd>#욕실 #실리콘재시공 #곰팡이제거</dd></div>
+            <div class="inrow"><dt>음성 메모</dt><dd>"원인은 환기 부족, 항균 실리콘으로 마감"</dd></div>
+            <div class="inrow"><dt>사진</dt><dd>작업 전 3 · 중 5 · 후 4 (비교 컷 2쌍)</dd></div>
+            <div class="inrow"><dt>업체</dt><dd>OO홈케어 · 마포/서대문 출장</dd></div>
+          </dl>
+
+          <div class="eyebrow" style="margin-top:24px">스마트 푸시 타이밍</div>
+          <div class="timeline">
+            <div class="tl"><span class="mono">17:50</span><strong>마지막 '작업 후' 촬영</strong></div>
+            <div class="tl"><span class="mono">18:10</span><strong>사진대지 전송</strong></div>
+            <div class="tl hot"><span class="mono">18:30</span><strong>포스팅 제안 팝업</strong></div>
+            <div class="tl"><span class="mono">일 20:00</span><strong>주간 베스트 3</strong></div>
+          </div>
+          <p class="small muted" style="margin-top:12px">푸시는 하루 1회까지만 보내고, 사용자가 빈도를 직접 조절합니다.</p>
+        </div>
+
+        <div>
+          <div class="agent-tabs" role="tablist" aria-label="생성 채널">
+            <button role="tab" aria-selected="true" data-ch="insta" id="ch-insta">인스타그램 감성글</button>
+            <button role="tab" aria-selected="false" data-ch="blog" id="ch-blog">네이버 블로그 상세후기</button>
+            <button role="tab" aria-selected="false" data-ch="kakao" id="ch-kakao">카카오톡 보고 메시지</button>
+          </div>
+          <div class="out" id="out" role="tabpanel" aria-live="polite"></div>
+          <div class="out-actions"><button type="button" id="copy">글 복사하기</button><small id="copyMsg">AI 예시 결과물입니다.</small></div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ================= 2. SHOWCASE ================= -->
+<section class="sheet" id="showcase">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div class="tag">SHEET 03 · 플랫폼<b>자랑터 & 선순환</b></div>
+      <h2>작업자의 사진이 모여, 사진통이 동네의 시공 포트폴리오가 됩니다</h2>
+      <p>사용자가 승인한 우수 작업은 지역·업종별 자랑터에 자동으로 노출됩니다. 작업자에게는 무료 홍보판, 고객에게는 믿고 고르는 기준이 됩니다.</p>
+    </div>
+
+    <div class="grid2" style="align-items:center">
+      <div class="feedbox">
+        <div class="fh"><strong>사진통 자랑터</strong>
+          <div class="filters"><span class="on">전체</span><span>청소</span><span>집수리</span><span>소방점검</span><span>서울</span><span>인천</span></div>
+        </div>
+        <div class="frow">
+          <div class="ba"><div class="ph before"></div><div class="ph after"></div></div>
+          <div><span class="pill gold">이달의 우수 시공</span><div class="k">서울 마포구</div><b>OO홈케어 · 덕트 청소 비포/애프터</b><div class="stats">♥ 412 · 스크랩 96 · 문의 7건</div></div>
+        </div>
+        <div class="frow">
+          <div class="ba"><div class="ph mid"></div><div class="ph after"></div></div>
+          <div><span class="pill live">실시간 전문가 현장</span><div class="k">인천 연수구</div><b>XX소방 · 알람밸브 점검 완료</b><div class="stats">12분 전 · 점검 사진 18장</div></div>
+        </div>
+        <div class="frow">
+          <div class="ba"><div class="ph before"></div><div class="ph after"></div></div>
+          <div><span class="pill live">실시간 전문가 현장</span><div class="k">경기 수원시</div><b>△△집수리 · 싱크대 수전 교체</b><div class="stats">38분 전 · ♥ 21</div></div>
+        </div>
+        <a class="fcta" href="#marketing"><span>→</span> 나도 내 현장 사진 등록하고 무료 홍보 카드 받기</a>
+      </div>
+
+      <div class="cycle" aria-label="자랑터 선순환 구조">
+        <svg viewBox="0 0 400 400" aria-hidden="true">
+          <defs><marker id="ar" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+          <circle cx="200" cy="200" r="138" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <path d="M290 95 A138 138 0 0 1 320 150" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/>
+          <path d="M305 305 A138 138 0 0 1 250 330" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/>
+          <path d="M110 305 A138 138 0 0 1 80 250" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/>
+          <path d="M95 110 A138 138 0 0 1 150 70" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/>
+        </svg>
+        <div class="node" style="left:50%;top:12%"><b>기록</b>매일 현장 촬영</div>
+        <div class="node" style="left:82%;top:50%"><b>자산</b>사진대지·포스팅 누적</div>
+        <div class="node" style="left:50%;top:88%"><b>노출</b>자랑터·SNS 공개</div>
+        <div class="node" style="left:18%;top:50%"><b>일감</b>문의·신뢰 증가</div>
+        <div class="center">사진통<small>찍을수록 일이 늘어나는 구조</small></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:26px;margin:52px 0 18px">이달의 우수 업체 · 사용자 시상</h3>
+    <div class="grid3">
+      <article class="card award">
+        <div class="medal">기록</div>
+        <h3>기록왕</h3>
+        <p>한 달 동안 가장 꾸준히 작업 사진을 쌓은 사용자. 습관을 만드는 상입니다.</p>
+        <div class="crit">기준 · 월간 기록 일수 + 사진대지 건수</div>
+      </article>
+      <article class="card award">
+        <div class="medal">자랑</div>
+        <h3>자랑왕</h3>
+        <p>자랑터에서 고객 반응(좋아요·스크랩)을 가장 많이 받은 사용자. 품질을 끌어올리는 상입니다.</p>
+        <div class="crit">기준 · 좋아요 + 스크랩 + 문의 전환</div>
+      </article>
+      <article class="card award">
+        <div class="medal">혜택</div>
+        <h3>수상 혜택</h3>
+        <ul style="margin-top:0">
+          <li>사진통 공식 인증 마크 (사진대지·미니홈·SNS 카드에 표시)</li>
+          <li>자랑터 메인 상단 노출</li>
+          <li>현장 보조용품·장비 지원금</li>
+          <li>수상 인증 카드 자동 제작 → 내 SNS에 자랑</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3. MARKETING ================= -->
+<section class="sheet" id="marketing">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div class="tag">SHEET 04 · MARKETER<b>성장 마케팅</b></div>
+      <h2>귀찮음을 없애 주는 도구로 들어와서, 일감을 늘려 주는 플랫폼으로 남는다</h2>
+      <p>유입은 "보고서가 편하다"로, 유지는 "홍보가 된다"로, 확산은 "자랑하고 싶다"로 설계합니다.</p>
+    </div>
+
+    <div class="slogan">
+      <div>
+        <div class="eyebrow" style="color:var(--chalk);opacity:.7">메인 카피</div>
+        <h3>현장 사진 한 장,<br><em>보고서에서 SNS 홍보까지!</em></h3>
+      </div>
+      <p>작업의 기록을 사업의 자산으로 쌓으세요. 사진이 쌓일수록 반복 업무는 줄고 신뢰와 일감은 늘어납니다.</p>
+    </div>
+
+    <div class="grid2" style="margin-top:28px">
+      <div>
+        <div class="eyebrow">초기 유입 · HOOK POINT</div>
+        <div class="ad" style="margin-top:10px">
+          <div class="adtop"><span>숨고 고수 커뮤니티 · 스폰서</span><span>광고 시안</span></div>
+          <div class="adbody">
+            <strong>아직도 작업 사진을<br>카카오톡으로 일일이 전송하십니까?</strong>
+            <p class="muted" style="margin-top:10px"><u style="text-decoration:none;background:linear-gradient(transparent 60%,var(--hivis) 60%);color:var(--ink);font-weight:700">1초 만에 만들어지는 프리미엄 사진대지</u>, 지금 무료로 체험해 보세요.</p>
+            <span class="adbtn">무료 체험 시작</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">네이버 블로그·인스타 연동 챌린지</div>
+        <div class="card" style="margin-top:10px">
+          <h3>#현장자랑 챌린지</h3>
+          <p class="muted">사진통 AI로 만든 포스팅을 SNS에 올리면 '사진통 인증 마크'와 자영업자 홍보 지원금을 리워드로 드립니다.</p>
+          <div class="challenge">
+            <div><span class="mono">STEP 1</span><b>현장 기록</b>전·후 사진 촬영</div>
+            <div><span class="mono">STEP 2</span><b>AI 글 생성</b>원클릭 포스팅</div>
+            <div><span class="mono">STEP 3</span><b>SNS 업로드</b>#현장자랑 태그</div>
+            <div><span class="mono">STEP 4</span><b>리워드</b>인증 마크·지원금</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:26px;margin:52px 0 18px">타깃별 마케팅 전략</h3>
+    <div class="tablewrap">
+      <table class="t">
+        <thead><tr><th>타깃</th><th>페인 포인트</th><th>소구 메시지</th><th>채널·실행</th></tr></thead>
+        <tbody>
+          <tr><td>숨고 고수</td><td>견적 경쟁, 포트폴리오 부족</td><td>"숨고 포트폴리오 5분 만에 채우기"</td><td>고수 커뮤니티 광고, 기존 사진 일괄 정리 무료 이벤트</td></tr>
+          <tr><td>크몽·프리랜서</td><td>작업 증빙·보고에 시간 소모</td><td>"보고서는 1초, 리뷰는 자동"</td><td>크몽 판매자 대상 콘텐츠, 납품 보고 템플릿 배포</td></tr>
+          <tr><td>1인 자영업자<br>(집수리·청소·홈케어)</td><td>SNS를 해야 하는데 쓸 글이 없음</td><td>"찍기만 하세요, 글은 사진통이 씁니다"</td><td>유튜브 쇼츠 비포/애프터, 업종 카페·밴드, 자재상 계산대 QR</td></tr>
+          <tr><td>점검·소방·전기 업체</td><td>양식 맞춘 사진대지 필수, 이력 관리</td><td>"관공서 제출 양식 그대로, 클릭 한 번"</td><td>협회·교육기관 제휴, 팀 단위 도입 프로모션</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:26px;margin:52px 0 18px">성장 퍼널 목표 (출시 6개월, 가입 1,000명 기준 가정)</h3>
+    <div class="funnel">
+      <div class="fbar"><span>가입</span><div class="track"><div class="fill" style="width:100%">무료 사진대지 체험</div></div><span class="num">1,000</span></div>
+      <div class="fbar"><span>첫 현장 기록</span><div class="track"><div class="fill" style="width:60%">24시간 내</div></div><span class="num">600</span></div>
+      <div class="fbar"><span>주 3회 사용</span><div class="track"><div class="fill" style="width:40%">습관화</div></div><span class="num">400</span></div>
+      <div class="fbar"><span>SNS 포스팅</span><div class="track"><div class="fill" style="width:25%">월 1건+</div></div><span class="num">250</span></div>
+      <div class="fbar"><span>유료 전환</span><div class="track"><div class="fill" style="width:7%"></div></div><span class="num">70</span></div>
+    </div>
+    <p class="small muted" style="margin-top:10px">수치는 기획 단계의 목표 가정이며, 베타 운영 데이터로 보정합니다.</p>
+  </div>
+</section>
+
+<!-- ================= 4. VISION ================= -->
+<section class="sheet" id="vision">
+  <div class="wrap">
+    <div class="sheet-head">
+      <div class="tag">SHEET 05 · 비전<b>기대 효과</b></div>
+      <h2>한 번 쌓인 기록은 떠날 수 없는 이유가 되고, 올릴 때마다 광고가 됩니다</h2>
+    </div>
+
+    <div class="grid2">
+      <article class="card effect">
+        <div class="big">Lock-in</div>
+        <div>
+          <h3>사용자 유입 및 락인</h3>
+          <p>일상적인 작업 기록(사진대지)이 곧 영업 자산(포트폴리오)이 됩니다. 현장 이력, 고객 동의 사례, 자랑터 반응이 쌓일수록 다른 앱으로 옮길 이유가 사라집니다.</p>
+        </div>
+      </article>
+      <article class="card effect">
+        <div class="big">Viral</div>
+        <div>
+          <h3>자발적 바이럴</h3>
+          <p>인스타그램·블로그 게시물과 고객에게 보낸 사진대지마다 "Made with 사진통" 표시가 노출됩니다. 동종 작업자와 고객 모두에게 자연스럽게 입소문이 납니다.</p>
+        </div>
+      </article>
+    </div>
+
+    <h3 style="font-size:26px;margin:52px 0 18px">핵심 지표</h3>
+    <div class="tablewrap">
+      <table class="t">
+        <thead><tr><th>구분</th><th>지표</th><th>목표</th><th>의미</th></tr></thead>
+        <tbody>
+          <tr><td>북극성</td><td>주간 홍보 자산 생성 수</td><td class="num">인당 주 3건</td><td>사진대지 + 포스팅 + 자랑터 등록. 업무 사용과 홍보 가치를 함께 측정</td></tr>
+          <tr><td>활성화</td><td>가입 24시간 내 첫 현장 기록률</td><td class="num">60%</td><td>첫 경험에서 "편하다"를 느꼈는가</td></tr>
+          <tr><td>정리</td><td>AI 라벨 수락률</td><td class="num">80%</td><td>입력 없이 정리가 끝나는가</td></tr>
+          <tr><td>홍보</td><td>포스팅 제안 → 실제 공유율</td><td class="num">15%</td><td>SNS 에이전트가 행동을 만드는가</td></tr>
+          <tr><td>일감</td><td>자랑터·미니홈 방문 → 문의 전환</td><td class="num">3%</td><td>사진통이 실제 일감을 만드는가</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:26px;margin:52px 0 18px">단계별 로드맵</h3>
+    <div class="road">
+      <div><span class="ph-k">PHASE 1 · 0–3개월</span><h3>기록이 편하다</h3>
+        <ul><li>AI 현장 카메라·워터마크</li><li>음성·칩 라벨링</li><li>사진대지 3종, 카톡 전송</li><li>인스타 글 생성 베타</li></ul>
+        <span class="goal">목표 · 첫 기록률 60%</span></div>
+      <div><span class="ph-k">PHASE 2 · 3–6개월</span><h3>홍보가 된다</h3>
+        <ul><li>블로그·카톡 글 생성, 스마트 푸시</li><li>고객 홍보 동의, 개인정보 자동 블러</li><li>업종별 B2B 템플릿 확대</li><li>#현장자랑 챌린지, 유료 플랜</li></ul>
+        <span class="goal">목표 · 포스팅 공유율 15%</span></div>
+      <div><span class="ph-k">PHASE 3 · 6–12개월</span><h3>일감이 생긴다</h3>
+        <ul><li>지역·업종별 자랑터 공개</li><li>이달의 우수 업체 시상</li><li>업체 미니홈·문의 연결</li><li>팀 플랜, 점검 업체 B2B</li></ul>
+        <span class="goal">목표 · 문의 전환 3%</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap closing">
+  <div class="board">
+    <div>
+      <h2>작업사진 한 장으로부터,<br><em>고객의 성공을 돕는 회사</em></h2>
+      <p>찍기만 하세요. 보고서도, 홍보도, 일감도 사진통이 이어 드립니다.</p>
+    </div>
+    <div class="sig">SAJINTONG<br>2026.10.10 · No. 001</div>
+  </div>
+</div>
+</main>
+
+<footer><div class="wrap">사진통 서비스 통합 기획서 · 본 문서의 업체명, 현장, 수치는 설명을 위한 예시입니다.</div></footer>
+
+<script>
+(function(){
+  // prototype steps
+  var steps=[].slice.call(document.querySelectorAll('.step'));
+  var scrs=[].slice.call(document.querySelectorAll('.scr'));
+  function show(i){
+    steps.forEach(function(b,j){b.setAttribute('aria-selected',j===i?'true':'false')});
+    scrs.forEach(function(s,j){s.hidden=j!==i});
+  }
+  steps.forEach(function(b,i){b.addEventListener('click',function(){show(i)})});
+
+  // agent outputs
+  var texts={
+    insta:'까맣게 번진 욕실 실리콘, 오늘 새것처럼 바꿔드렸어요 ✨\n\n원인은 환기 부족이었어요. 기존 실리콘과 곰팡이를 뿌리까지 걷어내고, 항균 실리콘으로 깔끔하게 마감했습니다.\n\n욕실 모서리가 거뭇거뭇하다면 덧바르지 말고 꼭 제거 후 재시공하세요 🙌\n\n📍 마포·서대문 출장 가능 | OO홈케어\n\n<span class="ht">#망원동욕실 #마포실리콘시공 #욕실곰팡이제거 #실리콘재시공 #욕실리폼 #마포집수리</span>',
+    blog:'[마포구 망원동] 욕실 실리콘 곰팡이 제거 & 재시공 후기\n\n■ 현장 상황\n망원동 빌라 욕실. 욕조와 벽 사이 실리콘에 검은 곰팡이가 넓게 번진 상태였습니다. (작업 전 사진 3장)\n\n■ 원인\n환기 부족으로 습기가 오래 머문 것이 주원인입니다.\n\n■ 작업 과정\n1. 기존 실리콘 완전 제거\n2. 곰팡이 제거제 도포 후 충분히 건조\n3. 항균 실리콘 시공, 마감 정리 (작업 중 사진 5장)\n\n■ 결과\n새것처럼 깨끗해진 욕실 모서리. (작업 후 사진 4장, 전·후 비교 2쌍)\n\n■ 관리 팁\n샤워 후 10분 환풍기 가동만으로도 재발을 크게 줄일 수 있습니다.\n\n<span class="ht">#마포구욕실실리콘 #망원동집수리 #욕실곰팡이</span>',
+    kakao:'[OO홈케어] 작업 완료 보고\n\n김OO 고객님, 안녕하세요.\n오늘(10/10) 욕실 실리콘 재시공을 마쳤습니다.\n\n· 작업 내용: 기존 실리콘·곰팡이 제거 → 항균 실리콘 마감\n· 원인: 환기 부족\n· 관리 팁: 실리콘 완전 경화까지 24시간 물 사용을 피해 주세요.\n\n📎 사진대지(전·후 사진 12장) 보기\n\n시공 사례로 소개해도 괜찮으시면 링크 하단 [동의] 버튼을 눌러 주세요. 감사합니다!'
+  };
+  var out=document.getElementById('out');
+  var tabs=[].slice.call(document.querySelectorAll('.agent-tabs button'));
+  var cur='insta';
+  function setCh(k){
+    cur=k;
+    tabs.forEach(function(t){t.setAttribute('aria-selected',t.dataset.ch===k?'true':'false')});
+    out.innerHTML=texts[k];
+    out.setAttribute('aria-labelledby','ch-'+k);
+    document.getElementById('copyMsg').textContent='AI 예시 결과물입니다.';
+  }
+  tabs.forEach(function(t){t.addEventListener('click',function(){setCh(t.dataset.ch)})});
+  setCh('insta');
+
+  var msg=document.getElementById('copyMsg');
+  document.getElementById('copy').addEventListener('click',function(){
+    var plain=out.textContent;
+    function fallback(){
+      var r=document.createRange();r.selectNodeContents(out);
+      var s=window.getSelection();s.removeAllRanges();s.addRange(r);
+      msg.textContent='글을 선택해 두었어요. 복사 단축키로 복사하세요.';
+    }
+    try{
+      navigator.clipboard.writeText(plain).then(function(){msg.textContent='복사했어요.'},fallback);
+    }catch(e){fallback()}
+  });
+})();
+</script>
