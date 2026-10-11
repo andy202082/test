@@ -228,6 +228,81 @@ section.sheet{padding-block:64px;border-top:1px solid var(--line)}
 .tl .mono{display:block;font-size:13px;color:var(--muted)}
 .tl strong{display:block}
 
+/* 기능 3: 자랑 에이전트 */
+.f3-head h3{font-size:clamp(22px,2.6vw,30px);margin:6px 0 10px}
+.f3-head p{max-width:56em}
+.bridge{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:16px}
+.bridge span{font-size:13.5px;padding:6px 11px;border-radius:6px;background:var(--paper);border:1px solid var(--line)}
+.bridge span.hot{background:var(--hivis);color:var(--hivis-ink);border-color:var(--hivis)}
+.bridge i{font-style:normal;color:var(--muted)}
+.f3-label{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.f3-label h3{margin:2px 0 0}
+.f3-no{flex:none;display:grid;place-items:center;width:58px;height:58px;border-radius:8px;background:var(--board);color:var(--hivis);font-family:var(--f-display);font-size:20px;box-shadow:inset 0 0 0 4px var(--board-2)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.split > div{min-width:0}
+.kchat{margin-top:10px;background:#B6CADB;border-radius:12px;padding:16px 14px;display:flex;flex-direction:column;gap:12px;color:#191919;font-size:13.5px;line-height:1.55}
+.kmsg{display:flex;flex-direction:column;align-items:flex-start;max-width:88%}
+.kmsg.me{align-self:flex-end;align-items:flex-end}
+.kname{font-size:12px;color:#3B4651;margin-bottom:3px}
+.kbub{background:#fff;border-radius:4px 14px 14px 14px;padding:10px 12px}
+.kmsg.me .kbub{background:#FEE500;border-radius:14px 4px 14px 14px}
+.ktime{font-size:11px;color:#4A5662;margin-top:3px}
+.klink{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-top:9px;border:1px solid #E1E4E7;border-radius:8px;overflow:hidden}
+.klink .ph{aspect-ratio:4/3;border-radius:0}
+.klt{grid-column:1/-1;padding:6px 9px;font-weight:700;font-size:12.5px}
+.klt small{display:block;font-weight:400;color:#6B7680;font-family:var(--f-mono);font-size:11px}
+.kbtns{display:flex;gap:5px;margin-top:7px}
+.kbtns span{font-size:12px;padding:5px 9px;border-radius:6px;background:rgba(255,255,255,.75)}
+.kbtns span.on{background:#191919;color:#FEE500;font-weight:700}
+.flowlist{margin:16px 0 0;padding-left:1.3em;font-size:14.5px}
+.flowlist li{margin-top:7px}
+.flowlist li::marker{font-family:var(--f-mono);color:var(--muted)}
+.flowlist b{margin-right:6px}
+.modes{display:flex;flex-wrap:wrap;gap:4px;border:1px solid var(--line);border-radius:10px;padding:4px;background:var(--bg)}
+.modes button{flex:1 1 auto;font:inherit;font-size:14px;font-weight:700;padding:9px 12px;border-radius:7px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.mode-desc{font-size:14px;color:var(--muted);margin:10px 0 12px;min-height:3.2em}
+.picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pk{all:unset;box-sizing:border-box;position:relative;aspect-ratio:1;border-radius:8px;cursor:pointer;overflow:hidden;max-width:100%}
+.pk .ph{position:absolute;inset:0;border-radius:8px}
+.pk .pl{position:absolute;left:5px;top:5px;font-size:10.5px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(15,18,16,.78);color:#fff;max-width:calc(100% - 10px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pk .pl.y{background:#F2B705;color:#1A1A12}
+.pk .sc{position:absolute;right:5px;bottom:5px;font-family:var(--f-mono);font-size:11px;padding:1px 6px;border-radius:4px;background:rgba(255,255,255,.9);color:#17201B}
+.pk.sel{box-shadow:inset 0 0 0 4px var(--hivis)}
+.pk.sel::after{content:"✓";position:absolute;right:6px;top:6px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--hivis);color:var(--hivis-ink);font-weight:700;font-size:13px}
+.pk.ex{cursor:not-allowed}
+.pk.ex .ph{filter:grayscale(1) blur(1.5px);opacity:.55}
+.pk.ex .sc{background:#E5484D;color:#fff}
+.pk:focus-visible{outline:3px solid var(--hivis);outline-offset:2px}
+.pk[aria-disabled="true"]:not(.ex){cursor:default}
+.prev{margin-top:14px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--bg)}
+.prev-ba{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.prev-ba .ph{aspect-ratio:4/3;border-radius:0}
+.prev-meta{padding:12px 14px 4px;font-size:14px}
+.prev-meta .k{font-family:var(--f-mono);font-size:12px;color:var(--muted);margin-top:2px}
+.prev-status{padding:4px 14px 0;font-size:13.5px;font-weight:700;color:var(--ok)}
+.prev-actions{display:flex;gap:8px;padding:10px 14px 14px}
+.prev-actions button{font:inherit;font-size:13.5px;font-weight:700;padding:8px 14px;border-radius:8px;border:0;background:var(--hivis);color:var(--hivis-ink);cursor:pointer}
+.prev-actions button.ghost{background:var(--soft);color:var(--ink)}
+.prev-actions button:disabled{opacity:.45;cursor:not-allowed}
+.rule{border-top:3px solid var(--ink);padding-top:10px;font-size:14px}
+.rule b{display:block;font-size:15px;margin-bottom:4px}
+.triggers{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.triggers li{display:grid;grid-template-columns:52px 1fr;gap:4px 12px;font-size:14.5px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.triggers .mono{grid-row:span 2;font-size:12px;font-weight:500;padding:3px 0;text-align:center;border-radius:5px;background:var(--soft);align-self:start}
+.triggers em{font-style:normal;color:var(--muted);font-size:13.5px}
+.howto{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+.how{border:1px solid var(--line);border-radius:var(--r);padding:20px;background:var(--bg);display:flex;flex-direction:column;min-width:0}
+.how.strong{border-color:var(--ink)}
+.how-k{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.how h4{font-family:var(--f-display);font-weight:400;font-size:21px;margin:4px 0 8px}
+.how p{font-size:14.5px}
+.how ul{margin:10px 0 0;padding-left:1.1em;font-size:14px}
+.how li{margin-top:6px}
+.how li::marker{color:var(--hivis)}
+.how-cost{margin-top:auto;padding-top:14px;font-size:13px;font-weight:700}
+.how-cost::before{content:"";display:block;border-top:1px dashed var(--line);margin-bottom:10px}
+
 /* 자랑터 */
 .feedbox{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .feedbox .fh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);gap:10px;flex-wrap:wrap}
@@ -310,7 +385,7 @@ footer{padding-block:24px 40px;color:var(--muted);font-size:13px}
 
 /* ---------- responsive ---------- */
 @media (max-width:920px){
-  .hero-grid,.proto,.grid2,.agent,.slogan{grid-template-columns:1fr}
+  .hero-grid,.proto,.grid2,.agent,.slogan,.split,.howto{grid-template-columns:1fr}
   .grid3{grid-template-columns:1fr 1fr}
   .phone{position:relative;top:0}
   .road{grid-template-columns:1fr}
@@ -515,43 +590,160 @@ footer{padding-block:24px 40px;color:var(--muted);font-size:13px}
       </article>
     </div>
 
-    <article class="card" style="margin-top:28px">
-      <div class="eyebrow">기능 3</div>
-      <h3>AI 기반 SNS 포스팅 에이전트 — "오늘 한 작업, 자랑해 보세요!"</h3>
-      <p class="muted" style="max-width:52em">라벨링된 사진과 음성 메모를 근거로, 채널마다 맞는 형식의 글을 키워드 맞춤으로 작성합니다. 사용자는 채널을 고르고 확인만 하면 됩니다.</p>
+    <div style="margin-top:44px">
+    <div class="f3-head">
+      <div class="eyebrow">기능 3 · AI 자랑 에이전트</div>
+      <h3>"오늘 한 작업, 자랑해 보세요!"는 안에서 먼저, 밖으로 나중에</h3>
+      <p class="muted">자랑 에이전트를 두 단계로 나눕니다. <b>3-A</b>는 카톡 보고를 끝낸 작업을 사진통 자랑터에 올립니다. <b>3-B</b>는 자랑터에서 반응이 확인된 작업을 인스타·블로그로 내보냅니다. 처음부터 외부 SNS를 권하면 부담스럽지만, 사진통 안에서 먼저 칭찬을 받으면 밖으로 올릴 자신감이 생깁니다.</p>
+      <div class="bridge" aria-label="자랑 에이전트 두 단계">
+        <span><b>3-A</b> 카톡 보고</span><i>→</i><span>고객 동의</span><i>→</i><span>사진통 자랑터 게시</span><i>→</i><span>좋아요·스크랩</span><i>→</i><span class="hot"><b>3-B</b> 인스타·블로그 확산</span>
+      </div>
+    </div>
+
+    <!-- ===== 3-A ===== -->
+    <article class="card f3" id="brag-inside" style="margin-top:20px">
+      <div class="f3-label"><span class="f3-no">3-A</span><div><div class="eyebrow">내부 자랑 · 사진통 자랑터</div><h3>카톡 보고 한 번으로 자랑터까지</h3></div></div>
+      <p class="muted" style="max-width:56em">작업자가 따로 "자랑하러" 들어올 필요가 없습니다. 고객에게 보내는 <b>카톡 보고</b>가 출발점이고, 고객이 사례 소개에 동의하면 그 작업이 자랑 후보가 됩니다. 올리는 방법은 두 가지이며, 설정에서 기본 방식을 고릅니다.</p>
+
+      <div class="split" style="margin-top:22px">
+        <div>
+          <div class="eyebrow">출발점 · 고객에게 가는 카톡 보고</div>
+          <div class="kchat" role="img" aria-label="카카오톡 보고 메시지 예시">
+            <div class="kmsg">
+              <div class="kname">OO홈케어</div>
+              <div class="kbub">
+                <b>[작업 완료 보고]</b><br>김OO 고객님, 오늘(10/10) 욕실 실리콘 재시공을 마쳤습니다.<br>· 기존 실리콘·곰팡이 제거 → 항균 실리콘 마감<br>· 24시간 물 사용을 피해 주세요.
+                <div class="klink"><div class="ph before"></div><div class="ph after"></div><div class="klt">사진대지 · 전·후 사진 12장<small>sajintong.com/r/0412</small></div></div>
+              </div>
+              <span class="ktime">오후 6:10</span>
+            </div>
+            <div class="kmsg me">
+              <div class="kbub">사례로 소개해도 될까요?<div class="kbtns"><span class="on">동의할게요 ✓</span><span>괜찮아요</span></div></div>
+              <span class="ktime">오후 6:14 · 고객 응답</span>
+            </div>
+          </div>
+          <ol class="flowlist">
+            <li><b>카톡 보고 전송</b> 사진대지 링크와 함께 고객에게 발송</li>
+            <li><b>고객 동의</b> 링크 하단 버튼 한 번. 동의한 작업만 자랑 후보가 됨</li>
+            <li><b>자랑 후보 등록</b> 개인정보(얼굴·동호수·번호판)는 AI가 자동으로 가림</li>
+            <li><b>자랑터 게시</b> 아래 두 방식 중 하나로 올라감</li>
+          </ol>
+        </div>
+
+        <div>
+          <div class="modes" role="group" aria-label="게시 방식">
+            <button type="button" id="mode-auto" aria-pressed="true">① AI 자동 선별</button>
+            <button type="button" id="mode-pick" aria-pressed="false">② 내가 고르면 자동 게시</button>
+          </div>
+          <p class="mode-desc" id="modeDesc"></p>
+
+          <div class="picker" id="picker" aria-label="오늘 찍은 사진">
+            <button type="button" class="pk" data-i="0"><span class="ph before"></span><span class="pl">전 · 욕조 모서리</span><span class="sc">92</span></button>
+            <button type="button" class="pk" data-i="1"><span class="ph after"></span><span class="pl y">후 · 욕조 모서리</span><span class="sc">95</span></button>
+            <button type="button" class="pk" data-i="2"><span class="ph mid"></span><span class="pl">중 · 실리콘 제거</span><span class="sc">61</span></button>
+            <button type="button" class="pk" data-i="3"><span class="ph before"></span><span class="pl">전 · 세면대 하부</span><span class="sc">84</span></button>
+            <button type="button" class="pk" data-i="4"><span class="ph after"></span><span class="pl y">후 · 세면대 하부</span><span class="sc">88</span></button>
+            <button type="button" class="pk ex" data-i="5"><span class="ph mid"></span><span class="pl">중 · 고객 얼굴 포함</span><span class="sc">제외</span></button>
+          </div>
+
+          <div class="prev" aria-live="polite">
+            <div class="prev-ba" id="prevBa"><span class="ph before"></span><span class="ph after"></span></div>
+            <div class="prev-meta">
+              <span class="pill live" id="prevTag">AI 선별</span><b>OO홈케어 · 망원동 욕실 실리콘 재시공</b>
+              <div class="k">서울 마포구 · 욕실 · #실리콘재시공 #곰팡이제거</div>
+            </div>
+            <div class="prev-status" id="prevStatus"></div>
+            <div class="prev-actions"><button type="button" id="prevGo">지금 게시하기</button><button type="button" class="ghost" id="prevCancel">취소</button></div>
+          </div>
+          <p class="small muted" style="margin-top:8px">화면 동작을 보여주는 예시입니다. 실제로 게시되지는 않습니다.</p>
+        </div>
+      </div>
+
+      <div class="tablewrap" style="margin-top:26px">
+        <table class="t">
+          <thead><tr><th>구분</th><th>① AI 자동 선별</th><th>② 내가 고르면 자동 게시</th></tr></thead>
+          <tbody>
+            <tr><td>누가 고르나</td><td>AI가 오늘 사진 중 가장 좋은 전·후 한 쌍을 고름</td><td>작업자가 사진을 탭해서 고름 (1장 이상)</td></tr>
+            <tr><td>언제 올라가나</td><td>고객 동의 30분 뒤 자동 게시. 그 전에 취소 가능</td><td>"자랑하기"를 누르는 즉시 게시</td></tr>
+            <tr><td>작업자가 할 일</td><td>없음 (확인 알림만 받음)</td><td>사진 선택 + 버튼 1번. 글·해시태그·블러는 AI가 처리</td></tr>
+            <tr><td>AI 선별 기준</td><td colspan="2">전·후 구도 일치도, 변화량, 선명도·밝기, 개인정보 포함 여부, 고객 동의, 같은 날 중복 여부를 합쳐 100점 만점으로 점수화</td></tr>
+            <tr><td>추천 대상</td><td>바쁜 1인 사장님, 하루 여러 현장</td><td>사진 품질에 자신 있는 업체, 대표 사례를 직접 고르고 싶은 팀</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid3" style="margin-top:22px">
+        <div class="rule"><b>안전장치</b><p>고객 동의가 없는 작업은 어떤 방식으로도 게시되지 않습니다. 얼굴·동호수·번호판은 게시 전에 자동으로 가립니다.</p></div>
+        <div class="rule"><b>자랑 포인트</b><p>게시 1건, 좋아요·스크랩마다 포인트가 쌓여 이달의 <b>기록왕·자랑왕</b> 집계에 바로 반영됩니다.</p></div>
+        <div class="rule"><b>노출 위치</b><p>자랑터 지역·업종 피드, 업체 미니홈 대표 사례, 다음 날 아침 "어제 올라온 우리 동네 시공" 알림.</p></div>
+      </div>
+    </article>
+
+    <!-- ===== 3-B ===== -->
+    <article class="card f3" id="brag-outside" style="margin-top:20px">
+      <div class="f3-label"><span class="f3-no">3-B</span><div><div class="eyebrow">외부 확산 · 인스타그램 · 네이버 블로그</div><h3>반응이 확인된 자랑을 SNS 글로</h3></div></div>
+      <p class="muted" style="max-width:56em">자랑터에서 반응이 좋았던 작업을 골라 외부 SNS용 글로 바꿔 줍니다. 라벨과 음성 메모를 근거로 채널에 맞는 형식의 글을 쓰고, 사용자는 확인하고 올리기만 합니다.</p>
 
       <div class="agent" style="margin-top:22px">
         <div>
-          <div class="eyebrow">AI가 읽는 재료 (예시 현장)</div>
-          <dl class="inputs">
-            <div class="inrow"><dt>현장</dt><dd>서울 마포구 망원동 빌라 욕실</dd></div>
-            <div class="inrow"><dt>라벨</dt><dd>#욕실 #실리콘재시공 #곰팡이제거</dd></div>
-            <div class="inrow"><dt>음성 메모</dt><dd>"원인은 환기 부족, 항균 실리콘으로 마감"</dd></div>
-            <div class="inrow"><dt>사진</dt><dd>작업 전 3 · 중 5 · 후 4 (비교 컷 2쌍)</dd></div>
-            <div class="inrow"><dt>업체</dt><dd>OO홈케어 · 마포/서대문 출장</dd></div>
-          </dl>
+          <div class="eyebrow">외부 포스팅을 제안하는 순간</div>
+          <ul class="triggers">
+            <li><span class="mono">반응</span>자랑터 게시물이 좋아요 30개 또는 스크랩 10개를 넘었을 때<em>"이 작업, 인스타에도 올려볼까요?"</em></li>
+            <li><span class="mono">수상</span>기록왕·자랑왕 선정 또는 이달의 우수 시공 선정 시<em>수상 인증 카드 + 글 자동 생성</em></li>
+            <li><span class="mono">주간</span>일요일 저녁, 이번 주 반응 TOP 3 묶음<em>인스타 캐러셀·블로그 주간 후기</em></li>
+          </ul>
 
-          <div class="eyebrow" style="margin-top:24px">스마트 푸시 타이밍</div>
+          <div class="eyebrow" style="margin-top:24px">하루 흐름 (예시)</div>
           <div class="timeline">
-            <div class="tl"><span class="mono">17:50</span><strong>마지막 '작업 후' 촬영</strong></div>
-            <div class="tl"><span class="mono">18:10</span><strong>사진대지 전송</strong></div>
-            <div class="tl hot"><span class="mono">18:30</span><strong>포스팅 제안 팝업</strong></div>
-            <div class="tl"><span class="mono">일 20:00</span><strong>주간 베스트 3</strong></div>
+            <div class="tl"><span class="mono">18:10</span><strong>카톡 보고 전송</strong></div>
+            <div class="tl"><span class="mono">18:44</span><strong>자랑터 자동 게시</strong></div>
+            <div class="tl hot"><span class="mono">21:00</span><strong>♥ 30 돌파, SNS 제안</strong></div>
+            <div class="tl"><span class="mono">일 20:00</span><strong>주간 TOP 3</strong></div>
           </div>
-          <p class="small muted" style="margin-top:12px">푸시는 하루 1회까지만 보내고, 사용자가 빈도를 직접 조절합니다.</p>
+          <p class="small muted" style="margin-top:12px">외부 SNS 제안 푸시는 하루 1회까지만 보내고, 사용자가 빈도를 조절합니다. 올리는 글 하단에는 "Made with 사진통" 표시가 붙습니다(끌 수 있음).</p>
         </div>
 
         <div>
           <div class="agent-tabs" role="tablist" aria-label="생성 채널">
             <button role="tab" aria-selected="true" data-ch="insta" id="ch-insta">인스타그램 감성글</button>
             <button role="tab" aria-selected="false" data-ch="blog" id="ch-blog">네이버 블로그 상세후기</button>
-            <button role="tab" aria-selected="false" data-ch="kakao" id="ch-kakao">카카오톡 보고 메시지</button>
           </div>
           <div class="out" id="out" role="tabpanel" aria-live="polite"></div>
           <div class="out-actions"><button type="button" id="copy">글 복사하기</button><small id="copyMsg">AI 예시 결과물입니다.</small></div>
         </div>
       </div>
+
+      <div class="eyebrow" style="margin-top:30px">블로그·인스타에 올리는 방법</div>
+      <div class="howto">
+        <div class="how">
+          <div class="how-k">방법 1 · 누구나</div>
+          <h4>원탭 공유</h4>
+          <p>사진통이 사진 순서와 글을 준비해 두고, 사용자는 앱을 골라 붙여넣기만 합니다. 계정 연동이 필요 없어 첫 사용자도 바로 씁니다.</p>
+          <ul>
+            <li><b>인스타그램</b> 비포·애프터 카드와 캐러셀 이미지를 저장하고, 캡션·해시태그를 복사한 채 인스타 앱 열기</li>
+            <li><b>네이버 블로그</b> 본문을 문단별로 복사하고, 사진을 본문 순서대로 저장한 뒤 블로그 앱 열기</li>
+          </ul>
+          <div class="how-cost">사용자 할 일 · 붙여넣기 1번 + 올리기</div>
+        </div>
+        <div class="how strong">
+          <div class="how-k">방법 2 · 계정 연동 (프로 플랜)</div>
+          <h4>선택하면 자동 게시</h4>
+          <p>인스타그램 비즈니스 계정을 한 번 연동해 두면, 사용자가 제안 카드에서 "올리기"만 눌러도 사진통이 대신 게시하거나 원하는 시간에 예약합니다.</p>
+          <ul>
+            <li><b>인스타그램</b> 비즈니스·크리에이터 계정 연동 후 즉시 게시 또는 예약 게시 (반응 좋은 저녁 8~9시 추천)</li>
+            <li><b>네이버 블로그</b> 외부 자동 게시가 제한적이라 "임시저장용 글 + 사진 묶음"을 만들어 두고, 앱에서 확인 후 발행</li>
+          </ul>
+          <div class="how-cost">사용자 할 일 · 버튼 1번</div>
+        </div>
+      </div>
+
+      <div class="grid3" style="margin-top:18px">
+        <div class="rule"><b>채널별 자동 편집</b><p>인스타는 1:1·4:5 비율 카드와 짧은 캡션, 블로그는 문제→원인→작업→결과→관리 팁 순서의 긴 후기와 지역 키워드 제목.</p></div>
+        <div class="rule"><b>올린 뒤 연결</b><p>게시 링크를 사진통에 저장해 미니홈 "SNS 사례"로 묶고, 3일 뒤 "인스타 반응 확인하기" 알림으로 다음 포스팅을 이끕니다.</p></div>
+        <div class="rule"><b>리워드</b><p>#현장자랑 태그로 올리고 링크를 등록하면 자랑 포인트와 챌린지 응모가 자동 처리됩니다.</p></div>
+      </div>
     </article>
+    </div>
   </div>
 </section>
 
@@ -779,8 +971,7 @@ footer{padding-block:24px 40px;color:var(--muted);font-size:13px}
   // agent outputs
   var texts={
     insta:'까맣게 번진 욕실 실리콘, 오늘 새것처럼 바꿔드렸어요 ✨\n\n원인은 환기 부족이었어요. 기존 실리콘과 곰팡이를 뿌리까지 걷어내고, 항균 실리콘으로 깔끔하게 마감했습니다.\n\n욕실 모서리가 거뭇거뭇하다면 덧바르지 말고 꼭 제거 후 재시공하세요 🙌\n\n📍 마포·서대문 출장 가능 | OO홈케어\n\n<span class="ht">#망원동욕실 #마포실리콘시공 #욕실곰팡이제거 #실리콘재시공 #욕실리폼 #마포집수리</span>',
-    blog:'[마포구 망원동] 욕실 실리콘 곰팡이 제거 & 재시공 후기\n\n■ 현장 상황\n망원동 빌라 욕실. 욕조와 벽 사이 실리콘에 검은 곰팡이가 넓게 번진 상태였습니다. (작업 전 사진 3장)\n\n■ 원인\n환기 부족으로 습기가 오래 머문 것이 주원인입니다.\n\n■ 작업 과정\n1. 기존 실리콘 완전 제거\n2. 곰팡이 제거제 도포 후 충분히 건조\n3. 항균 실리콘 시공, 마감 정리 (작업 중 사진 5장)\n\n■ 결과\n새것처럼 깨끗해진 욕실 모서리. (작업 후 사진 4장, 전·후 비교 2쌍)\n\n■ 관리 팁\n샤워 후 10분 환풍기 가동만으로도 재발을 크게 줄일 수 있습니다.\n\n<span class="ht">#마포구욕실실리콘 #망원동집수리 #욕실곰팡이</span>',
-    kakao:'[OO홈케어] 작업 완료 보고\n\n김OO 고객님, 안녕하세요.\n오늘(10/10) 욕실 실리콘 재시공을 마쳤습니다.\n\n· 작업 내용: 기존 실리콘·곰팡이 제거 → 항균 실리콘 마감\n· 원인: 환기 부족\n· 관리 팁: 실리콘 완전 경화까지 24시간 물 사용을 피해 주세요.\n\n📎 사진대지(전·후 사진 12장) 보기\n\n시공 사례로 소개해도 괜찮으시면 링크 하단 [동의] 버튼을 눌러 주세요. 감사합니다!'
+    blog:'[마포구 망원동] 욕실 실리콘 곰팡이 제거 & 재시공 후기\n\n■ 현장 상황\n망원동 빌라 욕실. 욕조와 벽 사이 실리콘에 검은 곰팡이가 넓게 번진 상태였습니다. (작업 전 사진 3장)\n\n■ 원인\n환기 부족으로 습기가 오래 머문 것이 주원인입니다.\n\n■ 작업 과정\n1. 기존 실리콘 완전 제거\n2. 곰팡이 제거제 도포 후 충분히 건조\n3. 항균 실리콘 시공, 마감 정리 (작업 중 사진 5장)\n\n■ 결과\n새것처럼 깨끗해진 욕실 모서리. (작업 후 사진 4장, 전·후 비교 2쌍)\n\n■ 관리 팁\n샤워 후 10분 환풍기 가동만으로도 재발을 크게 줄일 수 있습니다.\n\n<span class="ht">#마포구욕실실리콘 #망원동집수리 #욕실곰팡이</span>'
   };
   var out=document.getElementById('out');
   var tabs=[].slice.call(document.querySelectorAll('.agent-tabs button'));
@@ -794,6 +985,64 @@ footer{padding-block:24px 40px;color:var(--muted);font-size:13px}
   }
   tabs.forEach(function(t){t.addEventListener('click',function(){setCh(t.dataset.ch)})});
   setCh('insta');
+
+  // 3-A brag modes
+  var pks=[].slice.call(document.querySelectorAll('.pk'));
+  var picker=document.getElementById('picker');
+  var modeAuto=document.getElementById('mode-auto'),modePick=document.getElementById('mode-pick');
+  var desc=document.getElementById('modeDesc'),ba=document.getElementById('prevBa');
+  var tag=document.getElementById('prevTag'),status=document.getElementById('prevStatus');
+  var go=document.getElementById('prevGo'),cancel=document.getElementById('prevCancel');
+  var kinds=['before','after','mid','before','after','mid'];
+  var mode='auto',sel=[0,1],posted=false;
+  function render(){
+    pks.forEach(function(b,i){
+      var on=sel.indexOf(i)>-1;
+      b.classList.toggle('sel',on);
+      b.setAttribute('aria-pressed',on?'true':'false');
+      b.setAttribute('aria-disabled',(mode==='auto'||b.classList.contains('ex'))?'true':'false');
+    });
+    var pair=sel.slice().sort(function(a,b){return a-b});
+    var bf=pair.filter(function(i){return kinds[i]==='before'})[0];
+    var af=pair.filter(function(i){return kinds[i]==='after'})[0];
+    var show=(bf!=null&&af!=null)?[bf,af]:pair.slice(0,2);
+    ba.innerHTML=show.length?show.map(function(i){return '<span class="ph '+kinds[i]+'"></span>'}).join(''):'<span class="ph mid" style="grid-column:1/-1;aspect-ratio:8/3"></span>';
+    if(mode==='auto'){
+      desc.textContent='AI가 점수가 가장 높은 전·후 한 쌍을 골랐어요. 얼굴이 나온 사진은 자동으로 뺐습니다. 고객 동의 30분 뒤 자동으로 게시되고, 그 전에 취소할 수 있어요.';
+      tag.textContent='AI 선별';
+      status.textContent=posted?'자랑터에 게시했어요':'오후 6:44 자동 게시 예정';
+      go.textContent='지금 게시하기';
+      cancel.hidden=posted;
+    }else{
+      desc.textContent='올리고 싶은 사진을 탭하세요. "자랑하기"를 누르면 글·해시태그·블러 처리까지 끝난 카드가 바로 게시됩니다.';
+      tag.textContent='직접 선택';
+      status.textContent=posted?'자랑터에 게시했어요 · 사진 '+sel.length+'장':(sel.length?'사진 '+sel.length+'장 선택됨':'사진을 1장 이상 골라 주세요');
+      go.textContent=sel.length?'선택한 '+sel.length+'장 자랑하기':'자랑하기';
+      cancel.hidden=true;
+    }
+    go.disabled=posted||!sel.length;
+  }
+  function setMode(m){
+    mode=m;posted=false;
+    modeAuto.setAttribute('aria-pressed',m==='auto'?'true':'false');
+    modePick.setAttribute('aria-pressed',m==='pick'?'true':'false');
+    sel=m==='auto'?[0,1]:[];
+    render();
+  }
+  modeAuto.addEventListener('click',function(){setMode('auto')});
+  modePick.addEventListener('click',function(){setMode('pick')});
+  pks.forEach(function(b,i){b.addEventListener('click',function(){
+    if(mode==='auto'||b.classList.contains('ex'))return;
+    var k=sel.indexOf(i);
+    if(k>-1)sel.splice(k,1);else sel.push(i);
+    posted=false;render();
+  })});
+  go.addEventListener('click',function(){posted=true;render()});
+  cancel.addEventListener('click',function(){
+    posted=false;sel=[];render();
+    status.textContent='자동 게시를 취소했어요. 이 작업은 자랑 후보에만 남아 있어요.';
+  });
+  render();
 
   var msg=document.getElementById('copyMsg');
   document.getElementById('copy').addEventListener('click',function(){
