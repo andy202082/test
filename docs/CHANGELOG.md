@@ -17,6 +17,11 @@
 - 콘텐츠/생성기 분리: `src/content.py`(문구) + `src/build.py`(페이지 생성) → `site/`
 - 하위 페이지 5개 생성: fire-safety / fire-construction / building / inspection / story
 
+## 2026-11-08 (3차)
+- 자동 배포 설정 추가: GitHub Pages 워크플로, `netlify.toml`, `wrangler.toml`(Cloudflare Pages)
+- 기본 주소를 `https://andy202082.github.io/test` 로 설정 (자체 도메인 연결 시 교체)
+- 견적 신청 안내를 페이지 안에 표시, 휴대폰 화면 가장자리 여백 대응
+
 ## 다음 할 일
 - [ ] 실제 실적 수치, 소방시설관리업 등록번호, 해결사례 사진 반영
 - [ ] 카톡상담 링크 연결

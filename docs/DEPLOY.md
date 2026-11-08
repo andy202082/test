@@ -1,5 +1,33 @@
 # 배포 · 도메인 연결 가이드
 
+## ⚡ 바로 공개 주소로 보기 (3가지 중 하나 선택)
+
+저장소(`andy202082/test`)가 **비공개**이므로, 무료 계정이면 ② 또는 ③이 가장 쉽습니다.
+설정 파일은 이미 저장소에 들어 있어서, 아래 클릭만 하면 됩니다.
+
+### ① GitHub Pages → `https://andy202082.github.io/test/`
+- 조건: 저장소를 **공개(Public)** 로 바꾸거나, GitHub **Pro/Team** 요금제
+- 저장소 **Settings → Pages → Source: GitHub Actions** 선택 (최초 1회)
+- 이 브랜치를 **main 에 합치면(merge)** `.github/workflows/deploy-pages.yml` 이 자동으로 빌드·배포
+- 이후 main 에 올릴 때마다 자동 갱신 · Actions 탭에서 수동 실행(Run workflow)도 가능
+
+### ② Netlify (비공개 저장소 무료) → `https://사이트이름.netlify.app`
+1. netlify.com 가입 (GitHub 계정으로 로그인)
+2. **Add new site → Import an existing project → GitHub → andy202082/test**
+3. 설정은 `netlify.toml` 이 자동 적용 (빌드 `python3 src/build.py`, 게시 폴더 `site`)
+4. Deploy → 공개 주소 발급. 브랜치마다 미리보기 주소도 자동 생성
+
+### ③ Cloudflare Pages (비공개 저장소 무료, 국내 속도 좋음) → `https://siseoltong.pages.dev`
+1. dash.cloudflare.com 가입 → **Workers & Pages → Create → Pages → Connect to Git**
+2. `andy202082/test` 선택
+3. Build command: `python3 src/build.py` · Build output directory: `site`
+4. Save and Deploy → 공개 주소 발급 (브랜치별 미리보기 주소 자동 생성)
+
+> 어떤 방법이든 자체 도메인은 나중에 같은 화면의 **Custom domain** 에서 연결합니다 (아래 2번).
+> 자체 도메인을 연결하면 `src/content.py` 의 `domain` 값을 바꾸고 다시 빌드하세요.
+
+---
+
 `site/` 폴더는 빌드 과정이 필요 없는 정적 웹사이트입니다. 아래 중 하나를 고르면 됩니다.
 
 ## 선택지 비교
@@ -33,9 +61,9 @@
 - HTTPS(자물쇠)는 연결 후 호스팅에서 자동 발급됩니다.
 - 기존 master1.kr 을 그대로 쓸 경우, 기존 페이지 주소(`/about.php` 등)에서 새 주소로 **301 리다이렉트**를 걸어야 검색 순위가 유지됩니다.
 
-## 3. GitHub Pages 를 쓸 경우 (선택 C)
+## 3. GitHub Pages 워크플로 (이미 추가됨)
 
-저장소 Settings → Pages → Source 를 "GitHub Actions" 로 바꾼 뒤 아래 파일을 `.github/workflows/pages.yml` 로 추가합니다.
+`.github/workflows/deploy-pages.yml` 에 아래와 같은 워크플로가 들어 있습니다 (빌드 단계 포함).
 
 ```yaml
 name: Deploy site

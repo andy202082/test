@@ -1,0 +1,4 @@
+# Cloudflare Pages 배포 설정 (비공개 저장소도 무료)
+# 대시보드 빌드 설정: Build command = python3 src/build.py / Build output directory = site
+name = "siseoltong"
+pages_build_output_dir = "site"

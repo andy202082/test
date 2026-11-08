@@ -10,7 +10,7 @@
 
 SITE = {
     "name": "시설통",
-    "domain": "https://example.com",  # TODO: 도메인 연결 후 실제 주소로 교체
+    "domain": "https://andy202082.github.io/test",  # TODO: 자체 도메인 연결 후 교체 (예: https://www.시설통도메인.kr)
     "slogan": "한번에 시설통",
     "tel": "1555-5048",
     "tel_note": "오! 04판",
