@@ -16,7 +16,7 @@
 1. 이 저장소를 호스팅 서비스에 연결 (A·B·C) 또는 `site/` 폴더 업로드 (D)
 2. 배포된 임시 주소에서 화면 확인
 3. 도메인 연결 (아래 2번)
-4. `example.com` → 실제 도메인으로 교체: `site/index.html`, `site/robots.txt`, `site/sitemap.xml`
+4. `src/content.py` 의 `domain` 을 실제 도메인으로 바꾸고 `python3 src/build.py` 실행 후 커밋
 5. 네이버 서치어드바이저 · 구글 서치콘솔에 사이트 등록, `sitemap.xml` 제출
 
 ## 2. 도메인 연결 (DNS 설정)
@@ -70,5 +70,6 @@ jobs:
 ## 5. 견적 폼 연결 (배포 전 필수)
 
 현재 견적 폼은 화면만 있고 접수 서버가 없습니다 (`site/assets/js/main.js` 의 TODO).
+- 페이지 HTML 은 `src/build.py` 가 만들므로, 배포 전에 항상 `python3 src/build.py` 를 실행해 최신 상태로 커밋하세요.
 - 기존 master1.kr PHP 견적 처리에 연결하거나
 - Netlify Forms / Formspree 같은 폼 서비스, 또는 카카오 알림톡 연동 백엔드를 새로 만듭니다.

@@ -1,0 +1,471 @@
+# -*- coding: utf-8 -*-
+"""
+시설통 정적 사이트 생성기 (외부 라이브러리 없음)
+
+    python3 src/build.py
+
+src/content.py 의 내용을 읽어 site/ 폴더에 HTML 페이지를 만듭니다.
+CSS / JS / 이미지(site/assets)는 직접 편집합니다.
+"""
+import html
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(__file__))
+from content import SITE, EXPERTS, CATEGORIES, STORY, FAQ  # noqa: E402
+
+ROOT = os.path.join(os.path.dirname(__file__), "..", "site")
+e = html.escape
+
+ICONS = {
+    "shield": '<path d="M12 3l7 3v6c0 4.2-2.9 7.7-7 9-4.1-1.3-7-4.8-7-9V6l7-3z"/><path d="M12 8c.6 1.7 2.4 2.8 2.4 5a2.4 2.4 0 0 1-4.8 0c0-1 .5-1.8 1.1-2.4.1.8.5 1.3 1 1.5-.3-1.6 0-3 .3-4.1z"/>',
+    "wrench": '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.1L3.5 17.2a1.8 1.8 0 0 0 2.6 2.6l5.8-5.8a4 4 0 0 0 5.1-5.4l-2.4 2.4-2.3-.4-.4-2.3 2.8-2z"/>',
+    "building": '<path d="M4 21V5l8-2v18M12 21h8V9l-8-2"/><path d="M7 8h2M7 12h2M7 16h2M15 12h2M15 16h2"/>',
+    "clipboard": '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 12l2 2 4-4M9 17h6"/>',
+    "book": '<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5z"/><path d="M4 19a2 2 0 0 1 2-2h13M9 7h6"/>',
+}
+
+
+def icon(name, cls="ic"):
+    return (f'<svg class="{cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+            f'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[name]}</svg>')
+
+
+LOGO = ('<span class="logo-mark"><img src="assets/img/logo-mark.svg" alt="" width="34" height="34"></span>'
+        '<span class="logo-txt">시설통</span>')
+
+
+def hot(s):
+    return '<em class="hot">HOT</em>' if s.get("hot") else ""
+
+
+# ---------------------------------------------------------------- layout
+def head(title, desc, path=""):
+    url = SITE["domain"].rstrip("/") + "/" + path
+    return f"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{e(title)}</title>
+<meta name="description" content="{e(desc)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="시설통">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:url" content="{e(url)}">
+<link rel="canonical" href="{e(url)}">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#E3000F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<a class="skip" href="#main">본문 바로가기</a>
+"""
+
+
+def header(active=""):
+    items = []
+    for c in CATEGORIES:
+        subs = "".join(
+            f'<li><a href="{c["slug"]}.html#{s["id"]}"><b>{e(s["name"])}{hot(s)}</b>'
+            f'<small>{e(s["summary"])}</small></a></li>' for s in c["sections"])
+        cur = ' aria-current="page"' if c["slug"] == active else ""
+        story = " is-story" if c["slug"] == "story" else ""
+        items.append(f"""
+      <li class="nav-i{story}">
+        <a class="nav-top" href="{c['slug']}.html"{cur}>{e(c['name'])}</a>
+        <div class="mega" role="group" aria-label="{e(c['name'])} 하위 메뉴">
+          <span class="m-leaf l" aria-hidden="true"></span><span class="m-leaf r" aria-hidden="true"></span>
+          <div class="mega-in">
+            <a class="m-intro" href="{c['slug']}.html">
+              {icon(c['icon'], 'm-ic')}
+              <span class="m-no">{c['no']} · {c['en']}</span>
+              <strong>{e(c['name'])}</strong>
+              <span class="m-q">{e(c['question'])}</span>
+              <span class="m-go">문 열고 들어가기 →</span>
+            </a>
+            <ul class="m-list">{subs}</ul>
+          </div>
+        </div>
+      </li>""")
+    return f"""
+<header class="hd">
+  <div class="wrap hd-in">
+    <a href="index.html" class="logo" aria-label="시설통 홈">{LOGO}</a>
+    <nav class="gnb" id="gnb" aria-label="주 메뉴">
+      <ul class="nav">{''.join(items)}
+      </ul>
+      <div class="gnb-foot"><a href="tel:{SITE['tel']}">📞 {SITE['tel']}</a><a href="index.html#quote">무료 견적</a></div>
+    </nav>
+    <div class="hd-cta">
+      <a class="tel" href="tel:{SITE['tel']}">{SITE['tel']}</a>
+      <a class="btn btn-red" href="index.html#quote">무료 견적</a>
+    </div>
+    <button class="menu-btn" type="button" aria-label="메뉴 열기" aria-expanded="false" aria-controls="gnb"><span></span><span></span><span></span></button>
+  </div>
+</header>
+<main id="main">
+"""
+
+
+def band():
+    return f"""
+<section class="band">
+  <div class="wrap band-in">
+    <h2>점검 · 공사 · 보험 · 건물관리,<br><mark>한번에 시설통</mark>으로 끝내세요</h2>
+    <div class="acts">
+      <a class="btn btn-w" href="tel:{SITE['tel']}">📞 {SITE['tel']}</a>
+      <a class="btn btn-y" href="index.html#quote">무료 견적 비교</a>
+    </div>
+  </div>
+</section>"""
+
+
+def footer():
+    br = "".join(f"<li><b>{e(b['name'])}</b> {e(b['addr'])}</li>" for b in SITE["branches"])
+    menu = "".join(f'<a href="{c["slug"]}.html">{e(c["name"])}</a>' for c in CATEGORIES)
+    return f"""
+</main>
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-top">
+      <a href="index.html" class="logo" aria-label="시설통 홈">{LOGO}</a>
+      <nav class="ft-menu" aria-label="하단 메뉴">{menu}</nav>
+    </div>
+    <div class="ft-grid">
+      <div>
+        <p class="ft-tel"><a href="tel:{SITE['tel']}">{SITE['tel']}</a> <span>({SITE['tel_note']})</span></p>
+        <p>{e(SITE['company'])} · {e(SITE['company_desc'])}</p>
+        <p>사업자등록번호 {SITE['biz_no']} · 개인정보보호 책임자 {e(SITE['privacy_officer'])} · E-mail <a href="mailto:{SITE['email']}">{SITE['email']}</a></p>
+      </div>
+      <ul class="ft-br">{br}</ul>
+    </div>
+    <div class="ft-bottom">
+      <span>© 2026 시설통 · {e(SITE['company'])}. All rights reserved.</span>
+      <span class="ft-links"><a href="#">개인정보 처리방침</a><a href="{SITE['blog']}" rel="noopener">블로그</a></span>
+    </div>
+  </div>
+</footer>
+<nav class="mcta" aria-label="빠른 상담">
+  <a class="m1" href="tel:{SITE['tel']}">전화</a>
+  <a class="m2" href="{SITE['kakao']}">카톡상담</a>
+  <a class="m3" href="index.html#quote">무료 견적</a>
+</nav>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
+"""
+
+
+# ---------------------------------------------------------------- components
+def door(c, i):
+    subs = "".join(f"<li>{e(s['name'])}{' 🔥' if s.get('hot') else ''}</li>" for s in c["sections"])
+    return f"""
+    <li class="door" style="--d:{i * 0.14:.2f}s"><a href="{c['slug']}.html">
+      <div class="frame">
+        <div class="fx">
+          <div class="room">{icon(c['icon'], 'r-ic')}<ul>{subs}</ul></div>
+          <span class="leaf l" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
+          <span class="leaf r" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
+        </div>
+        <span class="plate" aria-hidden="true">{c['no']}</span>
+      </div>
+      <p class="d-no">{c['no']} · {c['en']}</p>
+      <h3>{e(c['name'])}</h3>
+      <p class="d-q">{e(c['question'])}</p>
+      <p class="d-t">{e(c['desc'])}</p>
+      <span class="d-go">문 열고 들어가기</span>
+    </a></li>"""
+
+
+def expert_card(key):
+    x = EXPERTS[key]
+    return f"""<div class="expert"><span class="ex-av" aria-hidden="true">{e(x['name'][0])}</span>
+      <div><p class="ex-k">담당 달인 · {e(x['field'])}</p><b>{e(x['name'])}</b><p>{e(x['desc'])}</p></div>
+      <a class="btn btn-red sm" href="index.html#quote">이 달인에게 견적</a></div>"""
+
+
+def section(c, s, idx):
+    out = [f'<section class="sub-sec{" alt" if idx % 2 else ""}" id="{s["id"]}"><div class="wrap">']
+    out.append(f'<p class="s-no">{c["no"]}-{idx + 1:02d}</p><h2 class="s-tt">{e(s["name"])}{hot(s)}</h2>')
+    if s.get("badge"):
+        out.append(f'<p class="s-badge">🎁 {e(s["badge"])}</p>')
+    if s.get("lead"):
+        out.append(f'<blockquote class="s-lead">“{e(s["lead"])}”</blockquote>')
+    if s.get("points"):
+        out.append('<div class="pts">' + "".join(
+            f'<div class="pt"><span>{i + 1:02d}</span><h3>{e(t)}</h3><p>{e(d)}</p></div>'
+            for i, (t, d) in enumerate(s["points"])) + "</div>")
+    if s.get("table"):
+        t = s["table"]
+        th = "".join(f"<th>{e(h)}</th>" for h in t["head"])
+        rows = "".join("<tr>" + "".join(f"<td>{e(v)}</td>" for v in r) + "</tr>" for r in t["rows"])
+        out.append(f'<div class="tbl-wrap"><table class="tbl"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table></div>')
+    if s.get("cases"):
+        out.append('<div class="cases">' + "".join(
+            f'<article class="case"><div class="ba"><div class="b"><span>BEFORE</span></div><div class="a"><span>AFTER</span></div></div>'
+            f'<div class="bd"><p class="cat">{e(k)}</p><h3>{e(t)}</h3><div class="meta"><span>{e(d)}</span><span>{e(w)}</span></div></div></article>'
+            for k, t, d, w in s["cases"]) + "</div>")
+    if s.get("steps"):
+        out.append('<ol class="steps">' + "".join(
+            f'<li><b>{e(t)}</b><p>{e(d)}</p></li>' for t, d in s["steps"]) + "</ol>")
+    if s.get("note"):
+        out.append(f'<p class="s-note">⚠️ {e(s["note"])}</p>')
+    if s.get("expert"):
+        out.append(expert_card(s["expert"]))
+    cta = s.get("cta", f'{s["name"]} 견적 받기')
+    out.append(f'<div class="s-cta"><a class="btn btn-red" href="index.html#quote">{e(cta)}</a>'
+               f'<a class="btn btn-ghost" href="tel:{SITE["tel"]}">전화 상담 {SITE["tel"]}</a></div>')
+    out.append("</div></section>")
+    return "\n".join(out)
+
+
+def page_hero(c):
+    chips = "".join(f'<a href="#{s["id"]}">{e(s["name"])}{" 🔥" if s.get("hot") else ""}</a>' for s in c["sections"])
+    return f"""
+<section class="ph">
+  <div class="ph-room">
+    <div class="wrap">
+      <p class="crumb"><a href="index.html">홈</a> / {e(c['name'])}</p>
+      <p class="ph-no">{c['no']} · {c['en']}</p>
+      <h1>{e(c['name'])}</h1>
+      <p class="ph-q">{e(c['question'])}</p>
+      <p class="ph-d">{e(c['desc'])}</p>
+      <div class="ph-chips">{chips}</div>
+    </div>
+  </div>
+  <span class="ph-leaf l" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
+  <span class="ph-leaf r" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
+  <span class="ph-sign" aria-hidden="true">{icon(c['icon'], 'ph-ic')}<b>{e(c['name'])}</b></span>
+</section>
+<nav class="subtabs" aria-label="{e(c['name'])} 하위 메뉴"><div class="wrap">{''.join(
+        f'<a href="#{s["id"]}">{e(s["name"])}</a>' for s in c["sections"])}</div></nav>"""
+
+
+def other_doors(cur):
+    others = [c for c in CATEGORIES if c["slug"] != cur]
+    return '<section class="sec more-doors"><div class="wrap"><p class="eyebrow">OTHER DOORS</p><h2 class="tt">다른 문도 열어보세요</h2><ul class="d-list small">' + \
+        "".join(door(c, i) for i, c in enumerate(others)) + "</ul></div></section>"
+
+
+# ---------------------------------------------------------------- pages
+def page_category(c):
+    title = f"{c['name']} | 시설통 — " + ", ".join(s["name"] for s in c["sections"][:4])
+    body = head(title, c["desc"], c["slug"] + ".html") + header(c["slug"]) + page_hero(c)
+    body += "\n".join(section(c, s, i) for i, s in enumerate(c["sections"]))
+    body += other_doors(c["slug"]) + band() + footer()
+    return body
+
+
+def page_story():
+    c = next(x for x in CATEGORIES if x["slug"] == "story")
+    origin = "".join(f"<p{' class=q' if p.startswith('“') else ''}>{e(p)}</p>" for p in STORY["origin"])
+    values = "".join(f'<div class="val"><b>{e(t)}</b><p>{e(d)}</p></div>' for t, d in STORY["values"])
+    prom = "".join(f"<li><span>{i + 1:02d}</span>{e(p)}</li>" for i, p in enumerate(STORY["promises"]))
+    hist = "".join(f'<li><time>{e(y)}</time><div><b>{e(t)}</b><p>{e(d)}</p></div></li>' for y, t, d in STORY["history"])
+    br = "".join(
+        f'<article class="br"><p class="br-a">{e(b["area"])}</p><h3>{e(b["name"])}</h3><p>{e(b["addr"])}</p>'
+        f'<a href="https://map.naver.com/p/search/{e(b["addr"])}" rel="noopener">지도 보기 →</a></article>'
+        for b in SITE["branches"])
+    body = head("STORY | 시설통 — 스토리와 걸어온 길", "관리소장님의 낡은 수첩에서 시작된 시설통 이야기, 걸어온 길과 지사 안내.", "story.html")
+    body += header("story") + page_hero(c)
+    body += f"""
+<section class="sub-sec" id="story"><div class="wrap">
+  <p class="s-no">05-01</p><h2 class="s-tt">{e(STORY['origin_title'])}</h2>
+  <div class="story">
+    <div class="note-book" aria-hidden="true"><span>점검 일정</span><span>업체 연락처</span><span>고칠 것</span><span>보고서 제출</span><span>…</span></div>
+    <div class="story-t">{origin}</div>
+  </div>
+  <div class="vals">{values}</div>
+  <blockquote class="s-lead">“건물관리는 노하우(Know-How)가 아니라, 최적의 해결책을 가진 달인을 정확히 아는 노웨어(Know-Where) 비즈니스입니다.”</blockquote>
+  <h3 class="sub-h">모두가 윈윈하는 6가지 약속</h3>
+  <ol class="promises">{prom}</ol>
+</div></section>
+<section class="sub-sec alt" id="history"><div class="wrap">
+  <p class="s-no">05-02</p><h2 class="s-tt">걸어온 길</h2>
+  <ol class="timeline">{hist}</ol>
+  <p class="s-note">{e(STORY['history_note'])}</p>
+  <h3 class="sub-h">지사 안내</h3>
+  <div class="brs">{br}</div>
+  <div class="company">
+    <p><b>{e(SITE['company'])}</b> · {e(SITE['company_desc'])}</p>
+    <p>사업자등록번호 {SITE['biz_no']} · 대표전화 {SITE['tel']} · {SITE['email']}</p>
+  </div>
+</div></section>"""
+    body += other_doors("story") + band() + footer()
+    return body
+
+
+def page_index():
+    doors = "".join(door(c, i) for i, c in enumerate(CATEGORIES))
+    faq = "".join(f'<details{" open" if i == 0 else ""}><summary>{e(q)}</summary><div class="ans">{e(a)}</div></details>'
+                  for i, (q, a) in enumerate(FAQ))
+    svc = ["소방점검", "셀프점검", "비상방송/음향", "방화셔터", "지적사항공사", "스프링클러·밸브",
+           "화재·누수보험", "종합건물관리", "법정점검", "관리비 절감"]
+    chips = "".join(f'<label class="chip"><input type="checkbox" name="svc" value="{e(v)}"{" checked" if i == 0 else ""}><span>{e(v)}</span></label>'
+                    for i, v in enumerate(svc))
+    bt = ["공동주택", "빌딩·상가", "고시원·숙박", "학교·공공", "공장·창고"]
+    bchips = "".join(f'<label class="chip"><input type="radio" name="bt" value="{e(v)}"{" checked" if i == 0 else ""}><span>{e(v)}</span></label>'
+                     for i, v in enumerate(bt))
+    experts = "".join(f'<li><span class="ex-av" aria-hidden="true">{e(x["name"][0])}</span><b>{e(x["name"])}</b><small>{e(x["field"])}</small></li>'
+                      for x in EXPERTS.values())
+    br = "".join(f'<li><b>{e(b["area"])}</b><span>{e(b["addr"])}</span></li>' for b in SITE["branches"])
+
+    body = head("시설통 | 소방점검 + 소방공사 + 화재·누수보험 한번에",
+                "비상방송, 소방점검, 종합건물관리부터 보험까지. 전문가 배치로 가격 비교와 견적 신청을 한 곳에서 투명하고 편리하게 해결하는 시설통.")
+    body += header()
+    body += f"""
+<!-- 1. 방화문 인트로: 스크롤하면 문이 열립니다 -->
+<section class="intro" id="intro" aria-label="시설통 소개">
+  <div class="stage">
+    <div class="hero-in">
+      <div class="wrap">
+        <span class="badge">⏱ 건물 소방법 개정 및 안전관리 강화 안심 솔루션</span>
+        <p class="formula"><b>소</b>방점검<span class="plus">+</span>소<b>방</b>공사<span class="plus">+</span><b>화</b>재·누수보험</p>
+        <h1 class="headline">한번에 <span class="r">시설통</span></h1>
+        <p class="sub">비상방송, 소방점검, 종합건물관리부터 보험까지 전문가 배치로 가격 비교와 견적 신청을 한 곳에서 투명하고 편리하게 해결하세요.</p>
+        <div class="choice">
+          <a href="fire-construction.html" class="c-cost"><span class="t">돈 드는 <span class="r">소방공사</span></span><span class="d">신설·교체 공사, 여러 업체 견적 비교</span><span class="go" aria-hidden="true">→</span></a>
+          <a href="#quote" class="c-fix"><span class="reco">먼저 확인하세요 · 비용 절감</span><span class="t"><span class="r">소방시설</span> 보수 수리</span><span class="d">교체 대신 고쳐 쓰는 지적사항 해결</span><span class="go" aria-hidden="true">→</span></a>
+        </div>
+        <a class="to-doors" href="#doors">5개의 문 둘러보기 ↓</a>
+      </div>
+    </div>
+    <span class="dl l" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
+    <span class="dl r" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
+    <div class="door-copy" aria-hidden="true">
+      <img src="assets/img/logo-mark.svg" alt="" width="64" height="64">
+      <p class="dc-k">SISEOLTONG · FIRE &amp; FACILITY</p>
+      <p class="dc-h">문을 열면,<br>건물 걱정이 끝납니다</p>
+    </div>
+    <button class="skip-door" type="button">바로 들어가기 ↘</button>
+    <p class="hint" aria-hidden="true">내려서 문 열기</p>
+  </div>
+</section>
+
+<!-- 2. 다섯 개의 문 (메뉴 큰 항목) -->
+<section class="sec doors" id="doors" aria-labelledby="doors-title">
+  <div class="wrap">
+    <p class="eyebrow">FIVE DOORS</p>
+    <h2 class="tt" id="doors-title">어느 문으로<br>들어가시겠어요?</h2>
+    <p class="lead">문을 누르면 해당 메뉴로 들어갑니다.</p>
+    <ul class="d-list">{doors}</ul>
+  </div>
+</section>
+
+<!-- 3. 견적 -->
+<section class="sec quote-sec" id="quote">
+  <div class="wrap quote-in">
+    <div>
+      <p class="eyebrow">FREE QUOTE</p>
+      <h2 class="tt">30초 무료 견적,<br><span class="r">사진 한 장</span>이면 충분합니다</h2>
+      <p class="lead">소방서 지적 통보서나 고장 부위 사진을 올려주시면 담당 달인이 보수·교체 견적을 함께 비교해 드립니다.</p>
+      <ul class="q-points"><li>평균 30분 내 담당 전문가 연락</li><li>교체보다 수리 가능 여부부터 진단</li><li>서울 · 인천 4개 지사 출동</li></ul>
+    </div>
+    <form class="qq" id="quote-form">
+      <p class="lb">필요한 서비스 (복수 선택)</p>
+      <div class="chips">{chips}</div>
+      <p class="lb">건물 유형</p>
+      <div class="chips">{bchips}</div>
+      <label class="lb" for="q-ph">연락처</label>
+      <div class="row2">
+        <input class="field" id="q-nm" name="name" placeholder="이름 / 담당자" aria-label="이름">
+        <input class="field" id="q-ph" name="phone" type="tel" placeholder="010-0000-0000" required>
+      </div>
+      <label class="upload"><input type="file" name="photo" accept="image/*">📷 지적 통보서·현장 사진 첨부 (선택)</label>
+      <button class="btn btn-red" type="submit">견적 비교 받기</button>
+      <p class="note">개인정보는 견적 상담 목적으로만 사용됩니다</p>
+    </form>
+  </div>
+</section>
+
+<!-- 4. 공사 vs 보수 -->
+<section class="sec sec-alt" id="vs">
+  <div class="wrap">
+    <p class="eyebrow">COST SAVING</p>
+    <h2 class="tt">교체부터 하지 마세요.<br><span class="r">고쳐 쓸 수 있는지</span> 먼저 봅니다</h2>
+    <div class="vs">
+      <div class="col cost"><span class="tag">일반 업체</span><h3>돈 드는 소방공사</h3>
+        <dl><div><dt>접근 방식</dt><dd>부품·설비 전체 교체 위주</dd></div><div><dt>견적</dt><dd>업체 1곳, 비교 어려움</dd></div><div><dt>사후 관리</dt><dd>공사 후 종료</dd></div></dl>
+        <p class="eg">예) 방송 랙 고장 → 시스템 통째 교체 (수백~수천만 원)</p></div>
+      <div class="mid" aria-hidden="true">VS</div>
+      <div class="col fix"><span class="tag">시설통</span><h3>소방시설 보수 수리</h3>
+        <dl><div><dt>접근 방식</dt><dd>원인 진단 후 필요한 부분만 수리</dd></div><div><dt>견적</dt><dd>검증된 달인 여러 명 가격 비교</dd></div><div><dt>사후 관리</dt><dd>재점검 · 월간 관리로 연결</dd></div></dl>
+        <p class="eg">예) 수신기 2개 연동 비상방송 → 핵심 부품·선로 수리 30만원 내외</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. 상황별 -->
+<section class="sec" id="sits">
+  <div class="wrap">
+    <p class="eyebrow">QUICK START</p>
+    <h2 class="tt">지금 어떤 상황이신가요?</h2>
+    <div class="sits">
+      <a href="fire-safety.html#inspection" class="sit"><span class="ic">📅</span><b>점검 시기가<br>다가와요</b><small>작동·종합점검 일정 잡기</small></a>
+      <a href="fire-construction.html#deficiency" class="sit"><span class="ic">📄</span><b>소방서 지적을<br>받았어요</b><small>통보서 사진으로 보수 견적</small></a>
+      <a href="fire-construction.html#shutter" class="sit"><span class="ic">🚗</span><b>방화셔터가<br>내려왔어요</b><small>긴급 출동 · 수동 개방</small></a>
+      <a href="building.html#savings" class="sit"><span class="ic">💰</span><b>관리비를<br>줄이고 싶어요</b><small>무료 관리비 진단</small></a>
+      <a href="tel:{SITE['tel']}" class="sit urgent"><span class="ic">🚨</span><b>경보가 계속<br>울려요</b><small>긴급 출동 {SITE['tel']}</small></a>
+    </div>
+  </div>
+</section>
+
+<!-- 6. 프로세스 + 달인 -->
+<section class="sec sec-alt">
+  <div class="wrap">
+    <p class="eyebrow">PROCESS</p>
+    <h2 class="tt">점검에서 끝나지 않습니다</h2>
+    <ol class="steps big"><li><b>점검</b><p>소방시설관리사가 현장 점검 및 계측</p></li><li><b>보고서 제출</b><p>결과보고서 작성 · 관할 관청 제출 대행</p></li><li><b>지적사항 보수</b><p>달인 네트워크가 견적 비교 후 바로 수리</p></li><li><b>월간 관리</b><p>다음 점검까지 상시 관리</p></li></ol>
+    <h3 class="sub-h">검증된 달인들</h3>
+    <ul class="ex-strip">{experts}</ul>
+  </div>
+</section>
+
+<!-- 7. FAQ -->
+<section class="sec" id="faq">
+  <div class="wrap faq-wrap">
+    <div><p class="eyebrow">FAQ</p><h2 class="tt">자주 묻는 질문</h2><p class="lead">더 궁금한 점은 {SITE['tel']} 으로 전화 주세요.</p></div>
+    <div class="faq">{faq}</div>
+  </div>
+</section>
+
+<!-- 8. 지사 -->
+<section class="sec sec-alt" id="branches">
+  <div class="wrap">
+    <p class="eyebrow">BRANCHES</p>
+    <h2 class="tt">서울 · 인천 4개 지사가 달려갑니다</h2>
+    <ul class="br-list">{br}</ul>
+    <a class="more-link" href="story.html#history">걸어온 길 · 지사 안내 →</a>
+  </div>
+</section>
+"""
+    body += band() + footer()
+    return body
+
+
+def write(name, text):
+    with open(os.path.join(ROOT, name), "w", encoding="utf-8") as f:
+        f.write(text)
+    print("built", name)
+
+
+def sitemap():
+    base = SITE["domain"].rstrip("/")
+    urls = [""] + [c["slug"] + ".html" for c in CATEGORIES]
+    body = "".join(f"  <url><loc>{base}/{u}</loc></url>\n" for u in urls)
+    write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{body}</urlset>\n')
+    write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n")
+
+
+if __name__ == "__main__":
+    write("index.html", page_index())
+    for c in CATEGORIES:
+        write(c["slug"] + ".html", page_story() if c["slug"] == "story" else page_category(c))
+    sitemap()
