@@ -5,7 +5,7 @@
 저장소(`andy202082/test`)가 **비공개**이므로, 무료 계정이면 ② 또는 ③이 가장 쉽습니다.
 설정 파일은 이미 저장소에 들어 있어서, 아래 클릭만 하면 됩니다.
 
-### ① GitHub Pages → `https://andy202082.github.io/test/`
+### ① GitHub Pages → `https://andy202082.github.io/test/` (이진숙 홈페이지와 같은 방식 · 선택됨)
 - 조건: 저장소를 **공개(Public)** 로 바꾸거나, GitHub **Pro/Team** 요금제
 - 저장소 **Settings → Pages → Source: GitHub Actions** 선택 (최초 1회)
 - 이 브랜치를 **main 에 합치면(merge)** `.github/workflows/deploy-pages.yml` 이 자동으로 빌드·배포
@@ -23,6 +23,7 @@
 3. Build command: `python3 src/build.py` · Build output directory: `site`
 4. Save and Deploy → 공개 주소 발급 (브랜치별 미리보기 주소 자동 생성)
 
+> **자체 도메인 (profiling.kr 처럼)**: 도메인을 산 뒤 `site/CNAME` 파일에 도메인 한 줄(예: `www.siseoltong.kr`)을 넣고, `src/content.py` 의 `domain` 을 바꿔 다시 빌드 → DNS 설정(아래 2번).
 > 어떤 방법이든 자체 도메인은 나중에 같은 화면의 **Custom domain** 에서 연결합니다 (아래 2번).
 > 자체 도메인을 연결하면 `src/content.py` 의 `domain` 값을 바꾸고 다시 빌드하세요.
 

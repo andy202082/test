@@ -465,8 +465,42 @@ def sitemap():
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n")
 
 
+def snapshot(ver):
+    """현재 사이트를 site/<ver>/ 에 통째로 복사 (미리보기 버전, 예: 도메인/v2/).
+
+    이진숙 홈페이지(profiling.kr)의 v1~v12 방식과 같습니다.
+    루트(/)는 운영 버전, v폴더는 검토용 미리보기입니다.
+    """
+    import re
+    import shutil
+    if not re.fullmatch(r"v\d+(-[a-z0-9-]+)?", ver):
+        sys.exit("버전 이름은 v1, v2, v3-test 처럼 지정하세요")
+    dst = os.path.join(ROOT, ver)
+    if os.path.exists(dst):
+        sys.exit(f"{ver} 는 이미 있습니다. 새 번호를 쓰거나 폴더를 지운 뒤 다시 실행하세요")
+    skip = re.compile(r"^(v\d+.*|CNAME|sitemap\.xml|robots\.txt|404\.html)$")
+    os.makedirs(dst)
+    for name in os.listdir(ROOT):
+        if skip.match(name):
+            continue
+        src = os.path.join(ROOT, name)
+        (shutil.copytree if os.path.isdir(src) else shutil.copy2)(src, os.path.join(dst, name))
+    # 미리보기 버전은 검색엔진에 노출하지 않음
+    for name in os.listdir(dst):
+        if name.endswith(".html"):
+            p = os.path.join(dst, name)
+            t = open(p, encoding="utf-8").read()
+            t = t.replace("<head>\n", '<head>\n<meta name="robots" content="noindex">\n', 1)
+            t = re.sub(r"<title>", f"<title>[{ver} 미리보기] ", t, count=1)
+            open(p, "w", encoding="utf-8").write(t)
+    print(f"snapshot -> site/{ver}/  (배포 후 주소: {SITE['domain'].rstrip('/')}/{ver}/)")
+
+
 if __name__ == "__main__":
     write("index.html", page_index())
     for c in CATEGORIES:
         write(c["slug"] + ".html", page_story() if c["slug"] == "story" else page_category(c))
     sitemap()
+    # 사용법: python3 src/build.py --snapshot v1
+    if len(sys.argv) == 3 and sys.argv[1] == "--snapshot":
+        snapshot(sys.argv[2])
