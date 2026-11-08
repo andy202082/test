@@ -1,0 +1,12 @@
+{
+  "name": "소방원 - 소방점검·소방공사·화재보험 한번에",
+  "short_name": "소방원",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#E3000F",
+  "lang": "ko",
+  "icons": [
+    { "src": "assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
