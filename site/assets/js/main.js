@@ -95,6 +95,8 @@
   const form = document.getElementById('quote-form');
   if (form) form.addEventListener('submit', (e) => {
     e.preventDefault();
-    alert('견적 신청이 접수되었습니다. (시안: 아직 서버에 연결되지 않음)');
+    let msg = form.querySelector('.q-done');
+    if (!msg) { msg = document.createElement('p'); msg.className = 'q-done'; msg.setAttribute('role', 'status'); form.appendChild(msg); }
+    msg.textContent = '견적 신청 내용이 준비되었습니다. (시안: 아직 접수 서버에 연결되지 않아 실제로 전송되지는 않습니다)';
   });
 })();

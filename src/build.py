@@ -46,8 +46,9 @@ def head(title, desc, path=""):
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>{e(title)}</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="{e(desc)}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="시설통">
