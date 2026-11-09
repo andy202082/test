@@ -41,9 +41,9 @@ LOGO = (BADGE + '<span class="logo-word"><span class="lw1">건물관리</span><s
 
 
 def badge_big(sub=True):
-    """C형 큰 배지: 지붕 + 달인명인 + 건물관리 / 소방점검"""
-    s = '<span class="bc-sub">건물관리 <i>/</i> 소방점검</span>' if sub else ""
-    return f'<span class="badge-c big" role="img" aria-label="건물관리 달인명인 로고">{ROOF}<b>달인명인</b>{s}</span>'
+    """C형 큰 배지: 지붕 + 소방 + 건물관리 / 달인명인"""
+    s = '<span class="bc-sub">건물관리 <i>/</i> 달인명인</span>' if sub else ""
+    return f'<span class="badge-c big" role="img" aria-label="소방 · 건물관리 달인명인 로고">{ROOF}<b>소방</b>{s}</span>'
 
 
 # A형 엠블럼 (지붕 + 건물 + 점검 완료 체크)
