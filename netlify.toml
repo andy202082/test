@@ -1,0 +1,7 @@
+# Netlify 배포 설정 (비공개 저장소도 무료)
+[build]
+  command = "python3 src/build.py"
+  publish = "site"
+
+[build.environment]
+  PYTHON_VERSION = "3.12"
