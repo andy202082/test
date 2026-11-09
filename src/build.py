@@ -92,7 +92,7 @@ def head(title, desc, path=""):
 <meta name="theme-color" content="#E3000F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 <script>document.documentElement.classList.add('js')</script>
 </head>
@@ -197,23 +197,33 @@ def footer():
 
 
 # ---------------------------------------------------------------- components
+DOOR_SLUGS = ("fire-safety", "fire-construction", "building", "inspection")  # 문으로 보여줄 4개 (STORY 제외)
+
+
 def door(c, i):
-    subs = "".join(f"<li>{e(s['name'])}{' 🔥' if s.get('hot') else ''}</li>" for s in c["sections"])
+    """방화문 카드. 문이 열리면 안쪽(room)에 고급형 메뉴판이 보입니다."""
+    subs = "".join(f"<li{' class=is-hot' if s.get('hot') else ''}>{e(s['name'])}</li>" for s in c["sections"])
     return f"""
-    <li class="door" style="--d:{i * 0.14:.2f}s"><a href="{c['slug']}.html">
+    <li class="door" style="--d:{i * 0.18:.2f}s"><a href="{c['slug']}.html">
       <div class="frame">
         <div class="fx">
-          <div class="room">{icon(c['icon'], 'r-ic')}<ul>{subs}</ul></div>
+          <div class="room">
+            <span class="r-no">No. {c['no']}</span>
+            <strong class="r-ttl">{e(c['name'])}</strong>
+            <span class="r-en">{c['en']}</span>
+            <ul>{subs}</ul>
+          </div>
+          <span class="spill" aria-hidden="true"></span>
           <span class="leaf l" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
           <span class="leaf r" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
         </div>
         <span class="plate" aria-hidden="true">{c['no']}</span>
       </div>
-      <p class="d-no">{c['no']} · {c['en']}</p>
+      <p class="d-no">No. {c['no']} <span>{c['en']}</span></p>
       <h3>{e(c['name'])}</h3>
       <p class="d-q">{e(c['question'])}</p>
       <p class="d-t">{e(c['desc'])}</p>
-      <span class="d-go">문 열고 들어가기</span>
+      <span class="d-go">ENTER</span>
     </a></li>"""
 
 
@@ -260,7 +270,7 @@ def section(c, s, idx):
 
 
 def page_hero(c):
-    chips = "".join(f'<a href="#{s["id"]}">{e(s["name"])}{" 🔥" if s.get("hot") else ""}</a>' for s in c["sections"])
+    chips = "".join(f'<a href="#{s["id"]}"{" class=is-hot" if s.get("hot") else ""}>{e(s["name"])}</a>' for s in c["sections"])
     return f"""
 <section class="ph">
   <div class="ph-room">
@@ -282,7 +292,7 @@ def page_hero(c):
 
 
 def other_doors(cur):
-    others = [c for c in CATEGORIES if c["slug"] != cur]
+    others = [c for c in CATEGORIES if c["slug"] in DOOR_SLUGS and c["slug"] != cur]
     return '<section class="sec more-doors"><div class="wrap"><p class="eyebrow">OTHER DOORS</p><h2 class="tt">다른 문도 열어보세요</h2><ul class="d-list small">' + \
         "".join(door(c, i) for i, c in enumerate(others)) + "</ul></div></section>"
 
@@ -337,7 +347,7 @@ def page_story():
 
 
 def page_index():
-    doors = "".join(door(c, i) for i, c in enumerate(CATEGORIES))
+    doors = "".join(door(c, i) for i, c in enumerate(x for x in CATEGORIES if x["slug"] in DOOR_SLUGS))
     faq = "".join(f'<details{" open" if i == 0 else ""}><summary>{e(q)}</summary><div class="ans">{e(a)}</div></details>'
                   for i, (q, a) in enumerate(FAQ))
     svc = ["소방점검", "셀프점검", "비상방송/음향", "방화셔터", "지적사항공사", "스프링클러·밸브",
@@ -368,9 +378,10 @@ def page_index():
           <a href="fire-construction.html" class="c-cost"><span class="t">돈 드는 <span class="r">소방공사</span></span><span class="d">신설·교체 공사, 여러 업체 견적 비교</span><span class="go" aria-hidden="true">→</span></a>
           <a href="#quote" class="c-fix"><span class="reco">먼저 확인하세요 · 비용 절감</span><span class="t"><span class="r">소방시설</span> 보수 수리</span><span class="d">교체 대신 고쳐 쓰는 지적사항 해결</span><span class="go" aria-hidden="true">→</span></a>
         </div>
-        <a class="to-doors" href="#doors">5개의 문 둘러보기 ↓</a>
+        <a class="to-doors" href="#doors">4개의 문 둘러보기 ↓</a>
       </div>
     </div>
+    <span class="beam" aria-hidden="true"></span>
     <span class="dl l" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
     <span class="dl r" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
     <div class="door-copy" aria-hidden="true">
@@ -386,7 +397,7 @@ def page_index():
 <!-- 2. 다섯 개의 문 (메뉴 큰 항목) -->
 <section class="sec doors" id="doors" aria-labelledby="doors-title">
   <div class="wrap">
-    <p class="eyebrow">FIVE DOORS</p>
+    <p class="eyebrow">FOUR DOORS</p>
     <h2 class="tt" id="doors-title">어느 문으로<br>들어가시겠어요?</h2>
     <p class="lead">문을 누르면 해당 메뉴로 들어갑니다.</p>
     <ul class="d-list">{doors}</ul>

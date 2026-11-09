@@ -32,25 +32,37 @@
   });
 
   // ---------------------------------------------- 인트로: 스크롤에 따라 방화문이 열림
+  // 스크롤 위치(target)를 그대로 쓰지 않고 부드럽게 따라가게(lerp) 해서
+  // 휴대폰 터치 스크롤에서도 문이 툭툭 끊기지 않고 묵직하게 열립니다.
   const intro = document.querySelector('.intro');
   if (intro && !reduce) {
     const stage = intro.querySelector('.stage');
     const hero = intro.querySelector('.hero-in');
-    let ticking = false;
-    const update = () => {
-      ticking = false;
+    let target = 0, cur = 0, running = false;
+    const measure = () => {
       const r = intro.getBoundingClientRect();
       const span = intro.offsetHeight - stage.offsetHeight;
-      const p = Math.min(1, Math.max(0, -r.top / (span * 0.75)));
-      const ease = 1 - Math.pow(1 - p, 2);
-      stage.style.setProperty('--p', ease.toFixed(4));
-      hero.style.setProperty('--hs', (0.92 + 0.08 * ease).toFixed(4));
-      hero.style.setProperty('--ho', (0.35 + 0.65 * ease).toFixed(4));
-      intro.classList.toggle('done', p >= 0.98);
+      target = Math.min(1, Math.max(0, -r.top / (span * 0.75)));
+      if (!running) { running = true; requestAnimationFrame(tick); }
     };
-    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
-    window.addEventListener('resize', update);
-    update();
+    const paint = (p) => {
+      const ease = 1 - Math.pow(1 - p, 2.2);
+      stage.style.setProperty('--p', ease.toFixed(4));
+      // 문틈 빛: 막 열릴 때 가장 밝고, 다 열리면 사라짐
+      stage.style.setProperty('--beam', (Math.sin(Math.min(1, p * 2.4) * Math.PI) * 0.9).toFixed(3));
+      hero.style.setProperty('--hs', (0.93 + 0.07 * ease).toFixed(4));
+      hero.style.setProperty('--ho', (0.3 + 0.7 * ease).toFixed(4));
+      intro.classList.toggle('done', p >= 0.985);
+    };
+    function tick() {
+      cur += (target - cur) * 0.14;
+      if (Math.abs(target - cur) < 0.001) cur = target;
+      paint(cur);
+      if (cur !== target) requestAnimationFrame(tick); else running = false;
+    }
+    window.addEventListener('scroll', measure, { passive: true });
+    window.addEventListener('resize', measure);
+    measure();
     const skip = intro.querySelector('.skip-door');
     if (skip) skip.addEventListener('click', () => {
       const y = intro.offsetTop + (intro.offsetHeight - stage.offsetHeight) * 0.85;
@@ -58,16 +70,34 @@
     });
   }
 
-  // ---------------------------------------------- 5개의 문: 화면에 들어오면 차례로 열림
-  const doors = document.querySelectorAll('.door');
-  if (doors.length) {
+  // ---------------------------------------------- 4개의 문
+  // PC: 문 목록이 화면에 들어오면 왼쪽부터 차례로 열림
+  // 휴대폰(가로 넘김): 넘겨서 가운데 온 문이 그때 열림 → 복도를 걸으며 문을 여는 느낌
+  const lists = document.querySelectorAll('.d-list');
+  if (lists.length) {
     if (reduce || !('IntersectionObserver' in window)) {
-      doors.forEach((d) => d.classList.add('open'));
+      document.querySelectorAll('.door').forEach((d) => d.classList.add('open'));
     } else {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('open'); io.unobserve(en.target); } });
-      }, { threshold: 0.45 });
-      doors.forEach((d) => io.observe(d));
+      lists.forEach((list) => {
+        const doors = [...list.querySelectorAll('.door')];
+        let visible = false;
+        const centered = new Set();
+        const sync = () => {
+          if (!visible) return;
+          const carousel = getComputedStyle(list).display === 'flex';
+          doors.forEach((d, i) => {
+            if (d.classList.contains('open')) return;
+            if (!carousel) { d.style.setProperty('--d', (i * 0.18).toFixed(2) + 's'); d.classList.add('open'); }
+            else if (centered.has(d)) { d.style.setProperty('--d', '0s'); d.classList.add('open'); }
+          });
+        };
+        new IntersectionObserver((en) => { visible = en[0].isIntersecting; sync(); }, { threshold: 0.35 }).observe(list);
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((x) => (x.isIntersecting ? centered.add(x.target) : centered.delete(x.target)));
+          sync();
+        }, { root: list, threshold: 0.7 });
+        doors.forEach((d) => io.observe(d));
+      });
     }
   }
 
