@@ -516,12 +516,13 @@ def page_index():
       </div>
     </div>
     <span class="beam" aria-hidden="true"></span>
-    <span class="dl l" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
-    <span class="dl r" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
+    <span class="dl l" aria-hidden="true"><i class="win"><b class="sign s-red">소화전</b></i><b class="bar"></b></span>
+    <span class="dl r" aria-hidden="true"><i class="win"><b class="sign s-white">방재실</b></i><b class="bar"></b></span>
     <div class="door-copy" aria-hidden="true">
       {badge_big()}
       <p class="dc-k">BUILDING CARE MASTERS</p>
-      <p class="dc-h">문을 열면,<br>건물 걱정이 끝납니다</p>
+      <p class="dc-knock">똑똑!</p>
+      <p class="dc-h">문을 열면,<br><span>시설물 관리실 <i>&amp;</i> 안전점검</span></p>
     </div>
     <button class="skip-door" type="button">바로 들어가기 ↘</button>
     <p class="hint" aria-hidden="true">내려서 문 열기</p>
