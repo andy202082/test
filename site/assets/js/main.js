@@ -76,36 +76,30 @@
     });
   }
 
-  // ---------------------------------------------- 4개의 문
-  // PC: 문 목록이 화면에 들어오면 왼쪽부터 차례로 열림
-  // 휴대폰(가로 넘김): 넘겨서 가운데 온 문이 그때 열림 → 복도를 걸으며 문을 여는 느낌
-  const lists = document.querySelectorAll('.d-list');
-  if (lists.length) {
-    if (reduce || !('IntersectionObserver' in window)) {
-      document.querySelectorAll('.door').forEach((d) => d.classList.add('open'));
-    } else {
-      lists.forEach((list) => {
-        const doors = [...list.querySelectorAll('.door')];
-        let visible = false;
-        const centered = new Set();
-        const sync = () => {
-          if (!visible) return;
-          const carousel = getComputedStyle(list).display === 'flex';
-          doors.forEach((d, i) => {
-            if (d.classList.contains('open')) return;
-            if (!carousel) { d.style.setProperty('--d', (i * 0.18).toFixed(2) + 's'); d.classList.add('open'); }
-            else if (centered.has(d)) { d.style.setProperty('--d', '0s'); d.classList.add('open'); }
-          });
-        };
-        new IntersectionObserver((en) => { visible = en[0].isIntersecting; sync(); }, { threshold: 0.35 }).observe(list);
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach((x) => (x.isIntersecting ? centered.add(x.target) : centered.delete(x.target)));
-          sync();
-        }, { root: list, threshold: 0.7 });
-        doors.forEach((d) => io.observe(d));
-      });
-    }
-  }
+  // ---------------------------------------------- 4개의 문 (닫힌 채로 시작)
+  // 문을 누르면 그 문만 열림 → 안의 메뉴를 보고 '닫기' → 다음 문을 열 수 있음
+  // 다른 문을 누르면 열려 있던 문은 자동으로 닫힘 (한 번에 한 문)
+  const setDoor = (d, open) => {
+    d.classList.toggle('open', open);
+    const btn = d.querySelector('.door-btn');
+    if (btn) btn.setAttribute('aria-expanded', String(open));
+  };
+  document.querySelectorAll('.door').forEach((d) => {
+    const list = d.closest('.d-list');
+    const btn = d.querySelector('.door-btn');
+    const close = d.querySelector('.door-close');
+    if (btn) btn.addEventListener('click', () => {
+      list.querySelectorAll('.door.open').forEach((o) => o !== d && setDoor(o, false));
+      setDoor(d, true);
+      if (getComputedStyle(list).display === 'flex') d.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest', inline: 'center' });
+      if (close) setTimeout(() => close.focus({ preventScroll: true }), reduce ? 0 : 1500);
+    });
+    if (close) close.addEventListener('click', () => { setDoor(d, false); btn && btn.focus({ preventScroll: true }); });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    document.querySelectorAll('.door.open').forEach((d) => { setDoor(d, false); });
+  });
 
   // ---------------------------------------------- 달인 라운지 분야 필터
   const tabsBox = document.querySelector('.lg-tabs');
