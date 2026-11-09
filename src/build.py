@@ -36,8 +36,8 @@ ROOF = ('<svg class="roof" viewBox="0 0 60 18" aria-hidden="true"><path d="M4 16
 
 # C형 로고 (배지) — 사이트 대표 로고
 BADGE = f'<span class="badge-c" aria-hidden="true">{ROOF}<b>달인</b></span>'
-# 헤더/푸터 로고: [달인 배지] + 두 줄 "건물관리 / 소 방" (두 줄 폭을 같게 맞춤)
-LOGO = (BADGE + '<span class="logo-word"><span class="lw1">건물관리</span><span class="lw2" aria-label="소방"><i>소</i><i>방</i></span></span>')
+# 헤더/푸터 로고: [달인 배지] + 두 줄 "건물관리 / 달인명인" (두 줄 폭을 같게 맞춤)
+LOGO = (BADGE + '<span class="logo-word"><span class="lw1">건물관리</span><span class="lw2" aria-label="달인명인"><i>달</i><i>인</i><i>명</i><i>인</i></span></span>')
 
 
 def badge_big(sub=True):
