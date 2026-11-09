@@ -101,6 +101,15 @@
     }
   }
 
+  // ---------------------------------------------- 달인 라운지 분야 필터
+  const tabsBox = document.querySelector('.lg-tabs');
+  if (tabsBox) tabsBox.addEventListener('click', (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    tabsBox.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+    const f = b.dataset.f;
+    document.querySelectorAll('.mcard').forEach((c) => c.classList.toggle('hide', f !== 'all' && c.dataset.g !== f));
+  });
+
   // ---------------------------------------------- 하위 페이지 히어로 문 열기
   const ph = document.querySelector('.ph');
   if (ph) setTimeout(() => ph.classList.add('open'), reduce ? 0 : 350);

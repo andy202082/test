@@ -17,6 +17,7 @@
 │  ├─ building.html         03 건물관리                                  │ 자동 생성
 │  ├─ inspection.html       04 법정점검                                  │ (직접 수정 X)
 │  ├─ story.html            05 STORY (스토리 · 걸어온 길 · 지사)          │
+│  ├─ experts.html          검증된 달인 12인 프로필                       │
 │  ├─ sitemap.xml, robots.txt                                           ┘
 │  ├─ 404.html, manifest.webmanifest
 │  └─ assets/  css/style.css · js/main.js · img/ (직접 편집)
