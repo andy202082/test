@@ -11,7 +11,7 @@
 SITE = {
     "name": "건물관리 달인명인",
     "short": "달인명인",
-    "domain": "https://andy202082.github.io/test",  # TODO: 자체 도메인 연결 후 교체 (예: https://www.dalinmyeongin.kr)
+    "domain": "https://master1.kr",  # 자체 도메인 (가비아 DNS → GitHub Pages)
     "slogan": "한번에 달인명인",
     "tel": "1555-5048",
     "tel_note": "오! 04판",
