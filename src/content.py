@@ -11,7 +11,7 @@
 SITE = {
     "name": "건물관리 달인명인",
     "short": "달인명인",
-    "domain": "https://andy202082.github.io/test",  # TODO: 자체 도메인 연결 후 교체 (예: https://www.dalinmyeongin.kr)
+    "domain": "https://master1.kr",  # 자체 도메인 (가비아 DNS → GitHub Pages)
     "slogan": "한번에 달인명인",
     "tel": "1555-5048",
     "tel_note": "오! 04판",
@@ -22,6 +22,8 @@ SITE = {
     "privacy_officer": "장남덕",
     "blog": "https://blog.naver.com/ii211",
     "kakao": "#",  # TODO: 카카오톡 채널 주소
+    # 기존 PHP 사이트(로그인·파트너·견적접수·공지)는 이 주소로 계속 운영
+    "old_site": "https://old.master1.kr",
     "branches": [
         {"name": "서울 본사", "area": "서울 구로", "addr": "서울 구로구 경인로 83 상가동 3층"},
         {"name": "인천 남동지사", "area": "인천 남동", "addr": "인천 남동구 만의골로 3-7 3층"},

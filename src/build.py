@@ -183,7 +183,7 @@ def footer():
     </div>
     <div class="ft-bottom">
       <span>© 2026 건물관리 달인명인 · {e(SITE['company'])}. All rights reserved.</span>
-      <span class="ft-links"><a href="#">개인정보 처리방침</a><a href="{SITE['blog']}" rel="noopener">블로그</a></span>
+      <span class="ft-links"><a href="{SITE['old_site']}/notice.php" rel="noopener">공지사항</a><a href="{SITE['old_site']}/partners.php" rel="noopener">파트너 등록</a><a href="{SITE['old_site']}/privacy.php" rel="noopener">개인정보 처리방침</a><a href="{SITE['blog']}" rel="noopener">블로그</a></span>
     </div>
   </div>
 </footer>
