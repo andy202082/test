@@ -22,6 +22,8 @@ SITE = {
     "privacy_officer": "장남덕",
     "blog": "https://blog.naver.com/ii211",
     "kakao": "#",  # TODO: 카카오톡 채널 주소
+    # 기존 PHP 사이트(로그인·파트너·견적접수·공지)는 이 주소로 계속 운영
+    "old_site": "https://old.master1.kr",
     "branches": [
         {"name": "서울 본사", "area": "서울 구로", "addr": "서울 구로구 경인로 83 상가동 3층"},
         {"name": "인천 남동지사", "area": "인천 남동", "addr": "인천 남동구 만의골로 3-7 3층"},

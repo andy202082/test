@@ -1,5 +1,42 @@
 <!DOCTYPE html>
 <html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>페이지를 찾을 수 없습니다 | 건물관리 달인명인</title>
+<meta name="robots" content="noindex">
+<title>페이지 이동 중 | 건물관리 달인명인</title>
+<script>
+/* 옛 master1.kr(PHP) 주소 → 새 사이트 페이지로 자동 이동
+   - 새 사이트에 같은 내용이 있으면 해당 페이지로
+   - 로그인·파트너·견적접수·공지처럼 기존 기능은 old.master1.kr 로 */
+(function () {
+  var OLD = 'https://old.master1.kr';
+  var path = location.pathname, q = new URLSearchParams(location.search);
+  var base = path.indexOf('/test/') === 0 ? '/test/' : '/';       // github.io/test 미리보기 주소 대응
+  var file = path.slice(base.length).toLowerCase();
+  var code = (q.get('code') || '').toLowerCase(), id = q.get('id') || '';
+  var experts = {'8':'lgp','11':'kks','13':'khj','14':'kkh','15':'jyw','23':'kwr','24':'kms','25':'lec','26':'lh','27':'pcs','28':'hdh','29':'valve'};
+  var service = {
+    'amp':'fire-construction.html#broadcast','sutter':'fire-construction.html#shutter','firerepair':'fire-construction.html#deficiency',
+    'fireinspection':'fire-safety.html#inspection','insurance':'building.html#fire-insurance','building management':'building.html#total',
+    'clean':'building.html#clean','disinfection':'building.html#clean','communication':'inspection.html#ict','elevator':'inspection.html#elevator',
+    'electric':'inspection.html#electric','tank':'inspection.html#tank','aircon':'inspection.html#air'
+  };
+  var inspection = {'function':'fire-safety.html#inspection','precision':'fire-safety.html#inspection','safety':'fire-safety.html#inspection',
+    'monthly':'fire-safety.html#inspection','machinic':'inspection.html#mechanical','disinfection':'building.html#clean','저수조':'inspection.html#tank'};
+  var keepOld = /^(login|logout|join|register|partners|request_quote|request_sos|notice|notice_view|privacy|mypage|admin)(\.php)?$/;
+  var to = null;
+  if (file === 'index.php' || file === 'index.html') to = '';
+  else if (file === 'about.php') to = 'story.html#story';
+  else if (file === 'experts.php') to = 'experts.html';
+  else if (file === 'expert_view.php') to = experts[id] ? 'experts.html#' + experts[id] : 'experts.html';
+  else if (file === 'service_view.php') to = service[code] || 'index.html#doors';
+  else if (file === 'inspection.php') to = 'inspection.html';
+  else if (file === 'inspection_view.php') to = inspection[code] || 'inspection.html';
+  else if (file === 'selfinspec_view.php') to = 'fire-safety.html#self';
+  else if (file === 'public_view.php') to = 'index.html#sits';
+  else if (file === 'cases.php' || file === 'case_view.php') to = 'fire-safety.html#cases';
+  else if (file === 'faq.php') to = 'index.html#faq';
+  else if (keepOld.test(file) || file.indexOf('admin/') === 0) { location.replace(OLD + path + location.search); return; }
+  if (to !== null) location.replace(base + to);
+})();
+</script>
 <style>body{font-family:'Noto Sans KR',system-ui,sans-serif;display:grid;place-items:center;min-height:100vh;margin:0;background:#fff;color:#16181D;text-align:center;padding:16px}a{display:inline-block;margin-top:20px;background:#E3000F;color:#fff;padding:12px 22px;border-radius:12px;font-weight:700;text-decoration:none}</style>
-</head><body><div><h1>페이지를 찾을 수 없습니다</h1><p>주소를 다시 확인해 주세요.</p><a href="javascript:history.back()">이전 페이지로</a></div></body></html>
+</head><body><div><h1>페이지를 찾을 수 없습니다</h1><p>주소가 바뀌었거나 없는 페이지입니다.</p><a href="./">건물관리 달인명인 홈으로</a></div></body></html>

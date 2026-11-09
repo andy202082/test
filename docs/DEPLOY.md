@@ -1,5 +1,61 @@
 # 배포 · 도메인 연결 가이드
 
+## ✅ master1.kr 연결 계획 (확정: 기존 사이트는 old.master1.kr 로 유지)
+
+| 주소 | 연결 대상 | 내용 |
+|---|---|---|
+| `master1.kr`, `www.master1.kr` | GitHub Pages (새 사이트) | 건물관리 달인명인 |
+| `old.master1.kr` | 기존 서버 `172.233.82.191` | 기존 PHP 사이트 (로그인·파트너·견적접수·공지·관리자) |
+
+도메인 관리: **가비아** (네임서버 ns.gabia.co.kr) — 이진숙 홈페이지(profiling.kr)와 같은 방식.
+
+### 순서 (이 순서대로 해야 끊김이 없습니다)
+
+**① 기존 서버가 old.master1.kr 도 받도록 설정** (서버 관리자/호스팅 업체에 요청)
+
+> 요청 문구 예시:
+> "master1.kr 서버(172.233.82.191, Apache)에서 `old.master1.kr` 도메인도 같은 사이트로 접속되도록
+> 가상호스트에 ServerAlias 추가와 SSL 인증서(old.master1.kr) 발급 부탁드립니다.
+> 곧 master1.kr / www.master1.kr 은 다른 곳으로 연결을 옮길 예정입니다."
+
+Apache 직접 관리 시: 가상호스트에 `ServerAlias old.master1.kr` 추가 → `sudo certbot --apache -d old.master1.kr` → `sudo systemctl reload httpd`
+
+**② 가비아에 old 레코드 추가** (My가비아 → DNS 관리툴 → master1.kr → 설정)
+
+| 타입 | 호스트 | 값 |
+|---|---|---|
+| A | old | 172.233.82.191 |
+
+→ `https://old.master1.kr` 로 기존 사이트가 열리는지 확인 (로그인·관리자 화면 포함)
+
+**③ GitHub 에 도메인 등록**: https://github.com/andy202082/test/settings/pages → Custom domain `master1.kr` → Save
+
+**④ 가비아에서 메인 주소 전환** — 기존 `@` A 레코드(172.233.82.191)와 `www` 레코드를 지우고:
+
+| 타입 | 호스트 | 값 |
+|---|---|---|
+| A | @ | 185.199.108.153 |
+| A | @ | 185.199.109.153 |
+| A | @ | 185.199.110.153 |
+| A | @ | 185.199.111.153 |
+| CNAME | www | andy202082.github.io. |
+
+(반영 10분~최대 24시간)
+
+**⑤ "연결 끝" 알리기** → Claude 가 `src/content.py` 의 `domain` 을 `https://master1.kr` 로 바꿔 배포·확인
+→ GitHub Pages 설정에서 **Enforce HTTPS** 체크 (인증서 발급 최대 24시간)
+
+### 옛 주소 자동 이동 (이미 반영됨, `site/404.html`)
+- `about.php` → STORY, `experts.php`·`expert_view.php?id=…` → 달인 프로필(해당 달인), `service_view.php?code=…`·`inspection_view.php?code=…` → 해당 서비스 항목, `cases.php` → 해결사례, `faq.php` → FAQ
+- `login`·`partners`·`request_quote`·`request_sos`·`notice`·`privacy`·`admin` → **old.master1.kr 같은 주소로**
+- 새 사이트 하단에도 공지사항·파트너 등록·개인정보 처리방침 → old.master1.kr 링크
+
+### 주의
+- 기존 사이트 안에 `https://master1.kr/...` 처럼 **주소 전체를 적어 둔 링크·이미지**가 있으면 전환 후 새 사이트로 가게 됩니다. 관리자 화면·업로드 이미지 경로를 ②단계에서 확인하세요.
+- master1.kr 에는 메일(MX) 설정이 없어 메일에는 영향이 없습니다 (현재 ii21@naver.com 사용).
+
+---
+
 ## ⚡ 바로 공개 주소로 보기 (3가지 중 하나 선택)
 
 저장소(`andy202082/test`)가 **비공개**이므로, 무료 계정이면 ② 또는 ③이 가장 쉽습니다.
