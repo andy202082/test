@@ -203,31 +203,38 @@ DOOR_SLUGS = ("fire-safety", "fire-construction", "building", "inspection")  # �
 
 
 def door(c, i):
-    """방화문 카드. 문이 열리면 안쪽(room)에 고급형 메뉴판이 보입니다."""
-    subs = "".join(f"<li{' class=is-hot' if s.get('hot') else ''}>{e(s['name'])}</li>" for s in c["sections"])
+    """방화문 카드 — 닫힌 채로 시작, 누르면 열리고(안쪽 메뉴판), 닫기로 다시 닫힘. 한 번에 한 문만 열림."""
+    subs = "".join(f'<li{" class=is-hot" if s.get("hot") else ""}><a href="{link(c, s)}">{e(s["name"])}</a></li>' for s in c["sections"])
     return f"""
-    <li class="door" style="--d:{i * 0.18:.2f}s"><a href="{c['slug']}.html">
+    <li class="door" style="--d:0s">
       <div class="frame">
         <div class="fx">
-          <div class="room">
+          <div class="room" id="room-{c['slug']}">
+            <button class="door-close" type="button" aria-label="{e(c['name'])} 문 닫기">닫기 ✕</button>
             <span class="r-no">No. {c['no']}</span>
             <strong class="r-ttl">{e(c['name'])}</strong>
             <span class="r-en">{c['en']}</span>
             <ul>{subs}</ul>
+            <a class="r-enter" href="{c['slug']}.html">들어가기 →</a>
           </div>
           <span class="spill" aria-hidden="true"></span>
           <span class="leaf l" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
           <span class="leaf r" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
         </div>
+        <button class="door-btn" type="button" aria-expanded="false" aria-controls="room-{c['slug']}" aria-label="{e(c['name'])} 문 열기">
+          <span class="knock">똑똑 · 눌러서 열기</span>
+        </button>
         <span class="plate" aria-hidden="true">{c['no']}</span>
       </div>
-      <p class="d-no">No. {c['no']} <span>{c['en']}</span></p>
-      <h3>{e(c['name'])}</h3>
-      <p class="d-q">{e(c['question'])}</p>
-      <p class="d-t">{e(c['desc'])}</p>
-      {cat_avatars(c, 'd-av')}
-      <span class="d-go">ENTER</span>
-    </a></li>"""
+      <a class="d-info" href="{c['slug']}.html">
+        <p class="d-no">No. {c['no']} <span>{c['en']}</span></p>
+        <h3>{e(c['name'])}</h3>
+        <p class="d-q">{e(c['question'])}</p>
+        <p class="d-t">{e(c['desc'])}</p>
+        {cat_avatars(c, 'd-av')}
+        <span class="d-go">ENTER</span>
+      </a>
+    </li>"""
 
 
 # ---------------------------------------------------------------- 달인 (전문가) 컴포넌트
@@ -534,7 +541,7 @@ def page_index():
   <div class="wrap">
     <p class="eyebrow">FOUR DOORS</p>
     <h2 class="tt" id="doors-title">어느 문으로<br>들어가시겠어요?</h2>
-    <p class="lead">문을 누르면 해당 메뉴로 들어갑니다.</p>
+    <p class="lead">문을 누르면 열립니다. 안을 둘러보고 닫은 뒤, 다음 문을 열어보세요.</p>
     <ul class="d-list">{doors}</ul>
   </div>
 </section>
