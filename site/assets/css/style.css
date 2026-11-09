@@ -42,18 +42,20 @@ img{max-width:100%;display:block}
 .hd-in{display:flex;align-items:center;gap:28px;height:100%}
 /* ---- 로고: C형 배지 + 워드마크 (D형 헤더 배치) ---- */
 .logo{display:flex;align-items:center;gap:10px;flex:none}
-.badge-c{--bc:#1B1E24;position:relative;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:40px;height:40px;border-radius:11px;background:var(--bc);color:#fff;flex:none;line-height:1}
+.badge-c{--bc:#1B1E24;position:relative;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;background:var(--bc);color:#fff;flex:none;line-height:1}
 .badge-c .roof{width:62%;height:auto;margin-top:-2px}
-.badge-c b{font-size:12px;font-weight:900;letter-spacing:-.5px;margin-top:2px}
+.badge-c b{font-size:14px;font-weight:900;letter-spacing:-.5px;margin-top:3px}
 .badge-c.big{width:168px;height:168px;border-radius:40px;padding:18px}
 .badge-c.big .roof{width:70%;margin-top:0}
 .badge-c.big b{font-size:34px;letter-spacing:-1.5px;margin-top:8px}
 .bc-sub{margin-top:10px;font-size:13px;font-weight:700;color:#D5D8DE;white-space:nowrap}
 .bc-sub i{font-style:normal;color:var(--red);margin:0 2px}
-.logo-word{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
-.logo-word small{font-size:14px;font-weight:700;color:var(--ink)}
-.logo-word strong{font-size:23px;font-weight:900;letter-spacing:-1px;color:var(--red)}
-.ft .logo-word small,.ft .logo-word strong{color:#fff}
+.logo-word{display:inline-grid;align-content:center;height:46px;padding-left:12px;border-left:1px solid var(--line);white-space:nowrap}
+.logo-word>span{display:block;text-align:justify;text-align-last:justify;line-height:1.15}
+.lw1{font-size:19px;font-weight:800;letter-spacing:.02em;color:var(--ink)}
+.lw2{display:flex!important;justify-content:space-between;font-size:19px;font-weight:900;color:var(--red)}
+.lw2 i{font-style:normal}
+.ft .logo-word{border-color:#2F333B}.ft .lw1{color:#fff}.ft .lw2{color:#FF3B47}
 .ft .badge-c{--bc:#2A2E36;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
 
 /* ---- A형 엠블럼 락업 ---- */
@@ -461,7 +463,7 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
   .hd{backdrop-filter:none;-webkit-backdrop-filter:none;background:#fff}
   .hd-cta{display:none}
   .menu-btn{display:block}
-  .logo-word strong{font-size:21px}
+  .badge-c{width:42px;height:42px}.logo-word{height:42px;padding-left:10px}.lw1,.lw2{font-size:17.5px}
   .gnb{position:fixed;inset:var(--hd) 0 0 0;height:auto;background:#fff;overflow-y:auto;transform:translateX(100%);transition:transform .4s var(--ease);padding-bottom:90px}
   .gnb.open{transform:none}
   .nav{flex-direction:column;height:auto}
