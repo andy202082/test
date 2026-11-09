@@ -519,3 +519,136 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
   .hero-in{position:relative;padding:60px 0}
   .leaf,.spill,.beam{display:none}.room>*{opacity:1;transform:none}
 }
+
+/* =========================================================
+   달인 (전문가) — 아바타 · 라운지 · 담당 달인 카드 · 프로필
+   ========================================================= */
+.xph{--fx:50%}
+.xph,.av{display:block;overflow:hidden;background:#2A2E36}
+.xph img,.av img{width:100%;height:100%;object-fit:cover;object-position:var(--fx) var(--fy,30%);display:block}
+.av img{object-position:50% 50%}
+.av{width:30px;height:30px;border-radius:50%;flex:none;box-shadow:0 0 0 2px #fff}
+.av.lg{width:58px;height:58px;box-shadow:none}
+.av-stack{display:flex}.av-stack .av+.av{margin-left:-9px}
+.m-av,.d-av{display:flex;align-items:center;gap:10px;margin-top:12px}
+.av-t{font-size:12.5px;font-weight:500}
+.m-av .av{box-shadow:0 0 0 2px var(--night)}.m-av .av-t{color:var(--ivory-dim)}
+.d-av .av-t{color:var(--ink-2)}
+/* 사례 카드 담당 */
+.xchip{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:5px 12px 5px 5px;border-radius:999px;background:var(--bg-2);font-size:12.5px;color:var(--ink-2);transition:.15s}
+.xchip .av{width:26px;height:26px;box-shadow:none}
+.xchip b{color:var(--ink)}.xchip:hover{background:var(--red-soft)}
+
+/* ---- 메인: 달인 라운지 (문 뒤의 사람들) ---- */
+.lounge{background:var(--night);color:#fff;position:relative;overflow:hidden}
+.lounge::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 80% 0%,rgba(255,244,228,.10),transparent 70%),radial-gradient(50% 40% at 0% 100%,rgba(227,0,15,.18),transparent 70%);pointer-events:none}
+.lounge .wrap{position:relative}
+.lounge .tt{font-family:var(--serif);font-weight:600;letter-spacing:0;color:#FBF7F0}
+.lounge .lead{color:var(--ivory-dim)}
+.lounge .eyebrow{color:#FF4D57}
+.lg-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.lg-head>div:first-child{min-width:0;max-width:640px}
+.lg-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.lg-tabs button{padding:9px 16px;border-radius:999px;border:1px solid rgba(239,232,220,.25);color:var(--ivory);font-size:14px;font-weight:500;transition:.2s}
+.lg-tabs button:hover{border-color:var(--ivory)}
+.lg-tabs button.on{background:var(--ivory);color:var(--ink);border-color:var(--ivory);font-weight:700}
+.mgrid{margin-top:40px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.mcard{min-width:0;transition:opacity .35s,transform .35s}
+.mcard.hide{display:none}
+.mcard a{display:flex;flex-direction:column;height:100%;border-radius:18px;overflow:hidden;background:#1A1D22;border:1px solid rgba(239,232,220,.1);transition:transform .35s var(--ease),border-color .35s,box-shadow .35s}
+.mcard a:hover{transform:translateY(-6px);border-color:rgba(239,232,220,.35);box-shadow:0 26px 40px -20px rgba(0,0,0,.8)}
+.mc-ph{position:relative;aspect-ratio:4/3.4}
+.mc-ph .xph{position:absolute;inset:0}
+.mc-ph .xph img{transition:transform .8s var(--ease)}
+.mcard a:hover .mc-ph img{transform:scale(1.06)}
+.mc-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(26,29,34,.95))}
+.mc-honor{position:absolute;z-index:1;left:12px;top:12px;font-family:var(--serif);font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--ink);background:var(--ivory);padding:3px 10px;border-radius:3px}
+.mc-yrs{position:absolute;z-index:1;right:12px;bottom:12px;font-size:11.5px;font-weight:700;color:#fff;background:var(--red);padding:3px 9px;border-radius:999px}
+.mc-bd{padding:6px 18px 20px;display:flex;flex-direction:column;flex:1}
+.mc-f{font-size:11.5px;letter-spacing:.14em;color:var(--ivory-dim)}
+.mcard h3{margin-top:4px;font-family:var(--serif);font-weight:600;font-size:22px;color:#FBF7F0;letter-spacing:.02em}
+.mcard h3 small{font-size:13px;color:var(--ivory-dim);font-weight:500;margin-left:2px}
+.mc-q{margin-top:10px;font-family:var(--serif);font-size:14px;line-height:1.6;color:#E6DFD3}
+.mc-tags{list-style:none;margin-top:auto;padding-top:14px;display:flex;flex-wrap:wrap;gap:5px}
+.mc-tags li{font-size:11.5px;color:var(--ivory);border:1px solid rgba(239,232,220,.2);padding:2px 8px;border-radius:4px}
+.lounge .more-link{color:var(--ivory);margin-top:30px}
+
+/* ---- 하위 콘텐츠: 담당 달인 (대표) ---- */
+.xp-lead{margin-top:34px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);border-radius:22px;overflow:hidden;background:var(--night);color:#fff;box-shadow:0 30px 50px -30px rgba(22,24,29,.6)}
+.xp-ph{position:relative;min-height:320px}
+.xp-ph .xph{position:absolute;inset:0}
+.xp-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,var(--night))}
+.xp-honor{position:absolute;z-index:1;left:16px;top:16px;font-family:var(--serif);font-weight:600;font-size:13px;letter-spacing:.12em;color:var(--ink);background:var(--ivory);padding:4px 12px;border-radius:3px}
+.xp-bd{padding:30px 32px 30px 20px;min-width:0}
+.xp-k{font-size:12px;letter-spacing:.12em;color:var(--ivory-dim)}
+.xp-lead h3,.pf-bd h2{margin-top:6px;font-family:var(--serif);font-weight:600;font-size:30px;color:#FBF7F0;letter-spacing:.02em;display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 10px}
+.xp-lead h3 small,.pf-bd h2 small{font-size:15px;color:var(--ivory-dim);font-weight:500}
+.xp-yrs{font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;color:#fff;background:var(--red);padding:3px 10px;border-radius:999px;letter-spacing:0}
+.xp-q{margin-top:12px;font-family:var(--serif);font-size:19px;line-height:1.55;color:#F3EDE3}
+.xp-creds{list-style:none;margin-top:16px;display:flex;flex-wrap:wrap;gap:6px}
+.xp-creds li{font-size:12.5px;color:var(--ivory);border:1px solid rgba(239,232,220,.22);padding:4px 10px;border-radius:4px}
+.xp-str{list-style:none;margin-top:16px;display:grid;gap:7px}
+.xp-str li{position:relative;padding-left:22px;font-size:14.5px;color:#D9D3C8}
+.xp-str li::before{content:"";position:absolute;left:2px;top:9px;width:10px;height:5px;border-left:2px solid #FF4D57;border-bottom:2px solid #FF4D57;transform:rotate(-45deg)}
+.xp-case{margin-top:18px;padding:14px 16px;border-radius:12px;background:rgba(239,232,220,.06);border-left:3px solid var(--red)}
+.xp-case b{font-size:13.5px;color:var(--ivory)}
+.xp-case p{margin-top:4px;font-size:13.5px;color:#BFB8AC}
+.xp-acts{margin-top:20px;display:flex;gap:8px;flex-wrap:wrap}
+.xp-lead .btn-ghost,.profile .btn-ghost{background:transparent;color:var(--ivory);border-color:rgba(239,232,220,.3)}
+.xp-lead .btn-ghost:hover,.profile .btn-ghost:hover{border-color:var(--ivory)}
+.xp-more{margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.xp-more>p{font-size:13px;font-weight:700;color:var(--ink-3);margin-right:4px}
+.xp-mini{display:flex;align-items:center;gap:12px;padding:10px 18px 10px 10px;border-radius:16px;background:#fff;border:1px solid var(--line);min-width:0;flex:1 1 300px;max-width:460px;transition:.2s}
+.xp-mini:hover{border-color:var(--red);transform:translateY(-2px)}
+.xp-mini>span:last-child{display:flex;flex-direction:column;min-width:0}
+.xp-mini small{font-size:11.5px;color:var(--ink-3)}
+.xp-mini b{font-family:var(--serif);font-size:16px;font-weight:600}
+.xp-mini i{font-style:normal;font-family:var(--serif);font-size:13px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ---- 프로필 페이지 ---- */
+.profile{padding:72px 0;background:#fff;scroll-margin-top:calc(var(--hd) + 50px)}
+.profile.alt{background:var(--bg-2)}
+.pf-in{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:44px;align-items:start}
+.profile.alt .pf-ph{order:2}
+.pf-ph{position:sticky;top:calc(var(--hd) + 70px);aspect-ratio:4/4.6;border-radius:22px;overflow:hidden;box-shadow:0 30px 50px -30px rgba(22,24,29,.6)}
+.pf-ph .xph{position:absolute;inset:0}
+.pf-bd{min-width:0}
+.pf-bd .xp-k{color:var(--red);font-weight:700}
+.pf-bd h2{color:var(--ink);font-size:36px}
+.pf-bd h2 small{color:var(--ink-3)}
+.pf-tag{margin-top:6px;color:var(--ink-2)}
+.pf-bd .xp-q{color:var(--ink);font-size:21px;padding-left:16px;border-left:3px solid var(--red)}
+.pf-cols{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pf-cols h3,.pf-svc h3{font-size:13px;letter-spacing:.12em;color:var(--ink-3);font-weight:700}
+.pf-bd .xp-creds{flex-direction:column;align-items:flex-start;margin-top:10px}
+.pf-bd .xp-creds li{color:var(--ink);border-color:var(--line);background:#fff}
+.pf-bd .xp-str{margin-top:10px}.pf-bd .xp-str li{color:var(--ink-2)}
+.pf-bd .xp-case{background:#fff;border:1px solid var(--line);border-left:3px solid var(--red)}
+.pf-bd .xp-case b{color:var(--ink)}.pf-bd .xp-case p{color:var(--ink-2)}
+.pf-promise{margin-top:18px;font-family:var(--serif);font-size:16px;color:var(--ink);font-weight:500}
+.pf-promise::before{content:"달인의 약속 — ";color:var(--red);font-weight:600}
+.pf-svc{margin-top:20px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pf-svc h3{width:100%;margin-bottom:4px}
+.pf-svc a{font-size:13px;padding:6px 12px;border-radius:999px;background:var(--red-soft);color:var(--red-dark);font-weight:500}
+.pf-svc a:hover{background:var(--red);color:#fff}
+.profile .btn-ghost{color:var(--ink);border-color:var(--line)}
+
+@media (max-width:1100px){.mgrid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:900px){
+  .mgrid{grid-template-columns:repeat(2,1fr)}
+  .xp-lead,.pf-in{grid-template-columns:1fr}
+  .xp-ph{min-height:0;aspect-ratio:16/10}.xp-ph::after{background:linear-gradient(180deg,transparent 55%,var(--night))}
+  .xp-bd{padding:6px 22px 26px}
+  .pf-ph{position:relative;top:0;aspect-ratio:16/11}.profile.alt .pf-ph{order:0}
+  .pf-cols{grid-template-columns:1fr}
+  .profile{padding:52px 0}
+}
+@media (max-width:640px){
+  .mgrid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;margin-left:-16px;margin-right:-16px;padding:4px 16px 10px;scrollbar-width:none}
+  .mgrid::-webkit-scrollbar{display:none}
+  .mcard{flex:0 0 72%;scroll-snap-align:start}
+  .lg-tabs{overflow-x:auto;flex-wrap:nowrap;width:100%;scrollbar-width:none}
+  .lg-tabs button{flex:none}
+  .xp-lead h3,.pf-bd h2{font-size:26px}
+  .xp-q{font-size:17px}
+}

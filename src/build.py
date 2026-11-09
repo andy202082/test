@@ -12,7 +12,7 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
-from content import SITE, EXPERTS, CATEGORIES, STORY, FAQ  # noqa: E402
+from content import SITE, EXPERTS, SECTION_EXPERTS, CASE_EXPERTS, CATEGORIES, STORY, FAQ  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "site")
 e = html.escape
@@ -106,7 +106,7 @@ def header(active=""):
     items = []
     for c in CATEGORIES:
         subs = "".join(
-            f'<li><a href="{c["slug"]}.html#{s["id"]}"><b>{e(s["name"])}{hot(s)}</b>'
+            f'<li><a href="{link(c, s)}"><b>{e(s["name"])}{hot(s)}</b>'
             f'<small>{e(s["summary"])}</small></a></li>' for s in c["sections"])
         cur = ' aria-current="page"' if c["slug"] == active else ""
         story = " is-story" if c["slug"] == "story" else ""
@@ -121,6 +121,7 @@ def header(active=""):
               <span class="m-no">{c['no']} · {c['en']}</span>
               <strong>{e(c['name'])}</strong>
               <span class="m-q">{e(c['question'])}</span>
+              {cat_avatars(c)}
               <span class="m-go">문 열고 들어가기 →</span>
             </a>
             <ul class="m-list">{subs}</ul>
@@ -224,15 +225,110 @@ def door(c, i):
       <h3>{e(c['name'])}</h3>
       <p class="d-q">{e(c['question'])}</p>
       <p class="d-t">{e(c['desc'])}</p>
+      {cat_avatars(c, 'd-av')}
       <span class="d-go">ENTER</span>
     </a></li>"""
 
 
-def expert_card(key):
+# ---------------------------------------------------------------- 달인 (전문가) 컴포넌트
+GROUPS = {"fire": "소방", "building": "건물관리·보험", "legal": "법정점검·위생"}
+
+
+def link(c, s):
+    return s.get("href") or f'{c["slug"]}.html#{s["id"]}'
+
+
+def expert_services(key):
+    """이 달인이 맡은 콘텐츠 [(카테고리, 섹션)]"""
+    out = []
+    for c in CATEGORIES:
+        for s in c["sections"]:
+            if key in SECTION_EXPERTS.get(s["id"], []):
+                out.append((c, s))
+    return out
+
+
+def cat_experts(c):
+    keys = []
+    for s in c["sections"]:
+        for k in SECTION_EXPERTS.get(s["id"], []):
+            if k not in keys:
+                keys.append(k)
+    return keys
+
+
+def photo(x, cls="xph"):
+    if cls.startswith("av"):  # 작은 동그라미: 미리 잘라 둔 얼굴 썸네일
+        return (f'<span class="{cls}"><img src="assets/img/experts/thumb-{x["photo"]}" alt="{e(x["name"])} {e(x["honor"])}" '
+                f'loading="lazy" decoding="async" width="80" height="80"></span>')
+    return (f'<span class="{cls}" style="--fx:{x["focus"]}%;--fy:{x.get("fy", 30)}%"><img src="assets/img/experts/{x["photo"]}" '
+            f'alt="{e(x["name"])} {e(x["honor"])} ({e(x["field"])})" loading="lazy" decoding="async"></span>')
+
+
+def cat_avatars(c, cls="m-av"):
+    keys = cat_experts(c)
+    if not keys:
+        return ""
+    faces = "".join(photo(EXPERTS[k], "av") for k in keys[:5])
+    names = " · ".join(EXPERTS[k]["name"] for k in keys[:3]) + (f" 외 {len(keys) - 3}인" if len(keys) > 3 else "")
+    return f'<span class="{cls}"><span class="av-stack">{faces}</span><span class="av-t">담당 달인 {e(names)}</span></span>'
+
+
+def chip_expert(key):
     x = EXPERTS[key]
-    return f"""<div class="expert"><span class="ex-av" aria-hidden="true">{e(x['name'][0])}</span>
-      <div><p class="ex-k">담당 달인 · {e(x['field'])}</p><b>{e(x['name'])}</b><p>{e(x['desc'])}</p></div>
-      <a class="btn btn-red sm" href="index.html#quote">이 달인에게 견적</a></div>"""
+    return (f'<a class="xchip" href="experts.html#{key}">{photo(x, "av")}<span>담당 <b>{e(x["name"])} {e(x["honor"])}</b></span></a>')
+
+
+def master_card(key):
+    """메인 '달인 라운지' 카드"""
+    x = EXPERTS[key]
+    tags = "".join(f'<li>{e(s["name"])}</li>' for _, s in expert_services(key)[:3])
+    return f"""
+      <article class="mcard" data-g="{x['group']}"><a href="experts.html#{key}">
+        <div class="mc-ph">{photo(x)}<span class="mc-honor">{e(x['honor'])}</span><span class="mc-yrs">{e(x['years'])}</span></div>
+        <div class="mc-bd">
+          <p class="mc-f">{e(x['field'])}</p>
+          <h3>{e(x['name'])} <small>{e(x['honor'])}</small></h3>
+          <p class="mc-q">“{e(x['quote'])}”</p>
+          <ul class="mc-tags">{tags}</ul>
+        </div></a></article>"""
+
+
+def expert_lead(key, svc_name=None):
+    """하위 콘텐츠의 대표 담당 달인 (크게)"""
+    x = EXPERTS[key]
+    creds = "".join(f"<li>{e(v)}</li>" for v in x["creds"])
+    strengths = "".join(f"<li>{e(v)}</li>" for v in x["strengths"])
+    ct, cx = x["case"]
+    return f"""
+  <div class="xp-lead">
+    <div class="xp-ph">{photo(x)}<span class="xp-honor">{e(x['honor'])}</span></div>
+    <div class="xp-bd">
+      <p class="xp-k">이 서비스의 담당 달인 · {e(x['field'])}</p>
+      <h3>{e(x['name'])} <small>{e(x['honor'])}</small><span class="xp-yrs">{e(x['years'])}</span></h3>
+      <p class="xp-q">“{e(x['quote'])}”</p>
+      <ul class="xp-creds">{creds}</ul>
+      <ul class="xp-str">{strengths}</ul>
+      <div class="xp-case"><b>대표 해결 사례 · {e(ct)}</b><p>{e(cx)}</p></div>
+      <div class="xp-acts"><a class="btn btn-red sm" href="index.html#quote">{e(x['name'])} {e(x['honor'])}에게 견적</a><a class="btn btn-ghost sm" href="experts.html#{key}">프로필 전체 보기</a></div>
+    </div>
+  </div>"""
+
+
+def expert_mini(key):
+    x = EXPERTS[key]
+    return (f'<a class="xp-mini" href="experts.html#{key}">{photo(x, "av lg")}<span><small>{e(x["field"])}</small>'
+            f'<b>{e(x["name"])} {e(x["honor"])}</b><i>“{e(x["quote"])}”</i></span></a>')
+
+
+def section_experts(s):
+    keys = SECTION_EXPERTS.get(s["id"], [])
+    if not keys:
+        return ""
+    out = expert_lead(keys[0])
+    if len(keys) > 1:
+        out += '<div class="xp-more"><p>함께하는 달인</p>' + "".join(expert_mini(k) for k in keys[1:]) + "</div>"
+    return out
 
 
 def section(c, s, idx):
@@ -254,15 +350,15 @@ def section(c, s, idx):
     if s.get("cases"):
         out.append('<div class="cases">' + "".join(
             f'<article class="case"><div class="ba"><div class="b"><span>BEFORE</span></div><div class="a"><span>AFTER</span></div></div>'
-            f'<div class="bd"><p class="cat">{e(k)}</p><h3>{e(t)}</h3><div class="meta"><span>{e(d)}</span><span>{e(w)}</span></div></div></article>'
-            for k, t, d, w in s["cases"]) + "</div>")
+            f'<div class="bd"><p class="cat">{e(k)}</p><h3>{e(t)}</h3><div class="meta"><span>{e(d)}</span><span>{e(w)}</span></div>'
+            f'{chip_expert(CASE_EXPERTS[i]) if i < len(CASE_EXPERTS) else ""}</div></article>'
+            for i, (k, t, d, w) in enumerate(s["cases"])) + "</div>")
     if s.get("steps"):
         out.append('<ol class="steps">' + "".join(
             f'<li><b>{e(t)}</b><p>{e(d)}</p></li>' for t, d in s["steps"]) + "</ol>")
     if s.get("note"):
         out.append(f'<p class="s-note">⚠️ {e(s["note"])}</p>')
-    if s.get("expert"):
-        out.append(expert_card(s["expert"]))
+    out.append(section_experts(s))
     cta = s.get("cta", f'{s["name"]} 견적 받기')
     out.append(f'<div class="s-cta"><a class="btn btn-red" href="index.html#quote">{e(cta)}</a>'
                f'<a class="btn btn-ghost" href="tel:{SITE["tel"]}">전화 상담 {SITE["tel"]}</a></div>')
@@ -271,7 +367,7 @@ def section(c, s, idx):
 
 
 def page_hero(c):
-    chips = "".join(f'<a href="#{s["id"]}"{" class=is-hot" if s.get("hot") else ""}>{e(s["name"])}</a>' for s in c["sections"])
+    chips = "".join(f'<a href="{s.get("href", "#" + s["id"])}"{" class=is-hot" if s.get("hot") else ""}>{e(s["name"])}</a>' for s in c["sections"])
     return f"""
 <section class="ph">
   <div class="ph-room">
@@ -289,7 +385,7 @@ def page_hero(c):
   <span class="ph-sign" aria-hidden="true">{icon(c['icon'], 'ph-ic')}<b>{e(c['name'])}</b></span>
 </section>
 <nav class="subtabs" aria-label="{e(c['name'])} 하위 메뉴"><div class="wrap">{''.join(
-        f'<a href="#{s["id"]}">{e(s["name"])}</a>' for s in c["sections"])}</div></nav>"""
+        f'<a href="{s.get("href", "#" + s["id"])}">{e(s["name"])}</a>' for s in c["sections"])}</div></nav>"""
 
 
 def other_doors(cur):
@@ -347,6 +443,42 @@ def page_story():
     return body
 
 
+def page_experts():
+    pseudo = {"slug": "story", "no": "05", "en": "MASTERS", "name": "검증된 달인", "icon": "shield",
+              "question": "우리 건물은 누가 맡게 되나요?",
+              "desc": f"현장에서 검증된 달인 {len(EXPERTS)}인. 모든 서비스에 담당 달인의 이름을 겁니다.",
+              "sections": [{"id": k, "name": f"{x['name']} {x['honor']}"} for k, x in EXPERTS.items()]}
+    profiles = []
+    for i, (k, x) in enumerate(EXPERTS.items()):
+        svcs = "".join(f'<a href="{link(c, s)}">{e(c["name"])} · {e(s["name"])}</a>' for c, s in expert_services(k))
+        creds = "".join(f"<li>{e(v)}</li>" for v in x["creds"])
+        strengths = "".join(f"<li>{e(v)}</li>" for v in x["strengths"])
+        ct, cx = x["case"]
+        profiles.append(f"""
+<article class="profile{' alt' if i % 2 else ''}" id="{k}"><div class="wrap pf-in">
+  <div class="pf-ph">{photo(x)}<span class="xp-honor">{e(x['honor'])}</span></div>
+  <div class="pf-bd">
+    <p class="xp-k">{e(GROUPS[x['group']])} · {e(x['field'])}</p>
+    <h2>{e(x['name'])} <small>{e(x['honor'])}</small><span class="xp-yrs">{e(x['years'])}</span></h2>
+    <p class="pf-tag">{e(x['tagline'])}</p>
+    <p class="xp-q">“{e(x['quote'])}”</p>
+    <div class="pf-cols">
+      <div><h3>경력 · 자격</h3><ul class="xp-creds">{creds}</ul></div>
+      <div><h3>핵심 강점</h3><ul class="xp-str">{strengths}</ul></div>
+    </div>
+    <div class="xp-case"><b>대표 해결 사례 · {e(ct)}</b><p>{e(cx)}</p></div>
+    <p class="pf-promise">{e(x['promise'])}</p>
+    <div class="pf-svc"><h3>담당 서비스</h3>{svcs}</div>
+    <div class="xp-acts"><a class="btn btn-red sm" href="index.html#quote">{e(x['name'])} {e(x['honor'])}에게 견적</a><a class="btn btn-ghost sm" href="tel:{SITE['tel']}">전화 {SITE['tel']}</a></div>
+  </div>
+</div></article>""")
+    body = head("검증된 달인 | 건물관리 달인명인 — 분야별 달인 프로필",
+                f"비상방송, 소방밸브, 방화셔터, 소방공사, 보험, 기계설비, 저수조까지 현장에서 검증된 달인 {len(EXPERTS)}인의 경력과 해결 사례.",
+                "experts.html")
+    body += header("story") + page_hero(pseudo) + "".join(profiles) + other_doors("story") + band() + footer()
+    return body
+
+
 def page_index():
     doors = "".join(door(c, i) for i, c in enumerate(x for x in CATEGORIES if x["slug"] in DOOR_SLUGS))
     faq = "".join(f'<details{" open" if i == 0 else ""}><summary>{e(q)}</summary><div class="ans">{e(a)}</div></details>'
@@ -358,8 +490,9 @@ def page_index():
     bt = ["공동주택", "빌딩·상가", "고시원·숙박", "학교·공공", "공장·창고"]
     bchips = "".join(f'<label class="chip"><input type="radio" name="bt" value="{e(v)}"{" checked" if i == 0 else ""}><span>{e(v)}</span></label>'
                      for i, v in enumerate(bt))
-    experts = "".join(f'<li><span class="ex-av" aria-hidden="true">{e(x["name"][0])}</span><b>{e(x["name"])}</b><small>{e(x["field"])}</small></li>'
-                      for x in EXPERTS.values())
+    cards = "".join(master_card(k) for k in EXPERTS)
+    tabs = '<button type="button" class="on" data-f="all">전체 {}</button>'.format(len(EXPERTS)) + "".join(
+        f'<button type="button" data-f="{g}">{e(n)} {sum(1 for x in EXPERTS.values() if x["group"] == g)}</button>' for g, n in GROUPS.items())
     br = "".join(f'<li><b>{e(b["area"])}</b><span>{e(b["addr"])}</span></li>' for b in SITE["branches"])
 
     body = head("건물관리 달인명인 | 소방점검 + 소방공사 + 화재·누수보험 한번에",
@@ -402,6 +535,22 @@ def page_index():
     <h2 class="tt" id="doors-title">어느 문으로<br>들어가시겠어요?</h2>
     <p class="lead">문을 누르면 해당 메뉴로 들어갑니다.</p>
     <ul class="d-list">{doors}</ul>
+  </div>
+</section>
+
+<!-- 2-1. 달인 라운지: 문 뒤의 사람들 -->
+<section class="sec lounge" id="masters" aria-labelledby="masters-title">
+  <div class="wrap">
+    <div class="lg-head">
+      <div>
+        <p class="eyebrow">BEHIND THE DOORS</p>
+        <h2 class="tt" id="masters-title">문 뒤에는,<br>검증된 달인 {len(EXPERTS)}인이 있습니다</h2>
+        <p class="lead">자격증보다 해결 경험을 먼저 봅니다. 모든 서비스에 담당 달인의 이름을 걸었습니다.</p>
+      </div>
+      <div class="lg-tabs" role="group" aria-label="분야별 달인 보기">{tabs}</div>
+    </div>
+    <div class="mgrid">{cards}</div>
+    <a class="more-link" href="experts.html">달인 {len(EXPERTS)}인 프로필 전체 보기 →</a>
   </div>
 </section>
 
@@ -470,8 +619,6 @@ def page_index():
     <p class="eyebrow">PROCESS</p>
     <h2 class="tt">점검에서 끝나지 않습니다</h2>
     <ol class="steps big"><li><b>점검</b><p>소방시설관리사가 현장 점검 및 계측</p></li><li><b>보고서 제출</b><p>결과보고서 작성 · 관할 관청 제출 대행</p></li><li><b>지적사항 보수</b><p>달인 네트워크가 견적 비교 후 바로 수리</p></li><li><b>월간 관리</b><p>다음 점검까지 상시 관리</p></li></ol>
-    <h3 class="sub-h">검증된 달인들</h3>
-    <ul class="ex-strip">{experts}</ul>
   </div>
 </section>
 
@@ -505,7 +652,7 @@ def write(name, text):
 
 def sitemap():
     base = SITE["domain"].rstrip("/")
-    urls = [""] + [c["slug"] + ".html" for c in CATEGORIES]
+    urls = [""] + [c["slug"] + ".html" for c in CATEGORIES] + ["experts.html"]
     body = "".join(f"  <url><loc>{base}/{u}</loc></url>\n" for u in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{body}</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n")
@@ -546,6 +693,7 @@ if __name__ == "__main__":
     write("index.html", page_index())
     for c in CATEGORIES:
         write(c["slug"] + ".html", page_story() if c["slug"] == "story" else page_category(c))
+    write("experts.html", page_experts())
     sitemap()
     # 사용법: python3 src/build.py --snapshot v1
     if len(sys.argv) == 3 and sys.argv[1] == "--snapshot":

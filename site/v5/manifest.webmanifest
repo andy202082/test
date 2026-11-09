@@ -1,0 +1,22 @@
+{
+  "name": "건물관리 달인명인 - 소방점검·소방공사·화재보험·건물관리 한번에",
+  "short_name": "달인명인",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#1B1E24",
+  "theme_color": "#E3000F",
+  "lang": "ko",
+  "icons": [
+    {
+      "src": "assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
