@@ -126,8 +126,12 @@ img{max-width:100%;display:block}
 .bar{position:absolute;left:10%;right:10%;top:56%;height:12px;border-radius:6px;background:linear-gradient(180deg,#F1F3F6,#A9AEB7);box-shadow:0 3px 6px rgba(0,0,0,.35)}
 
 /* ---------------------------------------------------------- 1. 인트로 (스크롤로 문 열기) */
-.intro{position:relative;height:185vh;background:var(--night)}
-.stage{position:sticky;top:var(--hd);height:calc(100vh - var(--hd));overflow:hidden;perspective:1800px}
+/* 무대 높이: 화면 높이를 따르되 최대 820px (세로로 긴 화면에서 위아래 빈 공간 방지)
+   전체 높이 = 무대 + 문 여는 스크롤 구간(65vh) */
+.intro{--stage:min(calc(100vh - var(--hd)),760px);position:relative;height:calc(var(--stage) + 65vh);background:#fff}
+.stage{position:sticky;top:var(--hd);height:var(--stage);overflow:hidden;perspective:1800px}
+/* 세로로 긴 화면(모니터 세로·브라우저 축소): 문을 고정하지 않고 스크롤하며 열림 → 문 아래 빈 공간 없음 */
+@media (min-height:940px){.intro{height:var(--stage)}.stage{position:relative;top:0}}
 .hero-in{position:absolute;inset:0;display:flex;align-items:center;background:
   linear-gradient(180deg,rgba(255,255,255,0) 60%,#fff 100%),
   repeating-linear-gradient(0deg,transparent 0 47px,#F0F1F4 47px 48px),
@@ -202,6 +206,7 @@ section.sec{padding:96px 0}
    열림: 손잡이(푸시바) 눌림 → 살짝 걸쇠 풀림 → 감속하며 열림 → 끝에서 살짝 되돌아와 멈춤
    안쪽: 어둠이 걷히며 빛이 들어오고, 명조체 메뉴판이 차례로 나타남 */
 .doors{background:#fff}
+section.sec.doors{padding-top:24px}
 .d-list{list-style:none;margin-top:52px;display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
 .d-list.small{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
 .door a{display:flex;flex-direction:column;height:100%}
@@ -502,7 +507,7 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 }
 @media (max-width:640px){
   .wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-  .intro{height:170vh}
+  .intro{height:calc(var(--stage) + 55vh)}
   .door-copy{top:63%;padding:20px 18px 22px;width:min(90%,360px)}
   .door-copy .badge-c.big{width:84px;height:84px;border-radius:22px;padding:9px;margin-bottom:10px}
   .door-copy .badge-c.big b{font-size:24px;margin-top:4px}

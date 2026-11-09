@@ -42,7 +42,13 @@
     const measure = () => {
       const r = intro.getBoundingClientRect();
       const span = intro.offsetHeight - stage.offsetHeight;
-      target = Math.min(1, Math.max(0, -r.top / (span * 0.75)));
+      if (span > 40) {
+        target = Math.min(1, Math.max(0, -r.top / (span * 0.92)));  // 스크롤 끝 직전에 다 열리도록 (헛스크롤 최소화)
+      } else {
+        // 세로로 긴 화면: 고정 없이, 문이 위로 올라가는 동안 열림
+        const hd = stage.getBoundingClientRect().top - r.top + (document.querySelector('.hd')?.offsetHeight || 0);
+        target = Math.min(1, Math.max(0, (hd - r.top) / (stage.offsetHeight * 0.5)));
+      }
       if (!running) { running = true; requestAnimationFrame(tick); }
     };
     const paint = (p) => {
