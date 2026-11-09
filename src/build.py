@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-시설통 정적 사이트 생성기 (외부 라이브러리 없음)
+건물관리 달인명인 정적 사이트 생성기 (외부 라이브러리 없음)
 
     python3 src/build.py
 
@@ -31,8 +31,37 @@ def icon(name, cls="ic"):
             f'stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[name]}</svg>')
 
 
-LOGO = ('<span class="logo-mark"><img src="assets/img/logo-mark.svg" alt="" width="34" height="34"></span>'
-        '<span class="logo-txt">시설통</span>')
+ROOF = ('<svg class="roof" viewBox="0 0 60 18" aria-hidden="true"><path d="M4 16 30 3l26 13" fill="none" '
+        'stroke="#E3000F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+# C형 로고 (배지) — 사이트 대표 로고
+BADGE = f'<span class="badge-c" aria-hidden="true">{ROOF}<b>달인</b></span>'
+LOGO = (BADGE + '<span class="logo-word"><small>건물관리</small><strong>달인명인</strong></span>')
+
+
+def badge_big(sub=True):
+    """C형 큰 배지: 지붕 + 달인명인 + 건물관리 / 소방점검"""
+    s = '<span class="bc-sub">건물관리 <i>/</i> 소방점검</span>' if sub else ""
+    return f'<span class="badge-c big" role="img" aria-label="건물관리 달인명인 로고">{ROOF}<b>달인명인</b>{s}</span>'
+
+
+# A형 엠블럼 (지붕 + 건물 + 점검 완료 체크)
+EMBLEM_A = (
+    '<svg class="emblem-a" viewBox="0 0 120 110" aria-hidden="true">'
+    '<path d="M8 50 60 10l52 40" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>'
+    '<path d="M26 46h56v58H26z" fill="currentColor"/>'
+    '<g fill="#fff"><rect x="34" y="56" width="12" height="12" rx="1.5"/><rect x="50" y="56" width="12" height="12" rx="1.5"/>'
+    '<rect x="34" y="72" width="12" height="12" rx="1.5"/><rect x="50" y="72" width="12" height="12" rx="1.5"/></g>'
+    '<circle cx="88" cy="84" r="21" fill="#E3000F" stroke="#fff" stroke-width="5"/>'
+    '<path d="m78 84 7 7 13-14" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+LOCKUP_A = ('<div class="lockup-a" role="img" aria-label="건물관리 달인명인 BUILDING CARE MASTERS">' + EMBLEM_A +
+            '<div><span class="la-k">건물관리</span><strong>달인명인</strong><span class="la-en">BUILDING CARE MASTERS</span></div></div>')
+
+# B형 낙관(도장)
+SEAL_B = ('<div class="seal-b" role="img" aria-label="달인명인 낙관 · 건물관리 전문">'
+          '<span class="seal"><i>달</i><i>인</i><i>명</i><i>인</i></span>'
+          '<div><strong>달인명인</strong><span class="sb-sub">건물관리 전문</span></div></div>')
 
 
 def hot(s):
@@ -51,12 +80,14 @@ def head(title, desc, path=""):
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="{e(desc)}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="시설통">
+<meta property="og:site_name" content="건물관리 달인명인">
+<meta property="og:image" content="{e(SITE['domain'].rstrip('/'))}/assets/img/og.png">
+<link rel="apple-touch-icon" href="assets/img/icon-180.png">
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{e(url)}">
 <link rel="canonical" href="{e(url)}">
-<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-32.png" type="image/png">
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#E3000F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,7 +129,7 @@ def header(active=""):
     return f"""
 <header class="hd">
   <div class="wrap hd-in">
-    <a href="index.html" class="logo" aria-label="시설통 홈">{LOGO}</a>
+    <a href="index.html" class="logo" aria-label="건물관리 달인명인 홈">{LOGO}</a>
     <nav class="gnb" id="gnb" aria-label="주 메뉴">
       <ul class="nav">{''.join(items)}
       </ul>
@@ -119,7 +150,8 @@ def band():
     return f"""
 <section class="band">
   <div class="wrap band-in">
-    <h2>점검 · 공사 · 보험 · 건물관리,<br><mark>한번에 시설통</mark>으로 끝내세요</h2>
+    {SEAL_B}
+    <h2>점검 · 공사 · 보험 · 건물관리,<br><mark>한번에 달인명인</mark>으로 끝내세요</h2>
     <div class="acts">
       <a class="btn btn-w" href="tel:{SITE['tel']}">📞 {SITE['tel']}</a>
       <a class="btn btn-y" href="index.html#quote">무료 견적 비교</a>
@@ -136,7 +168,7 @@ def footer():
 <footer class="ft">
   <div class="wrap">
     <div class="ft-top">
-      <a href="index.html" class="logo" aria-label="시설통 홈">{LOGO}</a>
+      <a href="index.html" class="logo" aria-label="건물관리 달인명인 홈">{LOGO}</a>
       <nav class="ft-menu" aria-label="하단 메뉴">{menu}</nav>
     </div>
     <div class="ft-grid">
@@ -148,7 +180,7 @@ def footer():
       <ul class="ft-br">{br}</ul>
     </div>
     <div class="ft-bottom">
-      <span>© 2026 시설통 · {e(SITE['company'])}. All rights reserved.</span>
+      <span>© 2026 건물관리 달인명인 · {e(SITE['company'])}. All rights reserved.</span>
       <span class="ft-links"><a href="#">개인정보 처리방침</a><a href="{SITE['blog']}" rel="noopener">블로그</a></span>
     </div>
   </div>
@@ -257,7 +289,7 @@ def other_doors(cur):
 
 # ---------------------------------------------------------------- pages
 def page_category(c):
-    title = f"{c['name']} | 시설통 — " + ", ".join(s["name"] for s in c["sections"][:4])
+    title = f"{c['name']} | 건물관리 달인명인 — " + ", ".join(s["name"] for s in c["sections"][:4])
     body = head(title, c["desc"], c["slug"] + ".html") + header(c["slug"]) + page_hero(c)
     body += "\n".join(section(c, s, i) for i, s in enumerate(c["sections"]))
     body += other_doors(c["slug"]) + band() + footer()
@@ -274,11 +306,12 @@ def page_story():
         f'<article class="br"><p class="br-a">{e(b["area"])}</p><h3>{e(b["name"])}</h3><p>{e(b["addr"])}</p>'
         f'<a href="https://map.naver.com/p/search/{e(b["addr"])}" rel="noopener">지도 보기 →</a></article>'
         for b in SITE["branches"])
-    body = head("STORY | 시설통 — 스토리와 걸어온 길", "관리소장님의 낡은 수첩에서 시작된 시설통 이야기, 걸어온 길과 지사 안내.", "story.html")
+    body = head("STORY | 건물관리 달인명인 — 스토리와 걸어온 길", "관리소장님의 낡은 수첩에서 시작된 달인명인 이야기, 걸어온 길과 지사 안내.", "story.html")
     body += header("story") + page_hero(c)
     body += f"""
 <section class="sub-sec" id="story"><div class="wrap">
   <p class="s-no">05-01</p><h2 class="s-tt">{e(STORY['origin_title'])}</h2>
+  <div class="story-brand">{SEAL_B}{LOCKUP_A}</div>
   <div class="story">
     <div class="note-book" aria-hidden="true"><span>점검 일정</span><span>업체 연락처</span><span>고칠 것</span><span>보고서 제출</span><span>…</span></div>
     <div class="story-t">{origin}</div>
@@ -318,18 +351,18 @@ def page_index():
                       for x in EXPERTS.values())
     br = "".join(f'<li><b>{e(b["area"])}</b><span>{e(b["addr"])}</span></li>' for b in SITE["branches"])
 
-    body = head("시설통 | 소방점검 + 소방공사 + 화재·누수보험 한번에",
-                "비상방송, 소방점검, 종합건물관리부터 보험까지. 전문가 배치로 가격 비교와 견적 신청을 한 곳에서 투명하고 편리하게 해결하는 시설통.")
+    body = head("건물관리 달인명인 | 소방점검 + 소방공사 + 화재·누수보험 한번에",
+                "비상방송, 소방점검, 종합건물관리부터 보험까지. 전문가 배치로 가격 비교와 견적 신청을 한 곳에서 투명하고 편리하게 해결하는 건물관리 달인명인.")
     body += header()
     body += f"""
 <!-- 1. 방화문 인트로: 스크롤하면 문이 열립니다 -->
-<section class="intro" id="intro" aria-label="시설통 소개">
+<section class="intro" id="intro" aria-label="건물관리 달인명인 소개">
   <div class="stage">
     <div class="hero-in">
       <div class="wrap">
         <span class="badge">⏱ 건물 소방법 개정 및 안전관리 강화 안심 솔루션</span>
         <p class="formula"><b>소</b>방점검<span class="plus">+</span>소<b>방</b>공사<span class="plus">+</span><b>화</b>재·누수보험</p>
-        <h1 class="headline">한번에 <span class="r">시설통</span></h1>
+        <h1 class="headline">한번에 <span class="r">달인명인</span></h1>
         <p class="sub">비상방송, 소방점검, 종합건물관리부터 보험까지 전문가 배치로 가격 비교와 견적 신청을 한 곳에서 투명하고 편리하게 해결하세요.</p>
         <div class="choice">
           <a href="fire-construction.html" class="c-cost"><span class="t">돈 드는 <span class="r">소방공사</span></span><span class="d">신설·교체 공사, 여러 업체 견적 비교</span><span class="go" aria-hidden="true">→</span></a>
@@ -341,8 +374,8 @@ def page_index():
     <span class="dl l" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
     <span class="dl r" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
     <div class="door-copy" aria-hidden="true">
-      <img src="assets/img/logo-mark.svg" alt="" width="64" height="64">
-      <p class="dc-k">SISEOLTONG · FIRE &amp; FACILITY</p>
+      {badge_big()}
+      <p class="dc-k">BUILDING CARE MASTERS</p>
       <p class="dc-h">문을 열면,<br>건물 걱정이 끝납니다</p>
     </div>
     <button class="skip-door" type="button">바로 들어가기 ↘</button>
@@ -364,6 +397,7 @@ def page_index():
 <section class="sec quote-sec" id="quote">
   <div class="wrap quote-in">
     <div>
+      {LOCKUP_A}
       <p class="eyebrow">FREE QUOTE</p>
       <h2 class="tt">30초 무료 견적,<br><span class="r">사진 한 장</span>이면 충분합니다</h2>
       <p class="lead">소방서 지적 통보서나 고장 부위 사진을 올려주시면 담당 달인이 보수·교체 견적을 함께 비교해 드립니다.</p>
@@ -396,7 +430,7 @@ def page_index():
         <dl><div><dt>접근 방식</dt><dd>부품·설비 전체 교체 위주</dd></div><div><dt>견적</dt><dd>업체 1곳, 비교 어려움</dd></div><div><dt>사후 관리</dt><dd>공사 후 종료</dd></div></dl>
         <p class="eg">예) 방송 랙 고장 → 시스템 통째 교체 (수백~수천만 원)</p></div>
       <div class="mid" aria-hidden="true">VS</div>
-      <div class="col fix"><span class="tag">시설통</span><h3>소방시설 보수 수리</h3>
+      <div class="col fix"><span class="tag">달인명인</span><h3>소방시설 보수 수리</h3>
         <dl><div><dt>접근 방식</dt><dd>원인 진단 후 필요한 부분만 수리</dd></div><div><dt>견적</dt><dd>검증된 달인 여러 명 가격 비교</dd></div><div><dt>사후 관리</dt><dd>재점검 · 월간 관리로 연결</dd></div></dl>
         <p class="eg">예) 수신기 2개 연동 비상방송 → 핵심 부품·선로 수리 30만원 내외</p></div>
     </div>

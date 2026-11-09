@@ -1,4 +1,4 @@
-// 시설통 공통 스크립트
+// 건물관리 달인명인 공통 스크립트
 (function () {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mobile = () => window.matchMedia('(max-width: 900px)').matches;
