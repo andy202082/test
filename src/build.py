@@ -258,6 +258,9 @@ def cat_experts(c):
 
 
 def photo(x, cls="xph"):
+    if cls.startswith("av"):  # 작은 동그라미: 미리 잘라 둔 얼굴 썸네일
+        return (f'<span class="{cls}"><img src="assets/img/experts/thumb-{x["photo"]}" alt="{e(x["name"])} {e(x["honor"])}" '
+                f'loading="lazy" decoding="async" width="80" height="80"></span>')
     return (f'<span class="{cls}" style="--fx:{x["focus"]}%;--fy:{x.get("fy", 30)}%"><img src="assets/img/experts/{x["photo"]}" '
             f'alt="{e(x["name"])} {e(x["honor"])} ({e(x["field"])})" loading="lazy" decoding="async"></span>')
 

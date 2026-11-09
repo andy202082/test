@@ -526,8 +526,7 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .xph{--fx:50%}
 .xph,.av{display:block;overflow:hidden;background:#2A2E36}
 .xph img,.av img{width:100%;height:100%;object-fit:cover;object-position:var(--fx) var(--fy,30%);display:block}
-.av img{transform:scale(2.5);transform-origin:var(--fx) var(--fy,30%)}
-.av.lg img{transform:scale(2.2)}
+.av img{object-position:50% 50%}
 .av{width:30px;height:30px;border-radius:50%;flex:none;box-shadow:0 0 0 2px #fff}
 .av.lg{width:58px;height:58px;box-shadow:none}
 .av-stack{display:flex}.av-stack .av+.av{margin-left:-9px}

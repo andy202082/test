@@ -102,7 +102,7 @@ EXPERTS = {
         "src": 26,
     },
     "kms": {
-        "name": "김명수", "honor": "달인", "field": "종합건물관리", "group": "building", "photo": "kim-myungsu.jpg", "focus": 51, "fy": 42,
+        "name": "김명수", "honor": "달인", "field": "종합건물관리", "group": "building", "photo": "kim-myungsu.jpg", "focus": 50, "fy": 13,
         "years": "‘공감관리’",
         "tagline": "소방관리까지 잘하는 건물관리 달인",
         "quote": "건물을 돌보는 일은 곧 그 안의 사람들을 돌보는 일입니다.",
@@ -113,7 +113,7 @@ EXPERTS = {
         "src": 24,
     },
     "kkh": {
-        "name": "강경훈", "honor": "명인", "field": "기계설비 성능점검", "group": "legal", "photo": "kang-kyunghoon.jpg", "focus": 82, "fy": 38,
+        "name": "강경훈", "honor": "명인", "field": "기계설비 성능점검", "group": "legal", "photo": "kang-kyunghoon.jpg", "focus": 74, "fy": 38,
         "years": "기계설비 30년",
         "tagline": "기계설비 성능점검 특급 명인",
         "quote": "기계설비는 과거를 읽고, 현재를 진단하며, 미래를 예측해야 합니다.",
@@ -124,7 +124,7 @@ EXPERTS = {
         "src": 14,
     },
     "pcs": {
-        "name": "박청수", "honor": "달인", "field": "저수조·물탱크 청소", "group": "legal", "photo": "park-cheongsu.jpg", "focus": 58, "fy": 40,
+        "name": "박청수", "honor": "달인", "field": "저수조·물탱크 청소", "group": "legal", "photo": "park-cheongsu.jpg", "focus": 20, "fy": 27,
         "years": "외길 20년",
         "tagline": "물탱크 청소 전문가",
         "quote": "저수조 청소는 우리 가족이 마시는 물의 건강을 지키는 일입니다.",
@@ -146,7 +146,7 @@ EXPERTS = {
         "src": 8,
     },
     "jyw": {
-        "name": "정영우", "honor": "달인", "field": "에어컨 세척·실내공기", "group": "building", "photo": "jung-youngwoo.jpg", "focus": 76, "fy": 24,
+        "name": "정영우", "honor": "달인", "field": "에어컨 세척·실내공기", "group": "building", "photo": "jung-youngwoo.jpg", "focus": 80, "fy": 27,
         "years": "완전 분해 세척",
         "tagline": "분해 후 세제·물 세척, 클린 청소법",
         "quote": "에어컨을 닦는 건 곧 사람의 호흡을 닦는 일입니다.",
@@ -157,7 +157,7 @@ EXPERTS = {
         "src": 15,
     },
     "hdh": {
-        "name": "허도형", "honor": "달인", "field": "철거·정밀 해체", "group": "building", "photo": "heo-dohyung.jpg", "focus": 12, "fy": 46,
+        "name": "허도형", "honor": "달인", "field": "철거·정밀 해체", "group": "building", "photo": "heo-dohyung.jpg", "focus": 20, "fy": 46,
         "years": "철거 20년",
         "tagline": "착한 철거왕, 성실하게 철거합니다",
         "quote": "‘맡기길 잘했다’는 결과로 증명합니다.",
