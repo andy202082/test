@@ -268,6 +268,10 @@ def photo(x, cls="xph"):
     if cls.startswith("av"):  # 작은 동그라미: 미리 잘라 둔 얼굴 썸네일
         return (f'<span class="{cls}"><img src="assets/img/experts/thumb-{x["photo"]}" alt="{e(x["name"])} {e(x["honor"])}" '
                 f'loading="lazy" decoding="async" width="80" height="80"></span>')
+    if "fit" in cls:  # 자르지 않고 전체 표시 + 같은 사진을 흐리게 깔아 빈 곳 채움
+        src = f'assets/img/experts/{x["photo"]}'
+        return (f'<span class="{cls}"><span class="xph-bg" style="background-image:url({src})" aria-hidden="true"></span>'
+                f'<img src="{src}" alt="{e(x["name"])} {e(x["honor"])} ({e(x["field"])})" loading="lazy" decoding="async"></span>')
     return (f'<span class="{cls}" style="--fx:{x["focus"]}%;--fy:{x.get("fy", 30)}%"><img src="assets/img/experts/{x["photo"]}" '
             f'alt="{e(x["name"])} {e(x["honor"])} ({e(x["field"])})" loading="lazy" decoding="async"></span>')
 
@@ -309,7 +313,7 @@ def expert_lead(key, svc_name=None):
     ct, cx = x["case"]
     return f"""
   <div class="xp-lead">
-    <div class="xp-ph">{photo(x)}<span class="xp-honor">{e(x['honor'])}</span></div>
+    <div class="xp-ph">{photo(x, "xph fit")}<span class="xp-honor">{e(x['honor'])}</span></div>
     <div class="xp-bd">
       <p class="xp-k">이 서비스의 담당 달인 · {e(x['field'])}</p>
       <h3>{e(x['name'])} <small>{e(x['honor'])}</small><span class="xp-yrs">{e(x['years'])}</span></h3>
@@ -463,7 +467,7 @@ def page_experts():
         ct, cx = x["case"]
         profiles.append(f"""
 <article class="profile{' alt' if i % 2 else ''}" id="{k}"><div class="wrap pf-in">
-  <div class="pf-ph">{photo(x)}<span class="xp-honor">{e(x['honor'])}</span></div>
+  <div class="pf-ph">{photo(x, "xph fit")}<span class="xp-honor">{e(x['honor'])}</span></div>
   <div class="pf-bd">
     <p class="xp-k">{e(GROUPS[x['group']])} · {e(x['field'])}</p>
     <h2>{e(x['name'])} <small>{e(x['honor'])}</small><span class="xp-yrs">{e(x['years'])}</span></h2>

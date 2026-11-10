@@ -570,6 +570,10 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .xph{--fx:50%}
 .xph,.av{display:block;overflow:hidden;background:#2A2E36}
 .xph img,.av img{width:100%;height:100%;object-fit:cover;object-position:var(--fx) var(--fy,30%);display:block}
+/* 전체 표시형: 사진을 자르지 않고(contain), 뒤에 같은 사진을 흐리게 확대해 빈 곳을 채움 */
+.xph.fit{position:relative;background:#14161A}
+.xph-bg{position:absolute;inset:-24px;background-size:cover;background-position:center;filter:blur(22px) brightness(.55) saturate(1.1);transform:scale(1.1)}
+.xph.fit img{position:relative;object-fit:contain;object-position:center;filter:drop-shadow(0 10px 24px rgba(0,0,0,.45))}
 .av img{object-position:50% 50%}
 .av{width:30px;height:30px;border-radius:50%;flex:none;box-shadow:0 0 0 2px #fff}
 .av.lg{width:58px;height:58px;box-shadow:none}
@@ -621,7 +625,7 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .xp-lead{margin-top:34px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);border-radius:22px;overflow:hidden;background:var(--night);color:#fff;box-shadow:0 30px 50px -30px rgba(22,24,29,.6)}
 .xp-ph{position:relative;min-height:320px}
 .xp-ph .xph{position:absolute;inset:0}
-.xp-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 60%,var(--night))}
+.xp-ph::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 88%,var(--night));pointer-events:none}
 .xp-honor{position:absolute;z-index:1;left:16px;top:16px;font-family:var(--serif);font-weight:600;font-size:13px;letter-spacing:.12em;color:var(--ink);background:var(--ivory);padding:4px 12px;border-radius:3px}
 .xp-bd{padding:30px 32px 30px 20px;min-width:0}
 .xp-k{font-size:12px;letter-spacing:.12em;color:var(--ivory-dim)}
@@ -681,7 +685,8 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 @media (max-width:900px){
   .mgrid{grid-template-columns:repeat(2,1fr)}
   .xp-lead,.pf-in{grid-template-columns:1fr}
-  .xp-ph{min-height:0;aspect-ratio:16/10}.xp-ph::after{background:linear-gradient(180deg,transparent 55%,var(--night))}
+  .xp-ph{min-height:0;aspect-ratio:16/11.5}
+  .xp-honor{top:8px;left:10px;font-size:11px;padding:2px 9px}.xp-ph::after{background:linear-gradient(180deg,transparent 55%,var(--night))}
   .xp-bd{padding:6px 22px 26px}
   .pf-ph{position:relative;top:0;aspect-ratio:16/11}.profile.alt .pf-ph{order:0}
   .pf-cols{grid-template-columns:1fr}
