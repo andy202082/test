@@ -296,7 +296,7 @@ def master_card(key):
     tags = "".join(f'<li>{e(s["name"])}</li>' for _, s in expert_services(key)[:3])
     return f"""
       <article class="mcard" data-g="{x['group']}"><a href="experts.html#{key}">
-        <div class="mc-ph">{photo(x)}<span class="mc-honor">{e(x['honor'])}</span><span class="mc-yrs">{e(x['years'])}</span></div>
+        <div class="mc-ph">{photo(x, "xph fit")}<span class="mc-honor">{e(x['honor'])}</span><span class="mc-yrs">{e(x['years'])}</span></div>
         <div class="mc-bd">
           <p class="mc-f">{e(x['field'])}</p>
           <h3>{e(x['name'])} <small>{e(x['honor'])}</small></h3>
