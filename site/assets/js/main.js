@@ -123,7 +123,12 @@
         if (en.isIntersecting) {
           tabs.forEach((t) => t.classList.remove('on'));
           const t = map.get(en.target.id);
-          if (t) { t.classList.add('on'); t.scrollIntoView({ block: 'nearest', inline: 'center' }); }
+          if (t) {
+            t.classList.add('on');
+            // 탭 줄만 가로로 이동 (scrollIntoView 는 페이지 세로 스크롤까지 끌어당겨 휠 스크롤을 방해함)
+            const bar = t.parentElement;
+            bar.scrollTo({ left: t.offsetLeft - (bar.clientWidth - t.offsetWidth) / 2, behavior: 'auto' });
+          }
         }
       });
     }, { rootMargin: '-40% 0px -55% 0px' });
