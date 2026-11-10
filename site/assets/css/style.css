@@ -659,6 +659,7 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .profile.alt{background:var(--bg-2)}
 .pf-in{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:44px;align-items:start}
 .profile.alt .pf-ph{order:2}
+.profile.alt .pf-in{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}  /* 사진은 좌·우 어느 쪽이든 같은 폭 */
 /* 프로필 사진: 원본 비율 그대로 꽉 차게 (잘림·빈 곳 없음) */
 .pf-ph{position:sticky;top:calc(var(--hd) + 70px);border-radius:22px;overflow:hidden;box-shadow:0 30px 50px -30px rgba(22,24,29,.6);line-height:0}
 .pf-ph .xph{position:relative}
@@ -689,7 +690,7 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 @media (max-width:1100px){.mgrid{grid-template-columns:repeat(3,1fr)}}
 @media (max-width:900px){
   .mgrid{grid-template-columns:repeat(2,1fr)}
-  .xp-lead,.pf-in{grid-template-columns:1fr}
+  .xp-lead,.pf-in,.profile.alt .pf-in{grid-template-columns:1fr}
   .xp-ph{min-height:0;aspect-ratio:16/11.5}
   .xp-honor{top:8px;left:10px;font-size:11px;padding:2px 9px}.xp-ph::after{background:linear-gradient(180deg,transparent 55%,var(--night))}
   .xp-bd{padding:6px 22px 26px}
