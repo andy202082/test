@@ -348,6 +348,55 @@ def section_experts(s):
     return out
 
 
+EXT_ICONS = {
+    "calendar": '<rect x="4" y="6" width="24" height="22" rx="3"/><path d="M4 12h24M10 3v6M22 3v6"/><text x="16" y="24.5" text-anchor="middle" font-size="9" font-weight="900" fill="currentColor" stroke="none">10년</text>',
+    "trash": '<path d="M6 9h20M12 9V5h8v4M8 9l1.5 19h13L24 9M13 14v10M16 14v10M19 14v10"/>',
+    "truck": '<path d="M3 9h16v14H3zM19 14h6l4 5v4H19z"/><circle cx="9" cy="25" r="3"/><circle cx="24" cy="25" r="3"/>',
+    "globe": '<circle cx="16" cy="16" r="12"/><path d="M4 16h24M16 4c4 4 4 20 0 24M16 4c-4 4-4 20 0 24"/>',
+    "recycle": '<path d="M12 6l4-3 4 3M16 3v9M6 22l-2-5 5-1M4 17l8 4M26 22l2-5-5-1M28 17l-8 4"/><path d="M10 9l-4 7M22 9l4 7M10 27h12"/>',
+    "flag": '<circle cx="16" cy="16" r="12"/><path d="M10 16a3 3 0 0 1 6 0 3 3 0 0 0 6 0"/><path d="M7 8l2 2M23 22l2 2M25 8l-2 2M7 24l2-2"/>',
+    "coins": '<ellipse cx="13" cy="9" rx="8" ry="3"/><path d="M5 9v5c0 1.7 3.6 3 8 3s8-1.3 8-3V9M5 14v5c0 1.7 3.6 3 8 3"/><path d="M24 15v12M20 23l4 4 4-4"/>',
+}
+
+
+def ext_icon(name):
+    return (f'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+            f'stroke-linejoin="round" aria-hidden="true">{EXT_ICONS[name]}</svg>')
+
+
+def extinguisher_landing(L):
+    """소화기 납품 랜딩: 히어로 → 제품 4종 → 구매 전 확인 → 대량구매 혜택 → 견적"""
+    prods = "".join(
+        f'<article class="xl-prod{" main" if main else ""}"><h4>{e(n)}</h4>'
+        f'<img src="assets/img/ext/{img}" alt="{e(n)}" loading="lazy" decoding="async">'
+        f'<span class="xl-tag">{e(tag)}</span></article>' for n, img, tag, main in L["products"])
+    checks = "".join(
+        f'<article class="xl-chk"><span class="xl-ic">{ext_icon(ic)}</span><h4>{e(t)}</h4><p>{e(d)}</p><small>{e(s)}</small></article>'
+        for ic, t, d, s in L["checks"])
+    bens = "".join(
+        f'<li><span class="xl-bic">{ext_icon(ic)}</span><small>{e(a)}</small><b>{e(b)}</b></li>' for ic, a, b in L["benefits"])
+    return f"""
+  <div class="xl">
+    <div class="xl-hero">
+      <img class="xl-hero-ph" src="assets/img/ext/hero.jpg" alt="벽에 비치된 분말소화기와 소화기 표지" loading="lazy" decoding="async">
+      <div class="xl-hero-t">
+        <p class="xl-k">{e(L['kicker'])}</p>
+        <p class="xl-tt">{e(L['title'])}</p>
+        <p class="xl-sub">{e(L['sub'])}</p>
+      </div>
+    </div>
+    <div class="xl-prods">{prods}</div>
+    <h3 class="xl-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m7 12 3.5 3.5L17 9"/></svg><span>소화기 구매 전 <em>꼭 확인</em>하세요!</span></h3>
+    <div class="xl-chks">{checks}</div>
+    <div class="xl-ben">
+      <h3><span>대량구매</span> 특별혜택</h3>
+      <ul>{bens}</ul>
+      <p>※ {e(L['benefit_note'])}</p>
+      <a class="xl-cta" href="index.html#quote">대량구매 견적 문의 <span aria-hidden="true">›</span></a>
+    </div>
+  </div>"""
+
+
 def section(c, s, idx):
     out = [f'<section class="sub-sec{" alt" if idx % 2 else ""}" id="{s["id"]}"><div class="wrap">']
     out.append(f'<p class="s-no">{c["no"]}-{idx + 1:02d}</p><h2 class="s-tt">{e(s["name"])}{hot(s)}</h2>')
@@ -355,6 +404,8 @@ def section(c, s, idx):
         out.append(f'<p class="s-badge">🎁 {e(s["badge"])}</p>')
     if s.get("lead"):
         out.append(f'<blockquote class="s-lead">“{e(s["lead"])}”</blockquote>')
+    if s.get("landing"):
+        out.append(extinguisher_landing(s["landing"]))
     if s.get("points"):
         out.append('<div class="pts">' + "".join(
             f'<div class="pt"><span>{i + 1:02d}</span><h3>{e(t)}</h3><p>{e(d)}</p></div>'
