@@ -43,6 +43,9 @@ img{max-width:100%;display:block}
 /* ---- 로고: C형 배지 + 워드마크 (D형 헤더 배치) ---- */
 .logo{display:flex;align-items:center;gap:10px;flex:none}
 .badge-c{--bc:#1B1E24;position:relative;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px;background:var(--bc);color:#fff;flex:none;line-height:1}
+/* 헤더·푸터 로고: 메인 방화문 로고와 같은 붉은 네온 테두리 */
+.logo .badge-c{background:radial-gradient(120% 90% at 50% 15%,#2A2D33,#121417 70%);border:1.5px solid #FF2A36;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 0 5px rgba(255,30,45,.75),0 0 12px rgba(255,30,45,.35)}
+.logo .badge-c .roof{filter:drop-shadow(0 1px 2px rgba(227,0,15,.5))}
 .badge-c .roof{width:62%;height:auto;margin-top:-2px}
 .badge-c b{font-size:14px;font-weight:900;letter-spacing:-.5px;margin-top:3px}
 .badge-c.big{width:168px;height:168px;border-radius:40px;padding:18px}
@@ -56,7 +59,7 @@ img{max-width:100%;display:block}
 .lw2{display:flex!important;justify-content:space-between;font-size:19px;font-weight:900;color:var(--red)}
 .lw2 i{font-style:normal}
 .ft .logo-word{border-color:#2F333B}.ft .lw1{color:#fff}.ft .lw2{color:#FF3B47}
-.ft .badge-c{--bc:#2A2E36;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.ft .logo .badge-c{box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 0 6px rgba(255,30,45,.9),0 0 16px rgba(255,30,45,.5)}
 
 /* ---- A형 엠블럼 락업 ---- */
 .emblem-a{width:64px;height:auto;color:var(--ink);flex:none}
