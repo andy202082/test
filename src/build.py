@@ -508,7 +508,7 @@ def page_hero(c):
   <span class="ph-leaf r" aria-hidden="true"><i class="win"></i><b class="bar"></b></span>
   <span class="ph-sign" aria-hidden="true">{icon(c['icon'], 'ph-ic')}<b>{e(c['name'])}</b></span>
 </section>
-<nav class="subtabs" aria-label="{e(c['name'])} 하위 메뉴"><div class="wrap">{''.join(
+<nav class="subtabs" aria-label="{e(c['name'])} 하위 메뉴"><div class="wrap">{'<a href="#overview">한눈에 보기</a>' if c.get("overview") else ""}{''.join(
         f'<a href="{s.get("href", "#" + s["id"])}"{kcls(s)}>{e(s["name"])}</a>' for s in c["sections"])}</div></nav>"""
 
 
@@ -519,9 +519,43 @@ def other_doors(cur):
 
 
 # ---------------------------------------------------------------- pages
+def overview(c):
+    O = c["overview"]
+    areas = "".join(
+        f'<article class="ov-area">' + (f'<img src="assets/img/{img}" alt="{e(name)} 현장" loading="lazy" decoding="async">' if img
+                                        else '<span class="ov-noimg" aria-hidden="true"><svg viewBox="0 0 120 80"><rect x="74" y="8" width="38" height="64" rx="2" fill="none" stroke="#fff" stroke-width="5"/><circle cx="40" cy="14" r="8" fill="#fff"/><path d="M38 24 22 34l6 6 10-6 4 14-14 16 6 6 16-18 10 10 8-4-12-16-4-16 12 6 10-4-4-6-10 4z" fill="#fff"/><path d="M84 40h20M96 32l8 8-8 8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><b>비상구 EXIT</b></span>') +
+        f'<div><h3>{e(name)}</h3><ul>' + "".join(f"<li>{e(x)}</li>" for x in items) + '</ul></div></article>'
+        for name, img, items in O["areas"])
+    prom = "".join(f'<li><span>{i + 1:02d}</span><h3>{e(t)}</h3><p>{e(d)}</p></li>' for i, (t, d) in enumerate(O["promises"]))
+    top = "".join(f'<tr><td><b class="rk{" hi" if i < 3 else ""}">{i + 1}위</b></td><td>{e(a)}</td><td>{e(r)}</td><td>{e(f)}</td></tr>'
+                  for i, (a, r, f) in enumerate(O["top10"]))
+    pts = "".join(
+        f'<div class="ov-pt"><h3>{e(g)}</h3><ul>' + "".join(
+            f'<li><b>{e(n)}</b><span>{e(d)}</span><small>→ {e(tip)}</small></li>' for n, d, tip in items) + '</ul></div>'
+        for g, items in O["points"])
+    proc = "".join(f'<li><b>{e(t)}</b><p>{e(d)}</p></li>' for t, d in O["process"])
+    return f"""
+<section class="sub-sec ov" id="overview"><div class="wrap">
+  <p class="s-no">{c['no']}-00</p><h2 class="s-tt">소방공사 한눈에 보기</h2>
+  <p class="s-band">{e(O['band'])}</p>
+  <div class="ov-areas">{areas}</div>
+  <div class="ov-prom"><p class="ov-k">현장을 대하는 3가지 약속</p><p class="ov-h">우리는 점검만 하고 떠나지 않습니다.</p><ol>{prom}</ol></div>
+  <h3 class="tbl-tt">자주 발생하는 소방공사 TOP 10</h3>
+  <div class="tbl-wrap"><table class="tbl ov-top"><thead><tr><th>순위</th><th>공사 분야</th><th>주요 사유</th><th>주요 대상 시설물</th></tr></thead><tbody>{top}</tbody></table></div>
+  <h3 class="tbl-tt">소방시설 점검 및 보수 포인트</h3>
+  <p class="tbl-foot" style="margin-top:4px">단순 점검에 그치지 않고 아래 항목을 정밀 진단해 꼭 필요한 보수 공사만 제안합니다.</p>
+  <div class="ov-pts">{pts}</div>
+  <h3 class="tbl-tt">안심 시공 프로세스</h3>
+  <ol class="steps big">{proc}</ol>
+  <div class="s-cta"><a class="btn btn-red" href="index.html#quote">소방공사 현장 실사 신청</a><a class="btn btn-ghost" href="tel:{SITE['tel']}">전화 상담 {SITE['tel']}</a></div>
+</div></section>"""
+
+
 def page_category(c):
     title = f"{c['name']} | 건물관리 달인명인 — " + ", ".join(s["name"] for s in c["sections"][:4])
     body = head(title, c["desc"], c["slug"] + ".html") + header(c["slug"]) + page_hero(c)
+    if c.get("overview"):
+        body += overview(c)
     body += "\n".join(section(c, s, i) for i, s in enumerate(c["sections"]))
     body += other_doors(c["slug"]) + band() + footer()
     return body
