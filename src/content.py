@@ -531,7 +531,7 @@ CATEGORIES = [
         "slug": "inspection",
         "no": "04",
         "name": "법정점검",
-        "title": "5대 법정점검",
+        "title": "6대 법정점검",
         "en": "LEGAL INSPECTION",
         "question": "놓치고 있는 법정 의무는 없나요?",
         "desc": "정보통신, 기계설비, 저수조, 소독방역, 공기질, 승강기. 매달 돌아오는 의무를 한 번에 챙깁니다.",
