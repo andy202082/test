@@ -205,7 +205,7 @@ def footer():
 
 
 # ---------------------------------------------------------------- components
-DOOR_SLUGS = ("fire-safety", "fire-construction", "building", "inspection")  # 문으로 보여줄 4개 (STORY 제외)
+DOOR_SLUGS = ("fire-safety", "fire-construction", "inspection", "building")  # 문으로 보여줄 4개 (STORY 제외)
 
 
 def door(c, i):
