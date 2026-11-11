@@ -328,7 +328,7 @@ section.sec.doors{padding-top:24px}
 /* ---------------------------------------------------------- steps / experts */
 .steps{list-style:none;margin-top:36px;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;counter-reset:s}
 .steps li{position:relative;padding-right:16px}
-.steps li::before{counter-increment:s;content:"0" counter(s);display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#fff;border:2px solid var(--red);color:var(--red);font-weight:900;font-size:15px;position:relative;z-index:1}
+.steps li::before{counter-increment:s;content:counter(s,decimal-leading-zero);display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#fff;border:2px solid var(--red);color:var(--red);font-weight:900;font-size:15px;position:relative;z-index:1}
 .steps li::after{content:"";position:absolute;top:23px;left:46px;right:0;height:2px;background:repeating-linear-gradient(90deg,var(--red) 0 6px,transparent 6px 12px)}
 .steps li:last-child::after{display:none}
 .steps b{display:block;margin-top:14px;font-size:16px;font-weight:900;letter-spacing:-.4px}
@@ -707,3 +707,22 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
   .xp-lead h3,.pf-bd h2{font-size:26px}
   .xp-q{font-size:17px}
 }
+
+/* =========================================================
+   핵심 법정점검 항목(정보통신·기계설비·저수조·소독방역): 테두리 + 배경
+   ========================================================= */
+.ph-chips a.is-key{background:#FBF7F0;color:var(--ink);border-color:#FBF7F0;font-weight:700;box-shadow:0 0 0 3px rgba(251,247,240,.18)}
+.ph-chips a.is-key:hover{background:#fff}
+.subtabs a.is-key{margin:8px 2px;padding:7px 14px;border:1.5px solid #F2C4C7;background:var(--red-soft);color:var(--red-dark);border-radius:999px}
+.subtabs a.is-key.on,.subtabs a.is-key:hover{border-color:var(--red);background:var(--red);color:#fff}
+.m-list li.is-key>a{border:1.5px solid #F2C4C7;background:var(--red-soft)}
+.m-list li.is-key>a:hover{border-color:var(--red)}
+.room li.is-key{border-top-color:transparent}
+.room li.is-key a{margin:2px 0;border:1px solid rgba(239,232,220,.4);background:rgba(239,232,220,.1);border-radius:6px;color:#FBF7F0}
+/* 제목 있는 표 · 많은 단계 */
+.tbl-tt{margin-top:34px;font-size:18px;font-weight:900;letter-spacing:-.4px}
+.tbl-tt+.tbl-wrap,.tbl-tt+.steps{margin-top:12px}
+.tbl-foot{margin-top:8px;font-size:13px;color:var(--ink-3)}
+.steps.many{grid-auto-flow:row;grid-template-columns:repeat(5,1fr);row-gap:26px}
+.steps.many li:nth-child(5n)::after{display:none}
+@media (max-width:900px){.steps.many{grid-template-columns:1fr 1fr}.steps.many li:nth-child(5n)::after{display:block}.steps.many li:nth-child(2n)::after{display:none}}

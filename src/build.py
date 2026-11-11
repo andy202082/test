@@ -65,6 +65,12 @@ SEAL_B = ('<div class="seal-b" role="img" aria-label="달인명인 낙관 · 건
           '<div><strong>달인명인</strong><span class="sb-sub">건물관리 전문</span></div></div>')
 
 
+def kcls(s, extra=""):
+    """핵심 항목(key)·HOT 표시용 class 속성"""
+    c = " ".join(x for x in [extra, "is-key" if s.get("key") else "", "is-hot" if s.get("hot") else ""] if x)
+    return f' class="{c}"' if c else ""
+
+
 def hot(s):
     return '<em class="hot">HOT</em>' if s.get("hot") else ""
 
@@ -106,7 +112,7 @@ def header(active=""):
     items = []
     for c in CATEGORIES:
         subs = "".join(
-            f'<li><a href="{link(c, s)}"><b>{e(s["name"])}{hot(s)}</b>'
+            f'<li{kcls(s)}><a href="{link(c, s)}"><b>{e(s["name"])}{hot(s)}</b>'
             f'<small>{e(s["summary"])}</small></a></li>' for s in c["sections"])
         cur = ' aria-current="page"' if c["slug"] == active else ""
         story = " is-story" if c["slug"] == "story" else ""
@@ -119,7 +125,7 @@ def header(active=""):
             <a class="m-intro" href="{c['slug']}.html">
               {icon(c['icon'], 'm-ic')}
               <span class="m-no">{c['no']} · {c['en']}</span>
-              <strong>{e(c['name'])}</strong>
+              <strong>{e(c.get('title', c['name']))}</strong>
               <span class="m-q">{e(c['question'])}</span>
               {cat_avatars(c)}
               <span class="m-go">문 열고 들어가기 →</span>
@@ -204,7 +210,7 @@ DOOR_SLUGS = ("fire-safety", "fire-construction", "building", "inspection")  # �
 
 def door(c, i):
     """방화문 카드 — 닫힌 채로 시작, 누르면 열리고(안쪽 메뉴판), 닫기로 다시 닫힘. 한 번에 한 문만 열림."""
-    subs = "".join(f'<li{" class=is-hot" if s.get("hot") else ""}><a href="{link(c, s)}">{e(s["name"])}</a></li>' for s in c["sections"])
+    subs = "".join(f'<li{kcls(s)}><a href="{link(c, s)}">{e(s["name"])}</a></li>' for s in c["sections"])
     return f"""
     <li class="door" style="--d:0s">
       <div class="frame">
@@ -212,7 +218,7 @@ def door(c, i):
           <div class="room" id="room-{c['slug']}">
             <button class="door-close" type="button" aria-label="{e(c['name'])} 문 닫기">닫기 ✕</button>
             <span class="r-no">No. {c['no']}</span>
-            <strong class="r-ttl">{e(c['name'])}</strong>
+            <strong class="r-ttl">{e(c.get('title', c['name']))}</strong>
             <span class="r-en">{c['en']}</span>
             <ul>{subs}</ul>
             <a class="r-enter" href="{c['slug']}.html">들어가기 →</a>
@@ -228,7 +234,7 @@ def door(c, i):
       </div>
       <a class="d-info" href="{c['slug']}.html">
         <p class="d-no">No. {c['no']} <span>{c['en']}</span></p>
-        <h3>{e(c['name'])}</h3>
+        <h3>{e(c.get('title', c['name']))}</h3>
         <p class="d-q">{e(c['question'])}</p>
         <p class="d-t">{e(c['desc'])}</p>
         {cat_avatars(c, 'd-av')}
@@ -358,6 +364,12 @@ def section(c, s, idx):
         th = "".join(f"<th>{e(h)}</th>" for h in t["head"])
         rows = "".join("<tr>" + "".join(f"<td>{e(v)}</td>" for v in r) + "</tr>" for r in t["rows"])
         out.append(f'<div class="tbl-wrap"><table class="tbl"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table></div>')
+    for tb in s.get("tables", []):  # 제목 있는 표 여러 개
+        th = "".join(f"<th>{e(h)}</th>" for h in tb["head"])
+        rows = "".join("<tr>" + "".join(f"<td>{e(v)}</td>" for v in r) + "</tr>" for r in tb["rows"])
+        foot = f'<p class="tbl-foot">{e(tb["foot"])}</p>' if tb.get("foot") else ""
+        out.append(f'<h3 class="tbl-tt">{e(tb["title"])}</h3><div class="tbl-wrap"><table class="tbl"><thead><tr>{th}</tr></thead>'
+                   f'<tbody>{rows}</tbody></table></div>{foot}')
     if s.get("cases"):
         out.append('<div class="cases">' + "".join(
             f'<article class="case"><div class="ba"><div class="b"><span>BEFORE</span></div><div class="a"><span>AFTER</span></div></div>'
@@ -365,7 +377,8 @@ def section(c, s, idx):
             f'{chip_expert(CASE_EXPERTS[i]) if i < len(CASE_EXPERTS) else ""}</div></article>'
             for i, (k, t, d, w) in enumerate(s["cases"])) + "</div>")
     if s.get("steps"):
-        out.append('<ol class="steps">' + "".join(
+        many = " many" if len(s["steps"]) > 6 else ""
+        out.append(f'<h3 class="tbl-tt">진행 절차 {len(s["steps"])}단계</h3><ol class="steps{many}">' + "".join(
             f'<li><b>{e(t)}</b><p>{e(d)}</p></li>' for t, d in s["steps"]) + "</ol>")
     if s.get("note"):
         out.append(f'<p class="s-note">⚠️ {e(s["note"])}</p>')
@@ -378,14 +391,14 @@ def section(c, s, idx):
 
 
 def page_hero(c):
-    chips = "".join(f'<a href="{s.get("href", "#" + s["id"])}"{" class=is-hot" if s.get("hot") else ""}>{e(s["name"])}</a>' for s in c["sections"])
+    chips = "".join(f'<a href="{s.get("href", "#" + s["id"])}"{kcls(s)}>{e(s["name"])}</a>' for s in c["sections"])
     return f"""
 <section class="ph">
   <div class="ph-room">
     <div class="wrap">
       <p class="crumb"><a href="index.html">홈</a> / {e(c['name'])}</p>
       <p class="ph-no">{c['no']} · {c['en']}</p>
-      <h1>{e(c['name'])}</h1>
+      <h1>{e(c.get('title', c['name']))}</h1>
       <p class="ph-q">{e(c['question'])}</p>
       <p class="ph-d">{e(c['desc'])}</p>
       <div class="ph-chips">{chips}</div>
@@ -396,7 +409,7 @@ def page_hero(c):
   <span class="ph-sign" aria-hidden="true">{icon(c['icon'], 'ph-ic')}<b>{e(c['name'])}</b></span>
 </section>
 <nav class="subtabs" aria-label="{e(c['name'])} 하위 메뉴"><div class="wrap">{''.join(
-        f'<a href="{s.get("href", "#" + s["id"])}">{e(s["name"])}</a>' for s in c["sections"])}</div></nav>"""
+        f'<a href="{s.get("href", "#" + s["id"])}"{kcls(s)}>{e(s["name"])}</a>' for s in c["sections"])}</div></nav>"""
 
 
 def other_doors(cur):
