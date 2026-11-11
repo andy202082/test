@@ -826,3 +826,19 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .sa-eff b::before{content:"✓ "}
 .sa-eff span{font-size:14px;color:var(--ink-2)}
 @media (max-width:700px){.s-photos{grid-template-columns:1fr 1fr 1fr;gap:6px}.s-photos figcaption{font-size:10.5px;padding:16px 6px 6px}.s-about{grid-template-columns:1fr}.sa-eff li{flex-direction:column;gap:2px}}
+/* 서비스 카드 (담당 달인 카드와 같은 틀) */
+.xp-lead.svc .xp-ph .xph img{object-position:center}
+.xp-lead.svc h3{font-size:28px}
+.sv-desc{margin-top:10px;font-size:14.5px;line-height:1.7;color:#D9D3C8}
+.sv-facts{list-style:none;margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sv-facts li{border:1px solid rgba(239,232,220,.18);border-radius:10px;padding:10px 12px;background:rgba(239,232,220,.04)}
+.sv-facts small{display:block;font-size:11.5px;color:var(--ivory-dim);letter-spacing:.06em}
+.sv-facts b{display:block;margin-top:2px;font-size:13.5px;color:#FBF7F0;font-weight:700}
+.sv-h{margin-top:16px;font-size:12px;letter-spacing:.12em;color:var(--ivory-dim)}
+.xp-lead.svc .xp-creds{margin-top:8px}
+.sv-steps{list-style:none;margin-top:8px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sv-steps li{border-top:2px solid #FF4D57;padding-top:8px}
+.sv-steps span{font-size:11px;font-weight:900;color:#FF4D57}
+.sv-steps b{display:block;font-size:13.5px;color:#FBF7F0}
+.sv-steps small{display:block;font-size:12px;color:#BFB8AC;margin-top:2px}
+@media (max-width:700px){.sv-facts{grid-template-columns:1fr}.sv-steps{grid-template-columns:1fr 1fr;row-gap:12px}}
