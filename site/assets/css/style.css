@@ -739,3 +739,63 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .bg-sub{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;font-weight:700;white-space:nowrap}
 .bg-sub i{width:1.5px;height:12px;background:#FF2A36}
 @media (max-width:640px){.badge-glow{width:104px;height:94px;border-radius:22px;margin-bottom:10px}.badge-glow b{font-size:30px;margin-top:5px}.bg-sub{font-size:8.5px;gap:5px;margin-top:6px}.bg-sub i{height:9px}}
+
+/* =========================================================
+   소화기 납품 랜딩
+   ========================================================= */
+.xl{margin-top:26px;border-radius:24px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 30px 50px -34px rgba(22,24,29,.5)}
+.xl-hero{position:relative;min-height:260px;display:flex;align-items:center;padding:36px 40px;color:#fff;
+  background:radial-gradient(70% 120% at 0% 100%,rgba(227,0,15,.55),transparent 60%),linear-gradient(120deg,#1B1E24 0%,#262A31 55%,#3A3F47 100%);overflow:hidden}
+.xl-hero::after{content:"";position:absolute;left:-10%;right:30%;bottom:22%;height:3px;background:linear-gradient(90deg,transparent,#FF2A36,transparent);transform:rotate(-4deg);opacity:.8}
+.xl-hero-ph{position:absolute;right:0;top:0;height:100%;width:auto;max-width:45%;object-fit:cover;-webkit-mask-image:linear-gradient(90deg,transparent,#000 30%);mask-image:linear-gradient(90deg,transparent,#000 30%)}
+.xl-hero-t{position:relative;z-index:1;max-width:60%}
+.xl-k{font-size:clamp(26px,3.4vw,40px);font-weight:900;letter-spacing:-1px;line-height:1.1;display:flex;align-items:center;gap:10px}
+.xl-k::before{content:"";width:30px;height:38px;flex:none;background:linear-gradient(180deg,#FF5A3C,#E3000F);clip-path:path('M15 0C17 9 30 15 30 26a15 12 0 0 1-30 0C0 19 5 15 8 12c0 5 3 8 6 9-3-8 0-15 1-21z')}
+.xl-tt{margin-top:4px;font-size:clamp(40px,5.6vw,66px);font-weight:900;letter-spacing:-2px;line-height:1.05;color:#FFE14A;text-shadow:0 3px 0 #7A5A00,0 8px 20px rgba(0,0,0,.4)}
+.xl-sub{margin-top:14px;font-size:clamp(15px,1.6vw,19px);font-weight:700;font-style:italic}
+.xl-prods{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:22px;background:var(--bg-2)}
+.xl-prod{background:#fff;border-radius:16px;padding:14px 14px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;border:1px solid var(--line);min-width:0}
+.xl-prod h4{width:100%;text-align:center;background:linear-gradient(180deg,#E3101C,#B8000C);color:#fff;font-size:14.5px;font-weight:900;padding:8px 6px;border-radius:999px;line-height:1.25}
+.xl-prod img{width:100%;max-width:170px;aspect-ratio:1/1;object-fit:contain;mix-blend-mode:multiply}
+.xl-tag{margin-top:auto;width:100%;text-align:center;font-weight:900;font-size:15px;padding:7px;border-radius:10px;background:#E9EBEF;color:var(--ink-2)}
+.xl-prod.main .xl-tag{background:#1D3F7A;color:#fff}
+.xl-bar{margin:26px 22px 0;display:flex;align-items:center;gap:12px;background:linear-gradient(100deg,#B8000C,#E3101C 70%,#B8000C);color:#fff;font-size:clamp(19px,2.2vw,26px);font-weight:900;font-style:italic;padding:12px 22px;border-radius:12px;clip-path:polygon(2% 0,100% 0,98% 100%,0 100%)}
+.xl-bar svg{width:30px;height:30px;flex:none}
+.xl-bar em{font-style:italic;color:#FFE14A}
+.xl-chks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:18px 22px 26px}
+.xl-chk{border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 20px -18px rgba(0,0,0,.4);min-width:0}
+.xl-ic{display:block;width:46px;height:46px;color:var(--red)}
+.xl-ic svg{width:100%;height:100%}
+.xl-chk h4{margin-top:10px;font-size:17px;font-weight:900;letter-spacing:-.4px;line-height:1.35}
+.xl-chk p{margin-top:6px;font-size:14px;color:var(--ink-2)}
+.xl-chk small{display:block;margin-top:4px;font-size:12.5px;color:var(--ink-3)}
+.xl-ben{background:linear-gradient(180deg,#0F1B33,#0B1426);color:#fff;padding:30px 22px 32px;text-align:center}
+.xl-ben h3{display:inline-block;font-size:clamp(20px,2.4vw,28px);font-weight:900;font-style:italic;padding:8px 26px;border:2px solid #FFE14A;border-radius:999px}
+.xl-ben h3 span{color:#fff}
+.xl-ben h3{color:#FFE14A}
+.xl-ben ul{list-style:none;margin-top:22px;display:grid;grid-template-columns:repeat(4,1fr)}
+.xl-ben li{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 8px;border-left:1px solid rgba(255,255,255,.15)}
+.xl-ben li:first-child{border-left:0}
+.xl-bic{width:66px;height:66px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF3A8,#F2C200);color:#B8000C;display:grid;place-items:center;margin-bottom:6px;box-shadow:0 6px 16px rgba(0,0,0,.35)}
+.xl-bic svg{width:36px;height:36px}
+.xl-ben li small{font-size:15px;font-weight:700;color:#fff}
+.xl-ben li b{font-size:20px;font-weight:900;color:#FFE14A}
+.xl-ben>p{margin-top:16px;font-size:12.5px;color:#AEB6C7}
+.xl-cta{display:inline-flex;align-items:center;gap:12px;margin-top:18px;padding:14px 34px;border-radius:999px;background:linear-gradient(180deg,#F21B27,#B8000C);color:#fff;font-size:clamp(18px,2vw,24px);font-weight:900;font-style:italic;box-shadow:0 0 0 2px rgba(255,255,255,.25) inset,0 0 18px rgba(255,40,50,.55)}
+.xl-cta span{font-size:1.3em;line-height:1}
+.xl-cta:hover{filter:brightness(1.08)}
+@media (max-width:900px){
+  .xl-prods,.xl-chks{grid-template-columns:1fr 1fr}
+  .xl-ben ul{grid-template-columns:1fr 1fr;row-gap:20px}
+  .xl-ben li:nth-child(3){border-left:0}
+  .xl-hero{padding:28px 22px;min-height:220px}
+  .xl-hero-t{max-width:70%}
+}
+@media (max-width:560px){
+  .xl-hero-ph{max-width:55%;opacity:.55}
+  .xl-hero-t{max-width:100%}
+  .xl-prods{padding:14px;gap:10px}.xl-chks{padding:14px;gap:10px}
+  .xl-prod h4{font-size:12.5px}.xl-tag{font-size:13px}
+  .xl-bar{margin:20px 14px 0;padding:10px 16px}
+  .xl-chk{padding:14px}.xl-chk h4{font-size:15px}
+}
