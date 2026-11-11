@@ -419,6 +419,14 @@ def section(c, s, idx):
                    f'{cta}<figcaption class="sr-only">{txt}</figcaption></figure>')
     if s.get("intro"):
         out.append(f'<p class="s-intro">{e(s["intro"])}</p>')
+    if s.get("photos"):
+        out.append('<div class="s-photos">' + "".join(
+            f'<figure><img src="assets/img/{p}" alt="{e(cap)}" loading="lazy" decoding="async" width="540" height="540"><figcaption>{e(cap)}</figcaption></figure>'
+            for p, cap in s["photos"]) + "</div>")
+    if s.get("about"):
+        (t0, d0), rest = s["about"][0], s["about"][1:]
+        out.append(f'<div class="s-about"><div class="sa-def"><h3>{e(t0)}</h3><p>{e(d0)}</p></div>'
+                   '<ul class="sa-eff">' + "".join(f'<li><b>{e(t)}</b><span>{e(d)}</span></li>' for t, d in rest) + '</ul></div>')
     if s.get("points"):
         out.append('<div class="pts">' + "".join(
             f'<div class="pt"><span>{i + 1:02d}</span><h3>{e(t)}</h3><p>{e(d)}</p></div>'
