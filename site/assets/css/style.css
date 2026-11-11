@@ -811,3 +811,18 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .s-bul{margin-top:12px;padding-left:20px;display:grid;gap:6px;font-size:14.5px;color:var(--ink-2)}
 .s-call{margin-top:14px;font-size:14.5px;color:var(--ink);background:#FFF6D6;border:1px solid #F1D98A;border-left:4px solid #E0A800;border-radius:10px;padding:12px 16px}
 .s-band{margin-top:18px;padding:14px 20px;border-radius:12px;background:#1E3A66;color:#fff;font-size:clamp(17px,2vw,21px);font-weight:900;text-align:center;letter-spacing:-.3px}
+/* 문서형: 현장 사진 3장 · 정의+기대효과 */
+.s-photos{margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.s-photos figure{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:1/1;max-width:100%}
+.s-photos img{width:100%;height:100%;object-fit:cover;display:block}
+.s-photos figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 12px 10px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+.s-about{margin-top:18px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:14px}
+.sa-def{background:#1E3A66;color:#fff;border-radius:14px;padding:20px}
+.sa-def h3{font-size:17px;font-weight:900}
+.sa-def p{margin-top:8px;font-size:14.5px;color:#D6DEEB}
+.sa-eff{list-style:none;display:grid;gap:8px}
+.sa-eff li{display:flex;gap:12px;align-items:baseline;border:1px solid var(--line);border-radius:12px;padding:12px 16px;background:#fff}
+.sa-eff b{flex:none;font-size:14.5px;color:var(--red-dark)}
+.sa-eff b::before{content:"✓ "}
+.sa-eff span{font-size:14px;color:var(--ink-2)}
+@media (max-width:700px){.s-photos{grid-template-columns:1fr 1fr 1fr;gap:6px}.s-photos figcaption{font-size:10.5px;padding:16px 6px 6px}.s-about{grid-template-columns:1fr}.sa-eff li{flex-direction:column;gap:2px}}
