@@ -338,7 +338,31 @@ def expert_mini(key):
             f'<b>{e(x["name"])} {e(x["honor"])}</b><i>“{e(x["quote"])}”</i></span></a>')
 
 
+def svc_card(C):
+    facts = "".join(f"<li><small>{e(k)}</small><b>{e(v)}</b></li>" for k, v in C["facts"])
+    tg = "".join(f"<li>{e(x)}</li>" for x in C["targets"])
+    st = "".join(f"<li><span>{i + 1:02d}</span><b>{e(t)}</b><small>{e(d)}</small></li>" for i, (t, d) in enumerate(C["steps"]))
+    return f"""
+  <div class="xp-lead svc">
+    <div class="xp-ph"><span class="xph"><img src="assets/img/{C['img']}" alt="{e(C['alt'])}" loading="lazy" decoding="async"></span><span class="xp-honor">{e(C['kicker'])}</span></div>
+    <div class="xp-bd">
+      <p class="xp-k">{e(C['kicker'])}</p>
+      <h3>{e(C['title'])}</h3>
+      <p class="sv-desc">{e(C['desc'])}</p>
+      <ul class="sv-facts">{facts}</ul>
+      <p class="sv-h">주요 점검 대상 설비</p>
+      <ul class="xp-creds">{tg}</ul>
+      <p class="sv-h">진행 절차</p>
+      <ol class="sv-steps">{st}</ol>
+      <div class="xp-case"><b>새 제도, 놓치기 전에 확인하세요</b><p>{e(C['note'])}</p></div>
+      <div class="xp-acts"><a class="btn btn-red sm" href="index.html#quote">적용 대상 무료 확인</a><a class="btn btn-ghost sm" href="tel:{SITE['tel']}">전화 {SITE['tel']}</a></div>
+    </div>
+  </div>"""
+
+
 def section_experts(s):
+    if s.get("svc_card"):
+        return svc_card(s["svc_card"])
     keys = SECTION_EXPERTS.get(s["id"], [])
     if not keys:
         return ""
