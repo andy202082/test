@@ -726,3 +726,13 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .steps.many{grid-auto-flow:row;grid-template-columns:repeat(5,1fr);row-gap:26px}
 .steps.many li:nth-child(5n)::after{display:none}
 @media (max-width:900px){.steps.many{grid-template-columns:1fr 1fr}.steps.many li:nth-child(5n)::after{display:block}.steps.many li:nth-child(2n)::after{display:none}}
+
+/* 메인 방화문 가운데 로고: 붉은 네온 테두리 배지 (소방 · 정보통신 | 기계설비) */
+.badge-glow{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:150px;height:136px;margin:0 auto 16px;border-radius:30px;
+  background:radial-gradient(120% 90% at 50% 15%,#2A2D33,#121417 70%);color:#fff;line-height:1;
+  border:2.5px solid #FF2A36;box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 0 10px rgba(255,30,45,.9),0 0 26px rgba(255,30,45,.55),0 0 54px rgba(255,30,45,.3)}
+.badge-glow .roof{width:66%;height:auto;margin-top:2px;filter:drop-shadow(0 2px 4px rgba(227,0,15,.5))}
+.badge-glow b{margin-top:8px;font-size:44px;font-weight:900;letter-spacing:-1px}
+.bg-sub{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:12px;font-weight:700;white-space:nowrap}
+.bg-sub i{width:1.5px;height:12px;background:#FF2A36}
+@media (max-width:640px){.badge-glow{width:104px;height:94px;border-radius:22px;margin-bottom:10px}.badge-glow b{font-size:30px;margin-top:5px}.bg-sub{font-size:8.5px;gap:5px;margin-top:6px}.bg-sub i{height:9px}}

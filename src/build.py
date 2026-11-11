@@ -543,7 +543,7 @@ def page_index():
     <span class="dl l" aria-hidden="true"><i class="win"><b class="sign s-red">소화전</b></i><b class="bar"></b></span>
     <span class="dl r" aria-hidden="true"><i class="win"><b class="sign s-white">방재실</b></i><b class="bar"></b></span>
     <div class="door-copy" aria-hidden="true">
-      {badge_big()}
+      <span class="badge-glow" role="img" aria-label="소방 · 정보통신 · 기계설비 로고">{ROOF}<b>소방</b><span class="bg-sub">정보통신<i></i>기계설비</span></span>
       <p class="dc-k">BUILDING CARE MASTERS</p>
       <p class="dc-knock">똑똑!</p>
       <p class="dc-h">문을 열면,<br><span>시설물 관리실 <i>&amp;</i> 안전점검</span></p>
