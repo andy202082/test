@@ -399,13 +399,26 @@ def extinguisher_landing(L):
 
 def section(c, s, idx):
     out = [f'<section class="sub-sec{" alt" if idx % 2 else ""}" id="{s["id"]}"><div class="wrap">']
-    out.append(f'<p class="s-no">{c["no"]}-{idx + 1:02d}</p><h2 class="s-tt">{e(s["name"])}{hot(s)}</h2>')
+    out.append(f'<p class="s-no">{c["no"]}-{idx + 1:02d}</p><h2 class="s-tt">{e(s.get("page_title", s["name"]))}{hot(s)}</h2>')
     if s.get("badge"):
         out.append(f'<p class="s-badge">🎁 {e(s["badge"])}</p>')
     if s.get("lead"):
-        out.append(f'<blockquote class="s-lead">“{e(s["lead"])}”</blockquote>')
+        if s.get("intro"):  # 문서형: 제목 띠 + 소개
+            out.append(f'<p class="s-band">{e(s["lead"])}</p>')
+        else:
+            out.append(f'<blockquote class="s-lead">“{e(s["lead"])}”</blockquote>')
     if s.get("landing"):
         out.append(extinguisher_landing(s["landing"]))
+    if s.get("poster"):
+        P = s["poster"]; x0, y0, x1, y1 = P["cta"]["box"]; W, H = P["w"], P["h"]
+        cta = (f'<a class="poster-cta" href="{P["cta"]["href"]}" style="left:{x0/W*100:.2f}%;top:{y0/H*100:.2f}%;'
+               f'width:{(x1-x0)/W*100:.2f}%;height:{(y1-y0)/H*100:.2f}%" aria-label="{e(P["cta"]["label"])}"></a>')
+        txt = "".join(f"<p>{e(x)}</p>" for x in P["text"])
+        out.append(f'<figure class="poster"><picture><source srcset="assets/img/{"ext/" + P["img"]}.webp" type="image/webp">'
+                   f'<img src="assets/img/ext/{P["img"]}.jpg" width="{W}" height="{H}" alt="{e(P["text"][0])}" loading="lazy" decoding="async"></picture>'
+                   f'{cta}<figcaption class="sr-only">{txt}</figcaption></figure>')
+    if s.get("intro"):
+        out.append(f'<p class="s-intro">{e(s["intro"])}</p>')
     if s.get("points"):
         out.append('<div class="pts">' + "".join(
             f'<div class="pt"><span>{i + 1:02d}</span><h3>{e(t)}</h3><p>{e(d)}</p></div>'
@@ -421,6 +434,10 @@ def section(c, s, idx):
         foot = f'<p class="tbl-foot">{e(tb["foot"])}</p>' if tb.get("foot") else ""
         out.append(f'<h3 class="tbl-tt">{e(tb["title"])}</h3><div class="tbl-wrap"><table class="tbl"><thead><tr>{th}</tr></thead>'
                    f'<tbody>{rows}</tbody></table></div>{foot}')
+        if tb.get("bullets"):
+            out.append('<ul class="s-bul">' + "".join(f"<li>{e(x)}</li>" for x in tb["bullets"]) + "</ul>")
+        if tb.get("callout"):
+            out.append(f'<p class="s-call">{e(tb["callout"])}</p>')
     if s.get("cases"):
         out.append('<div class="cases">' + "".join(
             f'<article class="case"><div class="ba"><div class="b"><span>BEFORE</span></div><div class="a"><span>AFTER</span></div></div>'
