@@ -14,26 +14,26 @@
   var code = (q.get('code') || '').toLowerCase(), id = q.get('id') || '';
   var experts = {'8':'lgp','11':'kks','13':'khj','14':'kkh','15':'jyw','23':'kwr','24':'kms','25':'lec','26':'lh','27':'pcs','28':'hdh','29':'valve'};
   var service = {
-    'amp':'fire-construction.html#broadcast','sutter':'fire-construction.html#shutter','firerepair':'fire-construction.html#deficiency',
-    'fireinspection':'fire-safety.html#inspection','insurance':'building.html#fire-insurance','building management':'building.html#total',
-    'clean':'building.html#clean','disinfection':'inspection.html#disinfection','communication':'inspection.html#ict','elevator':'inspection.html#elevator',
-    'electric':'inspection.html','tank':'inspection.html#tank','aircon':'inspection.html#air'
+    'amp':'fire-construction#broadcast','sutter':'fire-construction#shutter','firerepair':'fire-construction#deficiency',
+    'fireinspection':'fire-safety#inspection','insurance':'building#fire-insurance','building management':'building#total',
+    'clean':'building#clean','disinfection':'inspection#disinfection','communication':'inspection#ict','elevator':'inspection#elevator',
+    'electric':'inspection','tank':'inspection#tank','aircon':'inspection#air'
   };
-  var inspection = {'function':'fire-safety.html#inspection','precision':'fire-safety.html#inspection','safety':'fire-safety.html#inspection',
-    'monthly':'fire-safety.html#inspection','machinic':'inspection.html#mechanical','disinfection':'inspection.html#disinfection','저수조':'inspection.html#tank'};
+  var inspection = {'function':'fire-safety#inspection','precision':'fire-safety#inspection','safety':'fire-safety#safety-agency',
+    'monthly':'fire-safety#inspection','machinic':'inspection#mechanical','disinfection':'inspection#disinfection','저수조':'inspection#tank'};
   var keepOld = /^(login|logout|join|register|partners|request_quote|request_sos|notice|notice_view|privacy|mypage|admin)(\.php)?$/;
   var to = null;
   if (file === 'index.php' || file === 'index.html') to = '';
-  else if (file === 'about.php') to = 'story.html#story';
-  else if (file === 'experts.php') to = 'experts.html';
-  else if (file === 'expert_view.php') to = experts[id] ? 'experts.html#' + experts[id] : 'experts.html';
-  else if (file === 'service_view.php') to = service[code] || 'index.html#doors';
-  else if (file === 'inspection.php') to = 'inspection.html';
-  else if (file === 'inspection_view.php') to = inspection[code] || 'inspection.html';
-  else if (file === 'selfinspec_view.php') to = 'fire-safety.html#self';
-  else if (file === 'public_view.php') to = 'index.html#sits';
-  else if (file === 'cases.php' || file === 'case_view.php') to = 'fire-safety.html#cases';
-  else if (file === 'faq.php') to = 'index.html#faq';
+  else if (file === 'about.php') to = 'story#story';
+  else if (file === 'experts.php') to = 'experts';
+  else if (file === 'expert_view.php') to = experts[id] ? 'experts#' + experts[id] : 'experts';
+  else if (file === 'service_view.php') to = service[code] || '#doors';
+  else if (file === 'inspection.php') to = 'inspection';
+  else if (file === 'inspection_view.php') to = inspection[code] || 'inspection';
+  else if (file === 'selfinspec_view.php') to = 'fire-safety#self';
+  else if (file === 'public_view.php') to = '#sits';
+  else if (file === 'cases.php' || file === 'case_view.php') to = 'fire-safety#safety-agency';
+  else if (file === 'faq.php') to = '#faq';
   else if (keepOld.test(file) || file.indexOf('admin/') === 0) { location.replace(OLD + path + location.search); return; }
   if (to !== null) location.replace(base + to);
 })();

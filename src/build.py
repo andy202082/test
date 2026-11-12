@@ -9,6 +9,7 @@ CSS / JS / 이미지(site/assets)는 직접 편집합니다.
 """
 import html
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -444,8 +445,10 @@ def section(c, s, idx):
     if s.get("intro"):
         out.append(f'<p class="s-intro">{e(s["intro"])}</p>')
     if s.get("photos"):
-        out.append('<div class="s-photos">' + "".join(
-            f'<figure><img src="assets/img/{p}" alt="{e(cap)}" loading="lazy" decoding="async" width="540" height="540"><figcaption>{e(cap)}</figcaption></figure>'
+        pst = s.get("photo_style") == "poster"  # 글자가 들어간 포스터형 이미지: 캡션을 이미지 아래로
+        wh = 'width="600" height="650"' if pst else 'width="540" height="540"'
+        out.append(f'<div class="s-photos{" pst" if pst else ""}">' + "".join(
+            f'<figure><img src="assets/img/{p}" alt="{e(cap)}" loading="lazy" decoding="async" {wh}><figcaption>{e(cap)}</figcaption></figure>'
             for p, cap in s["photos"]) + "</div>")
     if s.get("about"):
         (t0, d0), rest = s["about"][0], s["about"][1:]
@@ -886,7 +889,28 @@ def page_index():
     return body
 
 
+# 주소창에 .html 이 보이지 않게: 내부 링크를 확장자 없는 주소로 바꿈
+# (GitHub Pages 는 /fire-safety 요청에 fire-safety.html 을 그대로 응답)
+_DOM = re.escape(SITE["domain"].rstrip("/") + "/")
+_HTML_LINK = re.compile(r'((?:href|content)=")((?:' + _DOM + r')?)(?:index\.html|([a-z0-9-]+)\.html)(?=[#"?])')
+# 예전 주소(…/index.html, …/xxx.html)로 들어와도 주소창에서 .html 을 지움
+_CLEAN_JS = ("<script>(function(){var p=location.pathname,q=p.replace(/(^|\\/)index\\.html$/,'$1').replace(/\\.html$/,'');"
+             "if(q!==p&&!/\\/404$/.test(q))history.replaceState(null,'',q+location.search+location.hash)})();</script>\n")
+
+
+def clean_urls(text):
+    def rep(m):
+        page = m.group(3)
+        if page:
+            return m.group(1) + m.group(2) + page
+        return m.group(1) + (m.group(2) or "./")  # index.html → ./ (도메인이면 도메인/)
+    text = _HTML_LINK.sub(rep, text)
+    return text.replace("<head>\n", "<head>\n" + _CLEAN_JS, 1)
+
+
 def write(name, text):
+    if name.endswith(".html"):
+        text = clean_urls(text)
     with open(os.path.join(ROOT, name), "w", encoding="utf-8") as f:
         f.write(text)
     print("built", name)
@@ -894,7 +918,7 @@ def write(name, text):
 
 def sitemap():
     base = SITE["domain"].rstrip("/")
-    urls = [""] + [c["slug"] + ".html" for c in CATEGORIES] + ["experts.html", "broadcast.html"]
+    urls = [""] + [c["slug"] for c in CATEGORIES] + ["experts", "broadcast"]
     body = "".join(f"  <url><loc>{base}/{u}</loc></url>\n" for u in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{body}</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n")
