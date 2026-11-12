@@ -1029,3 +1029,81 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
   .sb-trio{order:3;flex-basis:100%}
 }
 @media (max-width:520px){.sb-ic{width:46px;height:46px}.sb-ic svg{width:28px;height:28px}.sb-t b{font-size:13px}.sb-plus{font-size:22px}.sb-trio{padding:10px 8px;gap:4px}}
+
+/* =========================================================
+   비상방송 독립 랜딩 (broadcast.html)
+   ========================================================= */
+.s-more{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:22px;padding:16px 20px;border-radius:14px;background:var(--night);color:#fff;font-weight:700}
+.s-more span{color:#FF4D57;font-size:20px}
+.s-more:hover{background:#000}
+.bc-hero{background:radial-gradient(70% 90% at 100% 0%,rgba(255,216,77,.12),transparent 60%),radial-gradient(60% 80% at 0% 100%,rgba(227,0,15,.35),transparent 60%),var(--night);color:#fff;padding:54px 0 60px}
+.bc-hero-in{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;align-items:center}
+.bc-k{margin-top:18px;font-size:13px;letter-spacing:.14em;color:#FFB3B8;font-weight:700}
+.bc-hero h1{margin-top:8px;font-size:clamp(36px,5.2vw,62px);font-weight:900;letter-spacing:-2px;line-height:1.15}
+.bc-hero h1 span{color:#FFD84D}
+.bc-lead{margin-top:16px;font-size:17px;color:#D5D8DE;max-width:600px}
+.bc-lead b{color:#fff}
+.bc-offer{list-style:none;margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:600px}
+.bc-offer li{border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:14px 12px;background:rgba(255,255,255,.04)}
+.bc-offer b{display:block;font-size:20px;font-weight:900;color:#FFD84D}
+.bc-offer span{display:block;margin-top:2px;font-size:12.5px;color:#C5C9D1}
+.bc-acts{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
+.bc-acts .btn{height:54px;padding:0 24px;font-size:16px}
+.bc-tel{background:#fff;color:var(--ink)}
+.bc-tel.dark{background:var(--ink);color:#fff}
+.bc-fine{margin-top:10px;font-size:12px;color:#8E95A2}
+.bc-hero-ph{border-radius:22px;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.7);max-width:100%}
+.bc-hero-ph img{width:100%;height:auto;display:block}
+.bc-why{margin-top:24px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:18px}
+.bc-quote{border-radius:20px;background:var(--red);color:#fff;padding:28px;display:flex;align-items:center}
+.bc-quote p{font-family:var(--serif);font-size:clamp(20px,2.2vw,26px);font-weight:600;line-height:1.55}
+.bc-wl{list-style:none;display:grid;gap:10px}
+.bc-wl li{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#fff}
+.bc-wl b{display:block;font-size:16.5px;font-weight:900}
+.bc-wl span{display:block;margin-top:4px;font-size:14.5px;color:var(--ink-2)}
+.bc-sym{list-style:none;margin-top:22px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.bc-sym li{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px;font-size:14.5px;font-weight:700;line-height:1.4}
+.bc-sym li span{font-size:24px;flex:none}
+.bc-sym-cta{margin-top:16px;font-size:16px}
+.bc-sym-cta a{color:var(--red);font-weight:900}
+.bc-tbl td:nth-child(2) b{color:var(--ink)}
+.bc-tbl td.fq{font-weight:700}
+.bc-tbl td.f5,.bc-tbl td.f4{color:var(--red-dark)}
+.bc-tbl td.st{white-space:nowrap;color:#E0A800;letter-spacing:1px}
+.bc-tbl td.st i{font-style:normal;color:#D7DAE0}
+.bc-tbl td:last-child{font-weight:400}
+.bc-vs{margin-top:20px;display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:stretch}
+.bc-vs>div{border-radius:16px;padding:18px 20px;background:#fff;border:1px solid var(--line)}
+.bc-vs>div.good{background:var(--night);color:#fff;border-color:var(--night)}
+.bc-vs-k{font-size:12px;letter-spacing:.1em;color:var(--ink-3);font-weight:700}
+.bc-vs .good .bc-vs-k{color:#FF4D57}
+.bc-vs b{display:block;margin-top:4px;font-size:17px}
+.bc-vs span{display:block;margin-top:4px;font-size:15px;font-weight:900;color:var(--ink-3);text-decoration:line-through}
+.bc-vs .good span{color:#FFD84D;text-decoration:none}
+.bc-vs i{align-self:center;font-style:normal;font-size:28px;font-weight:900;color:var(--red)}
+.bc-case{margin-top:24px;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:24px;align-items:start}
+.bc-case figure{border-radius:18px;overflow:hidden;position:relative;max-width:100%}
+.bc-case figure img{width:100%;height:auto;display:block}
+.bc-case figcaption{position:absolute;left:0;right:0;bottom:0;padding:24px 14px 12px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:13px;font-weight:700}
+.bc-case-t{display:grid;gap:12px;min-width:0}
+.bc-cb{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:#fff}
+.bc-cb.good{border-color:#BBE5C8;background:#F2FBF5}
+.bc-cb-k{font-size:12px;font-weight:900;letter-spacing:.1em;color:var(--red)}
+.bc-cb.good .bc-cb-k{color:#15803D}
+.bc-cb ol,.bc-cb ul{margin-top:8px;padding-left:18px;display:grid;gap:6px;font-size:14.5px;color:var(--ink-2)}
+.bc-ok{list-style:none;padding-left:0!important}
+.bc-ok li::before{content:"✓ ";color:#15803D;font-weight:900}
+.bc-voice{border-radius:16px;background:var(--night);color:#E6DFD3;padding:20px 22px;font-family:var(--serif);font-size:17px;line-height:1.7}
+.bc-voice b{color:#FFD84D}
+.bc-voice cite{display:block;margin-top:8px;font-style:normal;font-family:'Noto Sans KR',sans-serif;font-size:13px;color:#9CA2AD}
+.bc-master2{margin-top:16px;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:18px;align-items:center}
+.bc-master2 figure{border-radius:16px;overflow:hidden;max-width:100%}
+.bc-master2 img{width:100%;height:auto;display:block}
+.bc-master2 ul{display:grid;gap:8px;padding-left:18px;font-size:15px;color:var(--ink-2)}
+.bc-master2 b{color:var(--ink)}
+.bc-final{margin-top:28px;border-radius:20px;background:linear-gradient(120deg,#16181D,#3A0A0E);color:#fff;padding:26px 28px}
+.bc-final p{font-size:16px;color:#D5D8DE}
+.bc-final p b{color:#fff}
+@media (max-width:1000px){.bc-sym{grid-template-columns:1fr 1fr}}
+@media (max-width:900px){.bc-hero-in,.bc-why,.bc-case,.bc-master2{grid-template-columns:1fr}.bc-hero-ph{max-width:420px}.bc-vs{grid-template-columns:1fr}.bc-vs i{transform:rotate(90deg);justify-self:center}}
+@media (max-width:560px){.bc-offer{grid-template-columns:1fr 1fr 1fr;gap:6px}.bc-offer b{font-size:15px}.bc-offer span{font-size:11px}.bc-sym li{font-size:13px;padding:10px;gap:6px}.bc-sym li span{font-size:20px}.bc-hero{padding:36px 0 44px}}
