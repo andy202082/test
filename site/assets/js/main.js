@@ -135,12 +135,33 @@
     map.forEach((_, id) => { const s = document.getElementById(id); if (s) io2.observe(s); });
   }
 
-  // ---------------------------------------------- 견적 폼 — TODO: 실제 접수 서버 연결
+  // ---------------------------------------------- 견적 폼 — TODO: 실제 접수 서버(DB) 연결
   const form = document.getElementById('quote-form');
-  if (form) form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    let msg = form.querySelector('.q-done');
-    if (!msg) { msg = document.createElement('p'); msg.className = 'q-done'; msg.setAttribute('role', 'status'); form.appendChild(msg); }
-    msg.textContent = '견적 신청 내용이 준비되었습니다. (시안: 아직 접수 서버에 연결되지 않아 실제로 전송되지는 않습니다)';
-  });
+  if (form) {
+    const area = form.querySelector('#q-area'), hint = form.querySelector('#q-area-hint');
+    const hint0 = hint ? hint.textContent : '';
+    if (area && hint) area.addEventListener('input', () => {
+      const v = parseFloat(area.value);
+      hint.textContent = v > 0 ? `약 ${Math.round(v / 3.3058).toLocaleString()}평` + (v >= 5000 ? ' · 정보통신 성능점검 대상일 수 있어요' : '') : hint0;
+      hint.classList.toggle('on', v > 0);
+    });
+    const ph = form.querySelector('#q-ph');
+    if (ph) ph.addEventListener('input', () => {
+      const d = ph.value.replace(/\D/g, '').slice(0, 11);
+      ph.value = d.length < 4 ? d : d.length < 8 ? `${d.slice(0, 3)}-${d.slice(3)}` : `${d.slice(0, 3)}-${d.slice(3, d.length - 4)}-${d.slice(-4)}`;
+    });
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const msg = form.querySelector('#q-msg');
+      const svc = form.querySelectorAll('input[name=svc]:checked').length;
+      const ok = /^01\d-?\d{3,4}-?\d{4}$/.test(ph.value);
+      const agree = form.querySelector('#q-agree').checked;
+      msg.className = 'qf-msg';
+      if (!svc) { msg.textContent = '필요한 서비스를 하나 이상 골라 주세요.'; msg.classList.add('err'); return; }
+      if (!ok) { msg.textContent = '휴대폰 번호를 확인해 주세요. 예) 010-1234-5678'; msg.classList.add('err'); ph.focus(); return; }
+      if (!agree) { msg.textContent = '개인정보 수집·이용에 동의해 주세요.'; msg.classList.add('err'); return; }
+      msg.textContent = '신청 내용이 준비되었습니다. (시안: 아직 접수 서버에 연결되지 않아 실제로 전송되지는 않습니다)';
+      msg.classList.add('ok');
+    });
+  }
 })();
