@@ -641,13 +641,15 @@ def page_index():
     doors = "".join(door(c, i) for i, c in enumerate(x for x in CATEGORIES if x["slug"] in DOOR_SLUGS))
     faq = "".join(f'<details{" open" if i == 0 else ""}><summary>{e(q)}</summary><div class="ans">{e(a)}</div></details>'
                   for i, (q, a) in enumerate(FAQ))
-    svc = ["소방점검", "셀프점검", "비상방송/음향", "방화셔터", "지적사항공사", "스프링클러·밸브",
-           "화재·누수보험", "종합건물관리", "법정점검", "관리비 절감"]
-    chips = "".join(f'<label class="chip"><input type="checkbox" name="svc" value="{e(v)}"{" checked" if i == 0 else ""}><span>{e(v)}</span></label>'
-                    for i, v in enumerate(svc))
-    bt = ["공동주택", "빌딩·상가", "고시원·숙박", "학교·공공", "공장·창고"]
-    bchips = "".join(f'<label class="chip"><input type="radio" name="bt" value="{e(v)}"{" checked" if i == 0 else ""}><span>{e(v)}</span></label>'
+    # 견적 폼 선택지 (요청 순서 그대로) — (값, 아이콘)
+    svc = [("소방점검", "🧯"), ("정보통신점검", "📡"), ("기계설비점검", "⚙️"), ("저수조청소", "💧"),
+           ("소방공사", "🛠️"), ("화재·누수보험", "🛡️"), ("관리비절감", "💰"), ("종합건물관리", "🏢")]
+    chips = "".join(f'<label class="qc"><input type="checkbox" name="svc" value="{e(v)}"{" checked" if i == 0 else ""}><span><i aria-hidden="true">{ic}</i>{e(v)}</span></label>'
+                    for i, (v, ic) in enumerate(svc))
+    bt = ["아파트·오피스·빌라", "빌딩·상가", "학교·공공", "공장·창고", "기타"]
+    bchips = "".join(f'<label class="qc qc-r"><input type="radio" name="bt" value="{e(v)}"{" checked" if i == 0 else ""}><span>{e(v)}</span></label>'
                      for i, v in enumerate(bt))
+    qfaces = "".join(photo(EXPERTS[k], "av") for k in ["lec", "kks", "kwr", "khj", "kkh"])
     cards = "".join(master_card(k) for k in EXPERTS)
     tabs = '<button type="button" class="on" data-f="all">전체 {}</button>'.format(len(EXPERTS)) + "".join(
         f'<button type="button" data-f="{g}">{e(n)} {sum(1 for x in EXPERTS.values() if x["group"] == g)}</button>' for g, n in GROUPS.items())
@@ -713,29 +715,46 @@ def page_index():
   </div>
 </section>
 
-<!-- 3. 견적 -->
+<!-- 3. 견적 (DB 입력) -->
 <section class="sec quote-sec" id="quote">
   <div class="wrap quote-in">
-    <div>
-      {LOCKUP_A}
-      <p class="eyebrow">FREE QUOTE</p>
-      <h2 class="tt">30초 무료 견적,<br><span class="r">사진 한 장</span>이면 충분합니다</h2>
-      <p class="lead">소방서 지적 통보서나 고장 부위 사진을 올려주시면 담당 달인이 보수·교체 견적을 함께 비교해 드립니다.</p>
-      <ul class="q-points"><li>평균 30분 내 담당 전문가 연락</li><li>교체보다 수리 가능 여부부터 진단</li><li>서울 · 인천 4개 지사 출동</li></ul>
+    <div class="q-left">
+      <p class="q-badge"><span class="q-dot" aria-hidden="true"></span>지금 상담 가능 · 무료 견적</p>
+      <h2 class="q-tt">우리 건물,<br><span class="r">어디까지 의무</span>인지<br>30초면 알려드립니다</h2>
+      <p class="q-lead">필요한 서비스와 시설 유형만 고르세요. 담당 달인이 의무 대상 여부와 <b>보수·교체 견적을 함께 비교</b>해 드립니다.</p>
+      <ul class="q-trust">
+        <li><b>30분</b><span>평균 연락 시간</span></li>
+        <li><b>수리 먼저</b><span>교체보다 원인 진단</span></li>
+        <li><b>4개 지사</b><span>서울 · 인천 출동</span></li>
+      </ul>
+      <ol class="q-flow">
+        <li><span>1</span>신청서 작성 <small>30초</small></li>
+        <li><span>2</span>담당 달인 전화 <small>의무 대상 확인</small></li>
+        <li><span>3</span>현장 진단 · 견적 <small>보수/교체 비교</small></li>
+      </ol>
+      <div class="q-team"><span class="av-stack">{qfaces}</span><p><b>검증된 달인 {len(EXPERTS)}인</b>이 직접 연락드립니다</p></div>
+      <a class="q-call" href="tel:{SITE['tel']}"><small>급하시면 바로 전화</small><b>{SITE['tel']}</b></a>
     </div>
-    <form class="qq" id="quote-form">
-      <p class="lb">필요한 서비스 (복수 선택)</p>
-      <div class="chips">{chips}</div>
-      <p class="lb">건물 유형</p>
-      <div class="chips">{bchips}</div>
-      <label class="lb" for="q-ph">연락처</label>
-      <div class="row2">
-        <input class="field" id="q-nm" name="name" placeholder="이름 / 담당자" aria-label="이름">
-        <input class="field" id="q-ph" name="phone" type="tel" placeholder="010-0000-0000" required>
+    <form class="qf" id="quote-form" novalidate>
+      <div class="qf-hd"><b>무료 견적 신청</b><span>작성 30초 · 상담 무료</span></div>
+      <div class="qf-bd">
+        <fieldset class="qf-step"><legend><span>1</span>필요한 서비스 <small>복수 선택</small></legend>
+          <div class="qcs qcs-svc">{chips}</div></fieldset>
+        <fieldset class="qf-step"><legend><span>2</span>시설 유형</legend>
+          <div class="qcs">{bchips}</div></fieldset>
+        <div class="qf-step"><label class="qf-lg" for="q-area"><span>3</span>연면적 <small>선택</small></label>
+          <div class="qf-area"><input class="field" id="q-area" name="area" type="number" inputmode="decimal" min="0" step="any" placeholder="예) 3000"><em>㎡</em></div>
+          <p class="qf-hint" id="q-area-hint">모르시면 비워 두세요. 건축물대장으로 확인해 드립니다.</p></div>
+        <div class="qf-step qf-contact"><label class="qf-lg" for="q-ph"><span>4</span>연락처 <small class="req">필수</small></label>
+          <div class="row2">
+            <input class="field" id="q-nm" name="name" placeholder="이름 / 담당자" aria-label="이름" autocomplete="name">
+            <input class="field" id="q-ph" name="phone" type="tel" inputmode="tel" placeholder="010-0000-0000" required autocomplete="tel" aria-required="true">
+          </div>
+          <label class="upload"><input type="file" name="photo" accept="image/*">📷 지적 통보서·현장 사진 첨부 <small>(선택)</small></label></div>
+        <label class="qf-agree"><input type="checkbox" id="q-agree" name="agree" required> <span>견적 상담을 위한 개인정보 수집·이용에 동의합니다 <a href="{SITE['old_site']}/privacy.php" rel="noopener">보기</a></span></label>
+        <button class="qf-submit" type="submit">무료 견적 받기 <span aria-hidden="true">→</span></button>
+        <p class="qf-msg" id="q-msg" role="status" aria-live="polite"></p>
       </div>
-      <label class="upload"><input type="file" name="photo" accept="image/*">📷 지적 통보서·현장 사진 첨부 (선택)</label>
-      <button class="btn btn-red" type="submit">견적 비교 받기</button>
-      <p class="note">개인정보는 견적 상담 목적으로만 사용됩니다</p>
     </form>
   </div>
 </section>
