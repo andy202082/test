@@ -561,11 +561,16 @@ def page_category(c):
     return body
 
 
+def promises3(cls="q-prom"):
+    return f'<ol class="{cls}">' + "".join(
+        f'<li><span class="qp-ic" aria-hidden="true">{ic}</span><div><p class="qp-no">{e(no)}</p><b>{e(t)}</b><p>{e(d)}</p></div></li>'
+        for ic, no, t, d in STORY["promises3"]) + "</ol>"
+
+
 def page_story():
     c = next(x for x in CATEGORIES if x["slug"] == "story")
     origin = "".join(f"<p{' class=q' if p.startswith('“') else ''}>{e(p)}</p>" for p in STORY["origin"])
-    values = "".join(f'<div class="val"><b>{e(t)}</b><p>{e(d)}</p></div>' for t, d in STORY["values"])
-    prom = "".join(f"<li><span>{i + 1:02d}</span>{e(p)}</li>" for i, p in enumerate(STORY["promises"]))
+    prom = "".join(f"<li><span>{i + 1:02d}</span><b>{e(t)}</b><small>{e(d)}</small></li>" for i, (t, d) in enumerate(STORY["principles"]))
     hist = "".join(f'<li><time>{e(y)}</time><div><b>{e(t)}</b><p>{e(d)}</p></div></li>' for y, t, d in STORY["history"])
     br = "".join(
         f'<article class="br"><p class="br-a">{e(b["area"])}</p><h3>{e(b["name"])}</h3><p>{e(b["addr"])}</p>'
@@ -581,9 +586,10 @@ def page_story():
     <div class="note-book" aria-hidden="true"><span>점검 일정</span><span>업체 연락처</span><span>고칠 것</span><span>보고서 제출</span><span>…</span></div>
     <div class="story-t">{origin}</div>
   </div>
-  <div class="vals">{values}</div>
+  <h3 class="sub-h st-ph"><small>고객님의</small>안전한 일상을 위한 3가지 약속</h3>
+  {promises3("q-prom st-prom")}
   <blockquote class="s-lead">“건물관리는 노하우(Know-How)가 아니라, 최적의 해결책을 가진 달인을 정확히 아는 노웨어(Know-Where) 비즈니스입니다.”</blockquote>
-  <h3 class="sub-h">모두가 윈윈하는 6가지 약속</h3>
+  <h3 class="sub-h">약속을 지키는 일하는 원칙</h3>
   <ol class="promises">{prom}</ol>
 </div></section>
 <section class="sub-sec alt" id="history"><div class="wrap">
@@ -721,11 +727,7 @@ def page_index():
     <div class="q-left"><div class="q-frame">
       <p class="q-badge"><span class="q-dot" aria-hidden="true"></span>지금 상담 가능 · 무료 견적</p>
       <h2 class="q-tt2">진심 설명 <em>30분</em><br><span class="r">출장비 무료</span><small>(진행 시)</small></h2>
-      <ol class="q-prom">
-        <li><span class="qp-ic" aria-hidden="true">🕊️</span><div><p class="qp-no">01 · 점검·공사 탈 없이 마무리</p><b>무탈 (無頉)</b><p>평범한 일상의 소중함을 지켜내는 것이 가장 큰 사명입니다.</p></div></li>
-        <li><span class="qp-ic" aria-hidden="true">⚡</span><div><p class="qp-no">02 · 관리자의 번거로움과 스트레스 최소화</p><b>유능한 담당자 평판 더하기</b><p>미리 체크해 불편을 없애고 사고를 막아, 맡기신 분이 인정받게 합니다.</p></div></li>
-        <li><span class="qp-ic" aria-hidden="true">🤝</span><div><p class="qp-no">03 · 시간과 품을 아끼는 원스톱 서비스</p><b>전·중·후 깔끔</b><p>점검부터 공사, 후속 서류 처리까지 한 번에 끝냅니다.</p></div></li>
-      </ol>
+      {promises3()}
       <div class="q-foot">
         <div class="q-team"><span class="av-stack">{qfaces}</span><p><b>검증된 달인 {len(EXPERTS)}인</b>이 직접 연락드립니다</p></div>
         <a class="q-call" href="tel:{SITE['tel']}"><small>급하시면 바로 전화</small><b>1555-<em>5048</em></b><span class="q-mn">오! 공사판</span></a>
