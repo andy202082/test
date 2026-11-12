@@ -643,7 +643,7 @@ def page_index():
                   for i, (q, a) in enumerate(FAQ))
     # 견적 폼 선택지 (요청 순서 그대로) — (값, 아이콘)
     svc = [("소방점검", "🧯"), ("정보통신점검", "📡"), ("기계설비점검", "⚙️"), ("저수조청소", "💧"),
-           ("소방공사", "🛠️"), ("화재·누수보험", "🛡️"), ("관리비절감", "💰"), ("종합건물관리", "🏢")]
+           ("소방공사", "🛠️"), ("화재·누수보험", "🛡️"), ("관리비절감", "💰"), ("기타", "➕")]
     chips = "".join(f'<label class="qc"><input type="checkbox" name="svc" value="{e(v)}"{" checked" if i == 0 else ""}><span><i aria-hidden="true">{ic}</i>{e(v)}</span></label>'
                     for i, (v, ic) in enumerate(svc))
     bt = ["아파트·오피스·빌라", "빌딩·상가", "학교·공공", "공장·창고", "기타"]
@@ -718,9 +718,9 @@ def page_index():
 <!-- 3. 견적 (DB 입력) -->
 <section class="sec quote-sec" id="quote">
   <div class="wrap quote-in">
-    <div class="q-left">
+    <div class="q-left"><div class="q-frame">
       <p class="q-badge"><span class="q-dot" aria-hidden="true"></span>지금 상담 가능 · 무료 견적</p>
-      <h2 class="q-tt2">신청 전에,<br><span class="r">달인명인의 3가지 약속</span></h2>
+      <h2 class="q-tt2">진심 설명 <em>30분</em><br><span class="r">출장비 무료</span><small>(진행 시)</small></h2>
       <ol class="q-prom">
         <li><span class="qp-ic" aria-hidden="true">🕊️</span><div><p class="qp-no">01 · 점검·공사 탈 없이 마무리</p><b>무탈 (無頉)</b><p>평범한 일상의 소중함을 지켜내는 것이 가장 큰 사명입니다.</p></div></li>
         <li><span class="qp-ic" aria-hidden="true">⚡</span><div><p class="qp-no">02 · 관리자의 번거로움과 스트레스 최소화</p><b>유능한 담당자 평판 더하기</b><p>미리 체크해 불편을 없애고 사고를 막아, 맡기신 분이 인정받게 합니다.</p></div></li>
@@ -728,9 +728,9 @@ def page_index():
       </ol>
       <div class="q-foot">
         <div class="q-team"><span class="av-stack">{qfaces}</span><p><b>검증된 달인 {len(EXPERTS)}인</b>이 직접 연락드립니다</p></div>
-        <a class="q-call" href="tel:{SITE['tel']}"><small>급하시면 바로 전화</small><b>{SITE['tel']}</b></a>
+        <a class="q-call" href="tel:{SITE['tel']}"><small>급하시면 바로 전화</small><b>1555-<em>5048</em></b><span class="q-mn">오! 공사판</span></a>
       </div>
-    </div>
+    </div></div>
     <form class="qf" id="quote-form" novalidate>
       <div class="qf-hd"><b>무료 견적 신청</b><span>작성 30초 · 상담 무료</span></div>
       <div class="qf-bd">
