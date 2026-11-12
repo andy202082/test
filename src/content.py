@@ -346,6 +346,7 @@ CATEGORIES = [
             {
                 "id": "broadcast",
                 "name": "비상방송/음향",
+                "href": "broadcast.html",
                 "hot": True,
                 "summary": "앰프 · 선로 쇼트 · 감쇄기 · 수신기 연동",
                 "lead": "화재 시 대피 방송이 먹통이라면? 단순한 기계 고장이 아니라 인명 피해로 이어집니다.",

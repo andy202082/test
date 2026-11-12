@@ -483,6 +483,8 @@ def section(c, s, idx):
     if s.get("note"):
         out.append(f'<p class="s-note">⚠️ {e(s["note"])}</p>')
     out.append(section_experts(s))
+    if s.get("href", "").endswith(".html"):
+        out.append(f'<a class="s-more" href="{s["href"]}">{e(s["name"])} 자세히 보기 — 증상·고장 원인·실제 사례 <span aria-hidden="true">→</span></a>')
     cta = s.get("cta", f'{s["name"]} 견적 받기')
     out.append(f'<div class="s-cta"><a class="btn btn-red" href="index.html#quote">{e(cta)}</a>'
                f'<a class="btn btn-ghost" href="tel:{SITE["tel"]}">전화 상담 {SITE["tel"]}</a></div>')
@@ -616,6 +618,130 @@ def page_story():
   </div>
 </div></section>"""
     body += other_doors("story") + band() + footer()
+    return body
+
+
+def page_broadcast():
+    """비상방송/음향 독립 랜딩 (출처: old.master1.kr 비상방송 서비스·경광순 달인·무료출장 이벤트)"""
+    x = EXPERTS["kks"]
+    sym = [("📢", "방송에 “지지직” 잡음"), ("🔇", "음성은 나오는데 사이렌이 안 울림"), ("🚨", "화재 신호는 넘어가는데 소리가 안 들림"),
+           ("🔌", "수신반에서 앰프로 화재 신호가 안 넘어감 (연동 불량)"), ("📉", "사이렌이 잠깐 나다 멈추거나 작아짐"), ("🗣️", "사이렌 후 대피 음성 안내가 안 나옴"),
+           ("🏢", "특정 층·동만 방송이 안 나옴"), ("🔁", "전원 불안정, 재부팅 반복")]
+    symh = "".join(f'<li><span aria-hidden="true">{i}</span>{e(t)}</li>' for i, t in sym)
+    causes = [("전원부 이상", "SMPS 노후, 콘덴서 열화, 접지 불량, 전원선 단선", "전원 불가, 재부팅, 잡음", "매우 높음", 5),
+              ("내부 부품 노후", "전해콘덴서 팽창, 릴레이 접점 불량, 냉땜", "음질 저하, 간헐 동작", "높음", 4),
+              ("스피커·배선 문제", "스피커 유닛 소손, 배선 단선·합선", "특정 구역 무음, 소리 찢어짐", "높음", 4),
+              ("증폭부(앰프) 고장", "출력 트랜지스터 손상, 과부하, 방열 불량", "출력 저하, 보호회로 작동", "중간", 3),
+              ("제어부·메인보드", "MCU 오류, 메모리 손상, 펌웨어 이상", "버튼 무응답, 자동방송 실패", "중간", 3),
+              ("마이크·입력장치", "마이크 수명, 케이블 접촉불량", "음량 작음, 하울링", "보통", 2),
+              ("환경 요인", "습기, 먼지, 고온, 결로", "오동작, 부식", "보통", 2),
+              ("외부 요인(낙뢰)", "낙뢰 유입, 통신선 방해", "보드 전소, 포트 파손", "낮음", 1)]
+    crows = "".join(f'<tr><td><b class="rk{" hi" if i < 3 else ""}">{i + 1}</b></td><td><b>{e(a)}</b></td><td>{e(b_)}</td><td>{e(c_)}</td>'
+                    f'<td class="fq f{st}">{e(f)}</td><td class="st" aria-label="우선도 {st}/5">{"★" * st}<i>{"★" * (5 - st)}</i></td></tr>'
+                    for i, (a, b_, c_, f, st) in enumerate(causes))
+    fix = [("메인 앰프 / 랙", "전원 불량, 출력 저하, 특정 층 방송 시 과전류 차단, SMPS 보수·교체", "예비전원(축전지) 성능 검사 포함"),
+           ("화재 수신기 연동부", "소방 신호(도트·릴레이) 접점 불량, 연동 셀렉터 오류, 비상 멘트 음원 칩 교체", "소방서 점검·화재안전조사 지적 단골 항목"),
+           ("선로 단선 / 단락", "리모델링·노후로 생긴 쇼트 추적, 단락보호장치(퓨즈·파워디스트리뷰터) 정상화, 층별 절연저항 측정", "한 층이 쇼트나도 다른 층은 정상 송출"),
+           ("스피커 / 감쇄기", "소리 찢어짐·무음 스피커 교체, 매장 볼륨조절기(감쇄기) 3선식 화재 연동 배선 수정", "평소엔 음악, 비상시엔 최대 음량 강제 방송")]
+    fixh = "".join(f"<tr><td>{e(a)}</td><td>{e(b_)}</td><td>{e(c_)}</td></tr>" for a, b_, c_ in fix)
+    steps = [("접수·문진", "지적명령서·오작동 증상 확인"), ("명인 출동", "랙 회로·소방 법규 숙련 전문가"), ("선로·장비 계측", "오실로스코프·메거로 원인 특정"),
+             ("부품·선로 보수", "기판 수리, 쇼트 구간 보수"), ("실연동 테스트", "화재 신호 투입, 전 층 스피커 검증")]
+    steph = "".join(f"<li><b>{e(t)}</b><p>{e(d)}</p></li>" for t, d in steps)
+    body = head("비상방송 수리 | 건물관리 달인명인 — 출장비 무료 · 수신기 2개 30만원 내외",
+                "아파트·빌딩·교육기관·군부대 비상방송 수리. 40년 경력 경광순 달인이 무료 출장 진단 후 통째 교체 대신 부분 수리로 소방 지적사항을 해결합니다.",
+                "broadcast.html")
+    body += header("fire-construction")
+    body += f"""
+<section class="bc-hero"><div class="wrap bc-hero-in">
+  <div class="bc-hero-t">
+    <p class="crumb"><a href="index.html">홈</a> / <a href="fire-construction.html">소방공사</a> / 비상방송·음향</p>
+    <p class="bc-k">아파트 · 빌딩 · 교육기관 · 군부대</p>
+    <h1>비상방송,<br><span>통째 교체 말고</span><br>고쳐서 씁니다</h1>
+    <p class="bc-lead">소방점검에서 <b>“비상방송 송출 불량”</b>, <b>“앰프 연동 불량”</b> 지적을 받으셨나요? 40년 경력 <b>{e(x['name'])} {e(x['honor'])}</b>이 무료로 출장 진단하고, 원인만 정확히 고칩니다.</p>
+    <ul class="bc-offer">
+      <li><b>출장비 무료</b><span>현장 방문·정밀 진단</span></li>
+      <li><b>30만원 내외</b><span>수신기 2개 연동 기준</span></li>
+      <li><b>풀 테스트</b><span>화재 신호 → 전 층 송출</span></li>
+    </ul>
+    <div class="bc-acts"><a class="btn btn-red" href="index.html#quote">무료 출장 진단 신청</a><a class="btn bc-tel" href="tel:{SITE['tel']}">📞 {SITE['tel']}</a></div>
+    <p class="bc-fine">현장 상황에 따라 금액이 달라질 수 있습니다.</p>
+  </div>
+  <figure class="bc-hero-ph"><img src="assets/img/amp/poster.jpg" alt="아파트 건물 비상방송 출장비 무료 — 경광순 달인" width="800" height="800"></figure>
+</div></section>
+
+<nav class="subtabs" aria-label="비상방송 안내"><div class="wrap"><a href="#why">왜 중요한가</a><a href="#symptoms">이런 증상</a><a href="#causes">고장 원인 TOP 8</a><a href="#fix">수리 항목</a><a href="#case">실제 사례</a><a href="#master">담당 달인</a><a href="#process">진행 절차</a></div></nav>
+
+<section class="sub-sec" id="why"><div class="wrap">
+  <p class="s-no">WHY</p><h2 class="s-tt">비상방송, 왜 지금 고쳐야 할까요?</h2>
+  <div class="bc-why">
+    <div class="bc-quote"><p>화재나 비상시 대피 안내 방송이 먹통이라면, 단순한 기계 고장이 아니라 <b>인명 피해</b>로 이어집니다.</p></div>
+    <ul class="bc-wl">
+      <li><b>10초 안에 송출돼야 합니다</b><span>화재안전성능기준(NFPC 202)에 따라 화재 신호가 들어오면 10초 안에 경보음과 대피 음성이 나와야 합니다.</span></li>
+      <li><b>지적사항은 권고가 아닙니다</b><span>소방점검 후 “비상방송 송출 불량”, “앰프 연동 불량” 지적은 입주민 안전과 직결되고, 이행하지 않으면 법적 불이익이 따를 수 있습니다.</span></li>
+      <li><b>사고 뒤엔 책임 소재를 묻습니다</b><span>화재는 나기 전엔 아무 문제가 없지만, 나고 나면 경보·대피 설비가 제대로 작동했는지 철저히 조사합니다.</span></li>
+    </ul>
+  </div>
+</div></section>
+
+<section class="sub-sec alt" id="symptoms"><div class="wrap">
+  <p class="s-no">CHECK</p><h2 class="s-tt">이런 증상, 하나라도 있나요?</h2>
+  <ul class="bc-sym">{symh}</ul>
+  <p class="bc-sym-cta">하나라도 해당되면 <b>지금 무료 진단</b>을 받아보세요. <a href="index.html#quote">신청하기 →</a></p>
+</div></section>
+
+<section class="sub-sec" id="causes"><div class="wrap">
+  <p class="s-no">DATA</p><h2 class="s-tt">비상방송 고장 원인 TOP 8</h2>
+  <p class="s-intro">현장 수리 기록을 바탕으로 정리한 고장 원인과 점검 우선도입니다. 위쪽일수록 자주 고장 나고, 먼저 점검해야 합니다.</p>
+  <div class="tbl-wrap"><table class="tbl bc-tbl"><thead><tr><th>순위</th><th>고장 원인</th><th>세부 원인</th><th>주요 증상</th><th>발생 빈도</th><th>점검 우선도</th></tr></thead><tbody>{crows}</tbody></table></div>
+</div></section>
+
+<section class="sub-sec alt" id="fix"><div class="wrap">
+  <p class="s-no">REPAIR</p><h2 class="s-tt">부위별 수리 항목</h2>
+  <div class="tbl-wrap"><table class="tbl"><thead><tr><th>고장 부위</th><th>증상 · 수리 내용</th><th>정비 포인트</th></tr></thead><tbody>{fixh}</tbody></table></div>
+  <div class="bc-vs">
+    <div><p class="bc-vs-k">흔한 견적</p><b>방송 랙 시스템 통째 교체</b><span>수백 ~ 수천만 원</span></div>
+    <i aria-hidden="true">→</i>
+    <div class="good"><p class="bc-vs-k">달인명인</p><b>원인 진단 후 부품·선로만 수리</b><span>수신기 2개 연동 기준 30만원 내외</span></div>
+  </div>
+  <p class="s-note">사용 연한, 브랜드, 송출 방식과 관계없이 수리합니다. 금액은 현장 상황에 따라 달라질 수 있습니다.</p>
+</div></section>
+
+<section class="sub-sec" id="case"><div class="wrap">
+  <p class="s-no">CASE</p><h2 class="s-tt">실제 사례 — 신반포아파트 비상방송설비 보수</h2>
+  <div class="bc-case">
+    <figure><img src="assets/img/amp/rack.jpg" alt="건물 벽에 설치된 비상방송 앰프 랙" loading="lazy" decoding="async" width="720" height="960"><figcaption>현장 비상방송 앰프 랙</figcaption></figure>
+    <div class="bc-case-t">
+      <div class="bc-cb"><p class="bc-cb-k">진단 결과</p><ol><li><b>전원부 노후</b> — SMPS 내부 콘덴서 열화, 장시간 사용 시 출력 불안정, 앰프 과부하 흔적, 비상방송 시 음압 부족</li><li><b>스피커 라인 불량</b> — 일부 동 배선 접촉 불량으로 특정 층 방송 송출 안 됨</li></ol></div>
+      <div class="bc-cb"><p class="bc-cb-k">수리 · 보수</p><ul><li>전원부 주요 콘덴서 선제 교체</li><li>증폭부 출력 소자 및 방열 상태 개선</li><li>문제 구역 스피커 라인 재정비</li><li>우선방송 릴레이 교체 및 동작 재시험</li><li>정전 가정 예비전원 시험 + 화재 신호 연동 자동방송 시험</li></ul></div>
+      <div class="bc-cb good"><p class="bc-cb-k">결과</p><ul class="bc-ok"><li>전 구역 방송 정상 송출</li><li>비상 시 우선방송 즉시 작동</li><li>음성 명료도 개선 · 소방 법정점검 기준 충족</li></ul></div>
+      <blockquote class="bc-voice">“이전에는 방송이 나와도 긴가민가 불안했는데, 이제는 <b>소방서 점검에도 자신 있게 설명할 수 있는 상태</b>가 되었습니다.”<cite>— 관리사무소 관계자</cite></blockquote>
+    </div>
+  </div>
+</div></section>
+
+<section class="sub-sec alt" id="master"><div class="wrap">
+  <p class="s-no">MASTER</p><h2 class="s-tt">담당 달인</h2>
+  {expert_lead("kks")}
+  <div class="bc-master2">
+    <figure><img src="assets/img/amp/workshop.jpg" alt="스피커가 가득한 작업실의 경광순 달인" loading="lazy" decoding="async" width="441" height="298"></figure>
+    <ul>
+      <li><b>“딱 보면 압니다.”</b> 40년 방송장비 수리 경력으로 핵심 문제를 바로 짚습니다.</li>
+      <li>제조사 브랜드와 관계없이, 언제 어디서나 출장 수리합니다.</li>
+      <li>일반 건물은 물론 강원도 최전선 부대, 해병대·공군부대, 남쪽 해안부대까지 군 방송 장비 시공·수리 경험이 있습니다.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section class="sub-sec" id="process"><div class="wrap">
+  <p class="s-no">PROCESS</p><h2 class="s-tt">무료 진단부터 실연동 테스트까지</h2>
+  <ol class="steps big">{steph}</ol>
+  <div class="bc-final">
+    <p><b>비상방송 무료 출장 센터</b> — 소리가 나오는 것을 넘어, 화재 신호에 앰프가 즉시 반응해 사이렌과 대피 방송이 나오는지까지 확인합니다.</p>
+    <div class="bc-acts"><a class="btn btn-red" href="index.html#quote">무료 출장 진단 신청</a><a class="btn bc-tel dark" href="tel:{SITE['tel']}">📞 {SITE['tel']}</a></div>
+  </div>
+</div></section>
+"""
+    body += other_doors("fire-construction") + band() + footer()
     return body
 
 
@@ -842,7 +968,7 @@ def write(name, text):
 
 def sitemap():
     base = SITE["domain"].rstrip("/")
-    urls = [""] + [c["slug"] + ".html" for c in CATEGORIES] + ["experts.html"]
+    urls = [""] + [c["slug"] + ".html" for c in CATEGORIES] + ["experts.html", "broadcast.html"]
     body = "".join(f"  <url><loc>{base}/{u}</loc></url>\n" for u in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{body}</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n")
@@ -884,6 +1010,7 @@ if __name__ == "__main__":
     for c in CATEGORIES:
         write(c["slug"] + ".html", page_story() if c["slug"] == "story" else page_category(c))
     write("experts.html", page_experts())
+    write("broadcast.html", page_broadcast())
     sitemap()
     # 사용법: python3 src/build.py --snapshot v1
     if len(sys.argv) == 3 and sys.argv[1] == "--snapshot":
