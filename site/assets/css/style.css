@@ -816,6 +816,9 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .s-photos figure{position:relative;border-radius:14px;overflow:hidden;aspect-ratio:1/1;max-width:100%}
 .s-photos img{width:100%;height:100%;object-fit:cover;display:block}
 .s-photos figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 12px 10px;font-size:13px;font-weight:700;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.7))}
+.s-photos.pst figure{aspect-ratio:auto;border-radius:14px;background:#fff;box-shadow:0 6px 18px rgba(16,32,60,.10)}
+.s-photos.pst img{height:auto;aspect-ratio:600/650}
+.s-photos.pst figcaption{position:static;background:none;color:#1E3A66;text-align:center;padding:9px 6px 11px;font-size:14px}
 .s-about{margin-top:18px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:14px}
 .sa-def{background:#1E3A66;color:#fff;border-radius:14px;padding:20px}
 .sa-def h3{font-size:17px;font-weight:900}
@@ -825,7 +828,7 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .sa-eff b{flex:none;font-size:14.5px;color:var(--red-dark)}
 .sa-eff b::before{content:"✓ "}
 .sa-eff span{font-size:14px;color:var(--ink-2)}
-@media (max-width:700px){.s-photos{grid-template-columns:1fr 1fr 1fr;gap:6px}.s-photos figcaption{font-size:10.5px;padding:16px 6px 6px}.s-about{grid-template-columns:1fr}.sa-eff li{flex-direction:column;gap:2px}}
+@media (max-width:700px){.s-photos{grid-template-columns:1fr 1fr 1fr;gap:6px}.s-photos figcaption{font-size:10.5px;padding:16px 6px 6px}.s-photos.pst figcaption{font-size:11px;padding:6px 3px 8px}.s-about{grid-template-columns:1fr}.sa-eff li{flex-direction:column;gap:2px}}
 /* 서비스 카드 (담당 달인 카드와 같은 틀) */
 .xp-lead.svc .xp-ph .xph img{object-position:center}
 .xp-lead.svc h3{font-size:28px}
