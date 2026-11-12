@@ -999,3 +999,13 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .promises b{display:block;font-size:16px}
 .promises small{display:block;margin-top:4px;font-size:13.5px;font-weight:500;color:var(--ink-2)}
 @media (max-width:900px){.st-prom{grid-template-columns:1fr}}
+/* STORY: 노하우 → 노웨어 인용 (가운데 정렬) */
+.kw{margin:48px auto 0;max-width:860px;text-align:center;padding:34px 24px;border-radius:24px;background:var(--night);color:#fff;position:relative}
+.kw::before{content:"“";position:absolute;left:50%;top:-30px;transform:translateX(-50%);font-family:var(--serif);font-size:90px;line-height:1;color:var(--red)}
+.kw-main{font-family:var(--serif);font-size:clamp(20px,2.6vw,30px);font-weight:600;line-height:1.6;color:#FBF7F0}
+.kw-main s{text-decoration:line-through;text-decoration-color:rgba(255,77,87,.8);text-decoration-thickness:2px;color:#9CA2AD}
+.kw-main small{font-family:'Noto Sans KR',sans-serif;font-size:.45em;font-weight:500;margin-left:4px;letter-spacing:.04em}
+.kw-main em{font-style:normal;color:#FFD84D;border-bottom:3px solid #FFD84D}
+.kw-ar{display:inline-block;margin:0 10px;color:#FF4D57;font-weight:900}
+.kw-sub{margin-top:14px;font-size:clamp(15px,1.7vw,18px);color:#D5D8DE}
+.kw-sub b{color:#fff;background:rgba(227,0,15,.35);padding:1px 6px;border-radius:5px}
