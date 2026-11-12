@@ -720,20 +720,16 @@ def page_index():
   <div class="wrap quote-in">
     <div class="q-left">
       <p class="q-badge"><span class="q-dot" aria-hidden="true"></span>지금 상담 가능 · 무료 견적</p>
-      <h2 class="q-tt">우리 건물,<br><span class="r">어디까지 의무</span>인지<br>30초면 알려드립니다</h2>
-      <p class="q-lead">필요한 서비스와 시설 유형만 고르세요. 담당 달인이 의무 대상 여부와 <b>보수·교체 견적을 함께 비교</b>해 드립니다.</p>
-      <ul class="q-trust">
-        <li><b>30분</b><span>평균 연락 시간</span></li>
-        <li><b>수리 먼저</b><span>교체보다 원인 진단</span></li>
-        <li><b>4개 지사</b><span>서울 · 인천 출동</span></li>
-      </ul>
-      <ol class="q-flow">
-        <li><span>1</span>신청서 작성 <small>30초</small></li>
-        <li><span>2</span>담당 달인 전화 <small>의무 대상 확인</small></li>
-        <li><span>3</span>현장 진단 · 견적 <small>보수/교체 비교</small></li>
+      <h2 class="q-tt2">신청 전에,<br><span class="r">달인명인의 3가지 약속</span></h2>
+      <ol class="q-prom">
+        <li><span class="qp-ic" aria-hidden="true">🕊️</span><div><p class="qp-no">01 · 점검·공사 탈 없이 마무리</p><b>무탈 (無頉)</b><p>평범한 일상의 소중함을 지켜내는 것이 가장 큰 사명입니다.</p></div></li>
+        <li><span class="qp-ic" aria-hidden="true">⚡</span><div><p class="qp-no">02 · 관리자의 번거로움과 스트레스 최소화</p><b>유능한 담당자 평판 더하기</b><p>미리 체크해 불편을 없애고 사고를 막아, 맡기신 분이 인정받게 합니다.</p></div></li>
+        <li><span class="qp-ic" aria-hidden="true">🤝</span><div><p class="qp-no">03 · 시간과 품을 아끼는 원스톱 서비스</p><b>전·중·후 깔끔</b><p>점검부터 공사, 후속 서류 처리까지 한 번에 끝냅니다.</p></div></li>
       </ol>
-      <div class="q-team"><span class="av-stack">{qfaces}</span><p><b>검증된 달인 {len(EXPERTS)}인</b>이 직접 연락드립니다</p></div>
-      <a class="q-call" href="tel:{SITE['tel']}"><small>급하시면 바로 전화</small><b>{SITE['tel']}</b></a>
+      <div class="q-foot">
+        <div class="q-team"><span class="av-stack">{qfaces}</span><p><b>검증된 달인 {len(EXPERTS)}인</b>이 직접 연락드립니다</p></div>
+        <a class="q-call" href="tel:{SITE['tel']}"><small>급하시면 바로 전화</small><b>{SITE['tel']}</b></a>
+      </div>
     </div>
     <form class="qf" id="quote-form" novalidate>
       <div class="qf-hd"><b>무료 견적 신청</b><span>작성 30초 · 상담 무료</span></div>
@@ -745,7 +741,9 @@ def page_index():
         <div class="qf-step"><label class="qf-lg" for="q-area"><span>3</span>연면적 <small>선택</small></label>
           <div class="qf-area"><input class="field" id="q-area" name="area" type="number" inputmode="decimal" min="0" step="any" placeholder="예) 3000"><em>㎡</em></div>
           <p class="qf-hint" id="q-area-hint">모르시면 비워 두세요. 건축물대장으로 확인해 드립니다.</p></div>
-        <div class="qf-step qf-contact"><label class="qf-lg" for="q-ph"><span>4</span>연락처 <small class="req">필수</small></label>
+        <div class="qf-step"><label class="qf-lg" for="q-addr"><span>4</span>건물 주소 <small>선택</small></label>
+          <input class="field" id="q-addr" name="address" placeholder="예) 구로구 경인로 83 · 건물명만도 OK" autocomplete="street-address"></div>
+        <div class="qf-step qf-contact"><label class="qf-lg" for="q-ph"><span>5</span>연락처 <small class="req">필수</small></label>
           <div class="row2">
             <input class="field" id="q-nm" name="name" placeholder="이름 / 담당자" aria-label="이름" autocomplete="name">
             <input class="field" id="q-ph" name="phone" type="tel" inputmode="tel" placeholder="010-0000-0000" required autocomplete="tel" aria-required="true">

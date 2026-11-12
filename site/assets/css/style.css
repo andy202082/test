@@ -949,3 +949,28 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 @media (max-width:1000px){.qcs-svc{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:900px){.quote-in{grid-template-columns:1fr;gap:28px}.q-trust,.q-flow,.q-lead{max-width:none}}
 @media (max-width:560px){.qf-bd{padding:18px 16px 20px}.qf-hd{padding:14px 16px}.q-trust b{font-size:17px}.qf-contact{margin:0 -4px 14px;padding:12px}.qc span{font-size:13px}}
+/* 견적 왼쪽: 3가지 약속 · 좌우 높이 맞춤 */
+.quote-in{align-items:stretch}
+.q-left{display:flex;flex-direction:column}
+.q-tt2{margin-top:14px;font-size:clamp(26px,3vw,36px);font-weight:900;letter-spacing:-1.2px;line-height:1.25}
+.q-prom{list-style:none;margin-top:20px;display:grid;gap:12px}
+.q-prom li{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:0 14px 26px -22px rgba(0,0,0,.45);position:relative;overflow:hidden}
+.q-prom li::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--red)}
+.qp-ic{flex:none;width:52px;height:52px;border-radius:16px;background:var(--red-soft);display:grid;place-items:center;font-size:26px}
+.qp-no{font-size:12.5px;font-weight:700;color:#2563EB;letter-spacing:-.2px}
+.q-prom b{display:block;margin-top:3px;font-family:var(--serif);font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.3px}
+.q-prom li p:last-child{margin-top:4px;font-size:14px;color:var(--ink-2);line-height:1.6}
+.q-foot{margin-top:auto;padding-top:20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.q-foot .q-team{margin-top:0}.q-foot .q-call{margin-top:0}
+.qf{display:flex;flex-direction:column}
+.qf-bd{flex:1}
+#q-addr{font-size:15px}
+@media (max-width:900px){.q-foot{padding-top:16px}}
+.q-left .q-badge{align-self:flex-start}
+@media (min-width:901px){
+  .q-prom{flex:1;grid-auto-rows:1fr;gap:14px}
+  .q-prom li{align-items:center;padding:22px 24px}
+  .qp-ic{width:62px;height:62px;font-size:30px;border-radius:18px}
+  .q-prom b{font-size:23px}
+  .q-prom li p:last-child{font-size:15px}
+}
