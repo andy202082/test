@@ -588,7 +588,10 @@ def page_story():
   </div>
   <h3 class="sub-h st-ph"><small>고객님의</small>안전한 일상을 위한 3가지 약속</h3>
   {promises3("q-prom st-prom")}
-  <blockquote class="s-lead">“건물관리는 노하우(Know-How)가 아니라, 최적의 해결책을 가진 달인을 정확히 아는 노웨어(Know-Where) 비즈니스입니다.”</blockquote>
+  <blockquote class="kw">
+    <p class="kw-main">“건물관리는 <s>노하우<small>Know-How</small></s> <span class="kw-ar" aria-hidden="true">→</span> <em>노웨어<small>Know-Where</small></em>가 핵심.”</p>
+    <p class="kw-sub">누가 <b>최적 가격</b>으로, <b>문제 해결 능력</b>이 좋으냐 &amp; <b>소통 능력</b>!</p>
+  </blockquote>
   <h3 class="sub-h">약속을 지키는 일하는 원칙</h3>
   <ol class="promises">{prom}</ol>
 </div></section>
