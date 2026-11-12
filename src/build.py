@@ -581,7 +581,16 @@ def page_story():
     body += f"""
 <section class="sub-sec" id="story"><div class="wrap">
   <p class="s-no">05-01</p><h2 class="s-tt">{e(STORY['origin_title'])}</h2>
-  <div class="story-brand">{SEAL_B}{LOCKUP_A}</div>
+  <div class="story-brand sb3">{SEAL_B}
+    <div class="sb-trio" role="img" aria-label="소방점검 더하기 정보통신점검 더하기 기계설비 성능점검">
+      <div class="sb-t t-red"><span class="sb-ic"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="13" y="13" width="12" height="22" rx="4" fill="#fff" stroke="none"/><path d="M16 13V9h6v4M22 9h6l3 3M19 9V6"/><path d="M31 22c1.5 2 3 3.5 3 6a4 4 0 0 1-8 0c0-2.5 1.5-4 2.5-6 .3 1.5 1.2 2.3 2.5 2.6z" fill="#fff" stroke="none"/></svg></span><b>소방점검</b></div>
+      <i class="sb-plus" aria-hidden="true">+</i>
+      <div class="sb-t t-blue"><span class="sb-ic"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 18v18M14 36h12M20 18l-6 18M20 18l6 18"/><circle cx="20" cy="15" r="3" fill="#fff"/><path d="M13 9a10 10 0 0 0 0 12M27 9a10 10 0 0 1 0 12M9 5a16 16 0 0 0 0 20M31 5a16 16 0 0 1 0 20"/></svg></span><b>정보통신점검</b></div>
+      <i class="sb-plus" aria-hidden="true">+</i>
+      <div class="sb-t t-amber"><span class="sb-ic"><svg viewBox="0 0 40 40" fill="#fff"><path d="M16 6h4l1 3.2 3 1.3 3-1.6 2.8 2.8-1.6 3 1.3 3 3.3 1v4l-3.3 1-1.3 3 1.6 3-2.8 2.8-3-1.6-3 1.3-1 3.2h-4l-1-3.2-3-1.3-3 1.6-2.8-2.8 1.6-3-1.3-3L4 24v-4l3.3-1 1.3-3-1.6-3 2.8-2.8 3 1.6 3-1.3z"/><circle cx="18" cy="22" r="5" fill="#E87A00"/><path d="M30 2h2.4l.6 2 1.8.8 1.8-1 1.7 1.7-1 1.8.8 1.8 2 .6v2.4l-2 .6-.8 1.8 1 1.8-1.7 1.7-1.8-1-1.8.8-.6 2H30l-.6-2-1.8-.8-1.8 1-1.7-1.7 1-1.8-.8-1.8-2-.6V8.6l2-.6.8-1.8-1-1.8 1.7-1.7 1.8 1 1.8-.8z" opacity=".9"/></svg></span><b>기계설비<br>성능점검</b></div>
+    </div>
+    <span class="badge-glow sb-glow" role="img" aria-label="소방 · 정보통신 · 기계설비">{ROOF}<b>소방</b><span class="bg-sub">정보통신<i></i>기계설비</span></span>
+  </div>
   <div class="story">
     <div class="note-book" aria-hidden="true"><span>점검 일정</span><span>업체 연락처</span><span>고칠 것</span><span>보고서 제출</span><span>…</span></div>
     <div class="story-t">{origin}</div>

@@ -1009,3 +1009,23 @@ html:not(.js) .ph .ph-room>.wrap>*{opacity:1;transform:none}
 .kw-ar{display:inline-block;margin:0 10px;color:#FF4D57;font-weight:900}
 .kw-sub{margin-top:14px;font-size:clamp(15px,1.7vw,18px);color:#D5D8DE}
 .kw-sub b{color:#fff;background:rgba(227,0,15,.35);padding:1px 6px;border-radius:5px}
+/* STORY 브랜드 줄: 낙관 + (소방점검 + 정보통신점검 + 기계설비) + 네온 소방 배지 */
+.story-brand.sb3{flex-wrap:nowrap;justify-content:space-between;gap:18px;padding:18px 22px}
+.sb-trio{flex:1;min-width:0;display:flex;align-items:stretch;gap:8px;background:#0E0F12;border-radius:16px;padding:12px 14px}
+.sb-t{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center}
+.sb-ic{width:58px;height:58px;border-radius:14px;display:grid;place-items:center;box-shadow:inset 0 -4px 0 rgba(0,0,0,.25),0 0 0 2px rgba(255,255,255,.08)}
+.sb-ic svg{width:36px;height:36px}
+.t-red .sb-ic{background:linear-gradient(180deg,#F23A3A,#B8000C)}
+.t-blue .sb-ic{background:linear-gradient(180deg,#2D8CFF,#0B4DB8)}
+.t-amber .sb-ic{background:linear-gradient(180deg,#FFB21A,#E87A00)}
+.sb-t b{font-size:16px;font-weight:900;color:#fff;line-height:1.2;letter-spacing:-.4px}
+.t-amber b{color:#FFD24D}
+.sb-plus{align-self:center;font-style:normal;font-size:30px;font-weight:900;color:#fff;opacity:.85}
+.sb-glow{margin:0;flex:none;width:118px;height:106px;border-radius:24px}
+.sb-glow b{font-size:32px;margin-top:6px}
+.sb-glow .bg-sub{font-size:9.5px;margin-top:6px;gap:5px}
+@media (max-width:900px){
+  .story-brand.sb3{flex-wrap:wrap;justify-content:center}
+  .sb-trio{order:3;flex-basis:100%}
+}
+@media (max-width:520px){.sb-ic{width:46px;height:46px}.sb-ic svg{width:28px;height:28px}.sb-t b{font-size:13px}.sb-plus{font-size:22px}.sb-trio{padding:10px 8px;gap:4px}}
