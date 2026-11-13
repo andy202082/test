@@ -42,3 +42,28 @@ body:has(.ea) .mcta{display:none}
 .ea .ea-x-links{margin-top:22px}
 .ea-x-dark .ea-x-links .ea-btn.ea-outline{border-color:#ffffff40;color:#fff}
 @media(max-width:650px){.ea .ea-x-scroll .ea-comparison{min-width:560px}.ea .ea-x-links .ea-btn{flex:1 1 100%}}
+/* 실제 사진 히어로 (소방점검): 수신기 3대 겹침 구성 */
+.ea .ea-photo-scene{position:relative;height:560px;max-width:520px;width:100%;margin-left:auto}
+.ea .ea-ph{position:absolute;margin:0;border-radius:8px;overflow:hidden;background:#0d1012;box-shadow:0 24px 60px #000a,0 0 0 1px #ffffff1f}
+.ea .ea-ph img{display:block;width:100%;height:100%;object-fit:cover}
+.ea .ea-ph figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 9px;font:11px/1.4 monospace;letter-spacing:.04em;color:#e6e8ea;background:linear-gradient(transparent,#000c)}
+.ea .ea-ph.main{width:58%;height:80%;left:21%;top:2%;z-index:3;border:1px solid #ffffff33}
+.ea .ea-ph.main:after{content:'';position:absolute;inset:0;box-shadow:inset 0 0 0 1px #ff8b7340;border-radius:8px;pointer-events:none}
+.ea .ea-ph.back-l{width:42%;height:66%;left:0;top:16%;z-index:1;transform:rotate(-5deg);filter:brightness(.62) saturate(.8)}
+.ea .ea-ph.back-r{width:42%;height:62%;right:0;top:9%;z-index:2;transform:rotate(4.5deg);filter:brightness(.7) saturate(.85)}
+.ea .ea-ph.back-l figcaption,.ea .ea-ph.back-r figcaption{display:none}
+.ea .ea-photo-scene .ea-signal-tag{z-index:4;bottom:6px;left:-6px}
+.ea .ea-photo-scene .ea-diagram-note{position:absolute;right:0;bottom:0;margin:0}
+/* 현장 사진 띠 */
+.ea .ea-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.ea .ea-gallery figure{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.ea .ea-gallery img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover}
+.ea .ea-gallery figcaption{padding:14px 16px 16px;font-size:13px;color:var(--muted);line-height:1.6}
+.ea .ea-gallery figcaption b{display:block;font-size:16px;color:var(--ink);margin-bottom:4px}
+/* 현장 영상 */
+.ea .ea-video{margin:0 0 26px;position:relative;border-radius:8px;overflow:hidden;background:#000}
+.ea .ea-video video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+.ea .ea-video figcaption{position:absolute;left:0;right:0;bottom:0;padding:34px 18px 14px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(transparent,#000b)}
+@media(max-width:900px){.ea .ea-photo-scene{height:470px;margin:0 auto}}
+@media(max-width:650px){.ea .ea-photo-scene{height:400px;max-width:380px}.ea .ea-ph figcaption{display:none}.ea .ea-ph.back-l figcaption,.ea .ea-ph.back-r figcaption{display:none}
+.ea .ea-photo-scene .ea-signal-tag{left:0;bottom:4px}.ea .ea-gallery{grid-template-columns:1fr;gap:12px}.ea .ea-video figcaption{font-size:12.5px;padding:24px 12px 10px}}
