@@ -204,6 +204,8 @@ CATEGORIES = [
             {
                 "id": "inspection",
                 "name": "소방점검",
+                "href": "fire-inspection.html",  # 독립 랜딩 (src/landings.py)
+                "more": "상황별 가이드·점검 항목·비용·절차",
                 "summary": "작동점검 · 종합점검 · 소방서 보고 대행",
                 "lead": "소방점검은 법적 의무를 채우는 일이 아니라, 재난에서 사람과 재산을 지키는 가장 확실한 예방책입니다.",
                 "points": [
@@ -545,6 +547,8 @@ CATEGORIES = [
             {
                 "id": "ict",
                 "name": "정보통신설비점검",
+                "href": "ict.html",  # 독립 랜딩 (src/landings.py)
+                "more": "대상 확인·선임 기준·과태료·절차",
                 "key": True,
                 "summary": "성능점검 · 유지점검 · 유지보수·관리자 선임",
                 "page_title": "정보통신설비 성능점검",

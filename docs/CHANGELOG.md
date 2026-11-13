@@ -190,6 +190,13 @@
   canonical·og:url·sitemap 도 같은 주소로. 예전 `…/index.html`, `…/xxx.html` 로 들어와도 주소창에서 자동으로 지움.
   404 옛 주소 이동표도 확장자 없는 주소로 변경.
 
+## 독립 랜딩 2개: 소방점검 · 정보통신설비 성능점검 (비상방송 랜딩과 같은 틀)
+- `master1.kr/fire-inspection` 소방점검, `master1.kr/ict` 정보통신설비 성능점검
+- 내용: 우리 사이트 해당 섹션 + old.master1.kr(fireinspection·PRECISION / communication) + 04b.kr 정보통신 페이지(타사 이름·번호 제외)
+- 구성: 히어로(설비 랙 일러스트) → 상황 선택 가이드(6개) → 서비스 범위 → 진행 구조 → 데이터 표 → 종류·범위 비교 → 비용 → 법적 의무·과태료 → 진단 시나리오 3 → 솔루션 + 담당 달인 → 절차 → 준비 자료 → FAQ → 상담 메일 초안
+- 콘텐츠는 `src/landings.py`, 렌더러는 `build.py`의 `page_landing()`, 스크립트는 `broadcast.js` 공용(페이지별 #ea-data)
+- 메뉴·하위 탭·섹션의 '자세히 보기'가 새 랜딩으로 연결, 옛 주소(fireinspection·precision·communication)도 새 랜딩으로 이동
+
 ## 다음 할 일
 - [ ] 실제 실적 수치, 소방시설관리업 등록번호, 해결사례 사진 반영
 - [ ] 카톡상담 링크 연결
