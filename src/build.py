@@ -9,10 +9,13 @@ CSS / JS / 이미지(site/assets)는 직접 편집합니다.
 """
 import html
 import os
+import urllib.parse
+import json
 import re
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
+from landings import LANDINGS  # noqa: E402
 from content import SITE, EXPERTS, SECTION_EXPERTS, CASE_EXPERTS, CATEGORIES, STORY, FAQ  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(__file__), "..", "site")
@@ -487,7 +490,7 @@ def section(c, s, idx):
         out.append(f'<p class="s-note">⚠️ {e(s["note"])}</p>')
     out.append(section_experts(s))
     if s.get("href", "").endswith(".html"):
-        out.append(f'<a class="s-more" href="{s["href"]}">{e(s["name"])} 자세히 보기 — 증상·고장 원인·실제 사례 <span aria-hidden="true">→</span></a>')
+        out.append(f'<a class="s-more" href="{s["href"]}">{e(s["name"])} 자세히 보기 — {e(s.get("more", "증상·고장 원인·실제 사례"))} <span aria-hidden="true">→</span></a>')
     cta = s.get("cta", f'{s["name"]} 견적 받기')
     out.append(f'<div class="s-cta"><a class="btn btn-red" href="index.html#quote">{e(cta)}</a>'
                f'<a class="btn btn-ghost" href="tel:{SITE["tel"]}">전화 상담 {SITE["tel"]}</a></div>')
@@ -669,6 +672,110 @@ def page_broadcast():
                         '<link rel="stylesheet" href="assets/css/style.css">\n<link rel="stylesheet" href="assets/css/broadcast.css">')
     body += header("fire-construction")
     body += f'<div class="ea">\n{tpl}\n</div>\n'
+    body += band() + footer()
+    body = body.replace("</body>", '<script src="assets/js/broadcast.js" defer></script>\n</body>')
+    return body
+
+
+def page_landing(slug):
+    """비상방송 랜딩(broadcast)과 같은 틀의 독립 랜딩 — 내용은 src/landings.py"""
+    d = LANDINGS[slug]
+    tel = SITE["tel"].replace("-", "")
+    no = [0]
+
+    def eb(en):  # 섹션 번호 자동 매김: 01 / ...
+        no[0] += 1
+        return f'<span class="ea-eyebrow">{no[0]:02d} / {en}</span>'
+
+    H = d["hero"]
+    units = []
+    for lab, kind, txt in H["rack"]:
+        if kind == "vents":
+            units.append('<div class="ea-vents"></div>'); continue
+        inner = {"screen": f'<div class="ea-screen">{txt}</div>', "meter": '<div class="ea-meter"></div>',
+                 "knob": '<div class="ea-meter"></div><i class="ea-knob"></i>'}[kind]
+        units.append(f'<div class="ea-unit"><label>{e(lab)}</label>{inner}<i class="ea-led"></i></div>')
+    foot = "".join(f"<div><strong>{i + 1:02d}</strong>{e(x)}</div>" for i, x in enumerate(H["foot"]))
+    out = [f"""<section class="ea-hero"><div class="ea-wrap"><div class="ea-hero-grid"><div><span class="ea-eyebrow">{e(H["eyebrow"])}</span><h1>{H["h1"]}</h1><p>{H["p"]}</p><div class="ea-actions"><a class="ea-btn" href="tel:{tel}">{e(H["cta"])} <span>↗</span></a><a class="ea-btn ea-outline" href="{H["cta2"][0]}">{e(H["cta2"][1])}</a></div><div class="ea-small">{e(H["small"])}</div></div><div class="ea-rack-scene" role="img" aria-label="{e(H["rack_aria"])}"><div class="ea-rack"><div class="ea-rack-top">{e(H["rack_top"])}</div>{"".join(units)}</div><div class="ea-signal-tag">{H["tag"]}</div><span class="ea-diagram-note">설비 구성 이해를 위한 개념 일러스트</span></div></div><div class="ea-hero-foot">{foot}</div></div></section>"""]
+
+    S = d["symptoms"]
+    btns = "".join(f'<button class="ea-symptom" data-sym="{i}" aria-pressed="{str(i == 0).lower()}"><span>{i + 1:02d} / {e(k)}</span>{lab}</button>'
+                   for i, (k, lab, _, _) in enumerate(S["items"]))
+    out.append(f"""<section class="ea-section" id="symptoms"><div class="ea-wrap"><div class="ea-intro-row"><div>{eb("Find your situation")}<h2>{S["title"]}</h2></div><p>{S["p"]}</p></div><div class="ea-symptom-layout"><div class="ea-symptoms" aria-label="상황 선택">{btns}</div><article class="ea-diagnosis" aria-live="polite"><span class="ea-eyebrow">확인 가이드</span><h3 id="diag-title"></h3><ul id="diag-list"></ul><a class="ea-btn ea-dark" href="#contact">이 상황으로 상담 준비 ↗</a><p class="ea-small">정확한 판단은 건물 정보와 현장 확인 후 안내합니다.</p></article></div><div class="ea-split-banner"><div><strong>{e(S["banner"][0])}</strong><p>{e(S["banner"][1])}</p></div><a class="ea-btn ea-outline" href="#prepare">준비할 자료 보기 ↓</a></div></div></section>""")
+
+    V = d["services"]
+    svc = "".join(f'<article class="ea-service"><small>{i + 1:02d} / {e(k)}</small><h3>{e(h)}</h3><p>{e(p_)}</p><div class="ea-service-list">{"".join(f"<span>{e(x)}</span>" for x in tags)}</div></article>'
+                  for i, (k, h, p_, tags) in enumerate(V["items"]))
+    out.append(f"""<section class="ea-section ea-white" id="service"><div class="ea-wrap"><div class="ea-intro-row"><div>{eb("Service scope")}<h2>{V["title"]}</h2></div><p>{V["p"]}</p></div><div class="ea-services">{svc}</div><p class="ea-note">{e(V["note"])}</p></div></section>""")
+
+    Y = d["system"]
+    nodes = "".join(f'<div class="ea-system-node"><span class="ea-num">{e(n)}</span><h3>{e(h)}</h3><p>{p_}</p></div>' for n, h, p_ in Y["nodes"])
+    out.append(f"""<section class="ea-section ea-system-section"><div class="ea-wrap">{eb("How it works")}<h2>{Y["title"]}</h2><p class="ea-muted">{Y["p"]}</p><div class="ea-system-flow">{nodes}</div><div class="ea-ribbon">{Y["ribbon"]}</div></div></section>""")
+
+    D = d["data"]
+    hot = D.get("hot_rows", 0)
+    th = "".join(f"<th>{e(x)}</th>" for x in D["head"])
+    rows = "".join("<tr>" + "".join(f'<td>{"<b>" + e(v) + "</b>" if j == 0 else e(v)}</td>' for j, v in enumerate(r)) + "</tr>" if i >= hot else
+                   '<tr class="hot">' + "".join(f'<td>{"<b>" + e(v) + "</b>" if j == 0 else e(v)}</td>' for j, v in enumerate(r)) + "</tr>"
+                   for i, r in enumerate(D["rows"]))
+    notes = "".join(f"<li>{e(x)}</li>" for x in D.get("notes", []))
+    out.append(f"""<section class="ea-section ea-white" id="data"><div class="ea-wrap"><span class="ea-eyebrow">{e(D["eyebrow"])}</span><div class="ea-x-head"><h2>{D["title"]}</h2><p class="ea-muted">{e(D["p"])}</p></div><div class="tbl-wrap"><table class="tbl bc-tbl ea-x-tbl"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table></div>{f'<ul class="ea-x-notes">{notes}</ul>' if notes else ""}</div></section>""")
+
+    C = d["compare"]
+    th = "".join(f"<th>{e(x)}</th>" for x in C["head"])
+    rows = "".join("<tr>" + "".join(f"<td>{e(v)}</td>" for v in r) + "</tr>" for r in C["rows"])
+    lis = "".join(f"<li>{e(x)}</li>" for x in C["aside_list"])
+    out.append(f"""<section class="ea-section"><div class="ea-wrap"><div class="ea-intro-row"><div>{eb("Know the scope")}<h2>{C["title"]}</h2></div><p>{e(C["p"])}</p></div><div class="ea-two-col"><div><div class="ea-x-scroll"><table class="ea-comparison"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table></div><p class="ea-note">{e(C["note"])}</p></div><aside class="ea-logic"><h3>{C["aside_title"]}</h3><p>{e(C["aside_p"])}</p><ol>{lis}</ol></aside></div></div></section>""")
+
+    K = d["cost"]
+    lis = "".join(f"<li>{e(x)}</li>" for x in K["list"])
+    out.append(f"""<section class="ea-section ea-cost" id="cost"><div class="ea-wrap ea-two-col"><div class="ea-cost-text">{eb("Cost guide")}<h2>{K["title"]}</h2><p>{e(K["p"])}</p><a class="ea-btn ea-dark" href="tel:{tel}">{e(K["btn"])}</a></div><div class="ea-cost-box"><span class="ea-eyebrow">{e(K["box_eyebrow"])}</span><p class="ea-price">{e(K["price"])} <small>{e(K["price_small"])}</small></p><p>{K["box_p"]}</p><ul>{lis}</ul></div></div></section>""")
+
+    X = d["checks"]
+    items = "".join(f'<article class="ea-check-item"><b>CHECK / {i + 1:02d}</b><h3>{e(h)}</h3><p>{e(p_)}</p></article>' for i, (h, p_) in enumerate(X["items"]))
+    out.append(f"""<section class="ea-section ea-white" id="standards"><div class="ea-wrap">{eb("Legal duty")}<h2>{X["title"]}</h2><p class="ea-muted">{e(X["p"])}</p><div class="ea-check-items">{items}</div><p class="ea-note">{e(X["note"])}</p></div></section>""")
+
+    Z = d["cases"]
+    cs = "".join(f'<article class="ea-case"><header>{e(k)}</header><h3>{h}</h3><dl><dt>구분할 문제</dt><dd>{e(a)}</dd><dt>확인할 계통</dt><dd>{e(b_)}</dd><dt>작업 후 확인</dt><dd>{e(c_)}</dd></dl><a href="#contact" data-case="{e(dc)}">이 상황으로 상담 준비 ↗</a></article>'
+                 for k, h, a, b_, c_, dc in Z["items"])
+    out.append(f"""<section class="ea-section"><div class="ea-wrap"><div class="ea-intro-row"><div>{eb("Field situations")}<h2>{Z["title"]}</h2></div><p>{e(Z["p"])}</p></div><div class="ea-cases">{cs}</div></div></section>""")
+
+    R = d["real"]
+    fig = ""
+    if R.get("img"):
+        src, alt, cap, w, h = R["img"]
+        fig = f'<figure><img src="{src}" alt="{e(alt)}" loading="lazy" decoding="async" width="{w}" height="{h}"><figcaption>{e(cap)}</figcaption></figure>'
+    steps = "".join(f'<div{" class=\"ok\"" if i == len(R["steps"]) - 1 else ""}><span>{e(k)}</span><p>{v}</p></div>' for i, (k, v) in enumerate(R["steps"]))
+    links = "".join(f'<a class="ea-btn ea-outline" href="{h}">{e(t)} →</a>' for h, t in R.get("links", []))
+    out.append(f"""<section class="ea-section ea-x-dark" id="solution"><div class="ea-wrap"><span class="ea-eyebrow">{e(R["eyebrow"])}</span><div class="ea-x-head"><h2>{e(R["title"])}</h2><p>{e(R["p"])}</p></div><div class="ea-x-case{"" if fig else " ea-x-nofig"}">{fig}<div class="ea-x-steps">{steps}<blockquote>{R["quote"]}<cite>{e(R["cite"])}</cite></blockquote></div></div><div class="ea-x-master">{expert_lead(R["expert"])}</div><div class="ea-actions ea-x-links">{links}</div></div></section>""")
+
+    P = d["process"]
+    tags = "".join(f"<span>{e(x)}</span>" for x in P["tags"])
+    st = "".join(f'<article class="ea-step"><b>{i + 1:02d}</b><h3>{e(h)}</h3><p>{e(p_)}</p></article>' for i, (h, p_) in enumerate(P["steps"]))
+    out.append(f"""<section class="ea-section ea-white" id="process"><div class="ea-wrap"><div class="ea-intro-row"><div>{eb("Working process")}<h2>{P["title"]}</h2></div><div class="ea-tags">{tags}</div></div><div class="ea-steps">{st}</div></div></section>""")
+
+    Q = d["prepare"]
+    its = "".join(f'<article class="ea-check-item"><h3>{e(h)}</h3><p>{e(p_)}</p></article>' for h, p_ in Q["items"])
+    out.append(f"""<section class="ea-section" id="prepare"><div class="ea-wrap ea-two-col"><div>{eb("Before you call")}<h2>{Q["title"]}</h2><p class="ea-muted">{Q["p"]}</p><a class="ea-btn ea-dark" href="#contact">상담 내용 작성하기 ↗</a></div><div>{its}</div></div></section>""")
+
+    fq = "".join(f"<details><summary>{e(q)}</summary><p>{e(a)}</p></details>" for q, a in d["faq"])
+    out.append(f"""<section class="ea-section ea-white" id="faq"><div class="ea-wrap">{eb("Questions & answers")}<h2>관리자님이 자주 묻는 질문.</h2><div class="ea-faq">{fq}</div></div></section>""")
+
+    T = d["contact"]
+    opts = "".join(f"<option>{e(x)}</option>" for x in T["buildings"])
+    mail = "ii21@naver.com"
+    out.append(f"""<section class="ea-section ea-contact" id="contact"><div class="ea-wrap ea-two-col"><div>{eb("Talk to a specialist")}<h2>{T["title"]}</h2><p class="ea-muted">{T["p"]}</p><a class="ea-call-number" href="tel:{tel}">{SITE["tel"]} ↗</a><div class="ea-actions"><a class="ea-btn" href="tel:{tel}">전화로 상담하기</a><a class="ea-btn ea-outline" href="mailto:{mail}?subject={urllib.parse.quote(d["subject"])}">이메일 문의</a></div><div class="ea-contact-info">{T["info"]}<br>이메일: {mail}</div></div><form class="ea-form" id="inquiry"><h3>상담 내용을 미리 정리하세요.</h3><p class="ea-small">입력 내용으로 이메일 초안을 열거나 복사할 수 있습니다.<br>이 페이지에서 별도로 접수·저장되지는 않습니다.</p><div class="ea-form-row"><div><label for="building">건물 유형</label><select id="building">{opts}</select></div><div><label for="region">현장 지역</label><input id="region" placeholder="예: 서울 구로구" maxlength="100"></div></div><label for="issue">{e(d["issue_label"])}</label><textarea id="issue" placeholder="{e(d["issue_ph"])}" maxlength="2000"></textarea><label for="reply">회신 연락처 (선택)</label><input id="reply" placeholder="전화번호 또는 이메일" maxlength="150"><div class="ea-actions"><button class="ea-btn" type="submit">이메일 초안 열기 ↗</button><button class="ea-btn ea-outline" id="copy" type="button">상담 내용 복사</button></div><output id="form-status" aria-live="polite"></output><p class="ea-small">이메일은 사용 중인 메일 앱에서 직접 전송해야 합니다.</p></form></div></section>""")
+    out.append(f'<div class="ea-floating" aria-label="빠른 상담"><a href="{d["floating"][0]}">{e(d["floating"][1])}</a><a href="tel:{tel}">전화상담 {SITE["tel"]} ↗</a></div>')
+
+    cfg = {"guides": [[g, lst] for _, _, g, lst in S["items"]], "subject": d["subject"], "mail": mail,
+           "issue": d["issue_label"], "closing": d["closing"]}
+    data = json.dumps(cfg, ensure_ascii=False).replace("</", "<\\/")
+    body = head(d["title"], d["desc"], slug + ".html")
+    body = body.replace('<link rel="stylesheet" href="assets/css/style.css">',
+                        '<link rel="stylesheet" href="assets/css/style.css">\n<link rel="stylesheet" href="assets/css/broadcast.css">')
+    body += header(d["active"])
+    body += '<div class="ea">\n' + "\n".join(out) + '\n</div>\n'
+    body += f'<script type="application/json" id="ea-data">{data}</script>\n'
     body += band() + footer()
     body = body.replace("</body>", '<script src="assets/js/broadcast.js" defer></script>\n</body>')
     return body
@@ -918,7 +1025,7 @@ def write(name, text):
 
 def sitemap():
     base = SITE["domain"].rstrip("/")
-    urls = [""] + [c["slug"] for c in CATEGORIES] + ["experts", "broadcast"]
+    urls = [""] + [c["slug"] for c in CATEGORIES] + ["experts", "broadcast"] + list(LANDINGS)
     body = "".join(f"  <url><loc>{base}/{u}</loc></url>\n" for u in urls)
     write("sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n{body}</urlset>\n')
     write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {base}/sitemap.xml\n")
@@ -961,6 +1068,8 @@ if __name__ == "__main__":
         write(c["slug"] + ".html", page_story() if c["slug"] == "story" else page_category(c))
     write("experts.html", page_experts())
     write("broadcast.html", page_broadcast())
+    for slug in LANDINGS:
+        write(slug + ".html", page_landing(slug))
     sitemap()
     # 사용법: python3 src/build.py --snapshot v1
     if len(sys.argv) == 3 and sys.argv[1] == "--snapshot":
