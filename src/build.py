@@ -696,7 +696,14 @@ def page_landing(slug):
                  "knob": '<div class="ea-meter"></div><i class="ea-knob"></i>'}[kind]
         units.append(f'<div class="ea-unit"><label>{e(lab)}</label>{inner}<i class="ea-led"></i></div>')
     foot = "".join(f"<div><strong>{i + 1:02d}</strong>{e(x)}</div>" for i, x in enumerate(H["foot"]))
-    out = [f"""<section class="ea-hero"><div class="ea-wrap"><div class="ea-hero-grid"><div><span class="ea-eyebrow">{e(H["eyebrow"])}</span><h1>{H["h1"]}</h1><p>{H["p"]}</p><div class="ea-actions"><a class="ea-btn" href="tel:{tel}">{e(H["cta"])} <span>↗</span></a><a class="ea-btn ea-outline" href="{H["cta2"][0]}">{e(H["cta2"][1])}</a></div><div class="ea-small">{e(H["small"])}</div></div><div class="ea-rack-scene" role="img" aria-label="{e(H["rack_aria"])}"><div class="ea-rack"><div class="ea-rack-top">{e(H["rack_top"])}</div>{"".join(units)}</div><div class="ea-signal-tag">{H["tag"]}</div><span class="ea-diagram-note">설비 구성 이해를 위한 개념 일러스트</span></div></div><div class="ea-hero-foot">{foot}</div></div></section>"""]
+    if H.get("photos"):  # 실제 현장 사진 구성
+        figs = "".join(f'<figure class="ea-ph {cls}"><img src="assets/img/{src}" alt="{e(cap)}" width="{w}" height="{h}" decoding="async"{" fetchpriority=\"high\"" if cls == "main" else ""}><figcaption>{e(cap)}</figcaption></figure>'
+                       for src, w, h, cap, cls in H["photos"])
+        visual = f'<div class="ea-photo-scene">{figs}<div class="ea-signal-tag">{H["tag"]}</div><span class="ea-diagram-note">실제 점검 현장의 수신기</span></div>'
+    else:
+        visual = (f'<div class="ea-rack-scene" role="img" aria-label="{e(H["rack_aria"])}"><div class="ea-rack"><div class="ea-rack-top">{e(H["rack_top"])}</div>{"".join(units)}</div>'
+                  f'<div class="ea-signal-tag">{H["tag"]}</div><span class="ea-diagram-note">설비 구성 이해를 위한 개념 일러스트</span></div>')
+    out = [f"""<section class="ea-hero"><div class="ea-wrap"><div class="ea-hero-grid"><div><span class="ea-eyebrow">{e(H["eyebrow"])}</span><h1>{H["h1"]}</h1><p>{H["p"]}</p><div class="ea-actions"><a class="ea-btn" href="tel:{tel}">{e(H["cta"])} <span>↗</span></a><a class="ea-btn ea-outline" href="{H["cta2"][0]}">{e(H["cta2"][1])}</a></div><div class="ea-small">{e(H["small"])}</div></div>{visual}</div><div class="ea-hero-foot">{foot}</div></div></section>"""]
 
     S = d["symptoms"]
     btns = "".join(f'<button class="ea-symptom" data-sym="{i}" aria-pressed="{str(i == 0).lower()}"><span>{i + 1:02d} / {e(k)}</span>{lab}</button>'
@@ -719,7 +726,12 @@ def page_landing(slug):
                    '<tr class="hot">' + "".join(f'<td>{"<b>" + e(v) + "</b>" if j == 0 else e(v)}</td>' for j, v in enumerate(r)) + "</tr>"
                    for i, r in enumerate(D["rows"]))
     notes = "".join(f"<li>{e(x)}</li>" for x in D.get("notes", []))
-    out.append(f"""<section class="ea-section ea-white" id="data"><div class="ea-wrap"><span class="ea-eyebrow">{e(D["eyebrow"])}</span><div class="ea-x-head"><h2>{D["title"]}</h2><p class="ea-muted">{e(D["p"])}</p></div><div class="tbl-wrap"><table class="tbl bc-tbl ea-x-tbl"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table></div>{f'<ul class="ea-x-notes">{notes}</ul>' if notes else ""}</div></section>""")
+    gal = ""
+    if D.get("gallery"):
+        gal = '<div class="ea-gallery">' + "".join(
+            f'<figure><img src="assets/img/{src}" alt="{e(t_)}" width="{w}" height="{h}" loading="lazy" decoding="async"><figcaption><b>{e(t_)}</b>{e(dsc)}</figcaption></figure>'
+            for src, w, h, t_, dsc in D["gallery"]) + "</div>"
+    out.append(f"""<section class="ea-section ea-white" id="data"><div class="ea-wrap"><span class="ea-eyebrow">{e(D["eyebrow"])}</span><div class="ea-x-head"><h2>{D["title"]}</h2><p class="ea-muted">{e(D["p"])}</p></div><div class="tbl-wrap"><table class="tbl bc-tbl ea-x-tbl"><thead><tr>{th}</tr></thead><tbody>{rows}</tbody></table></div>{f'<ul class="ea-x-notes">{notes}</ul>' if notes else ""}{gal}</div></section>""")
 
     C = d["compare"]
     th = "".join(f"<th>{e(x)}</th>" for x in C["head"])
@@ -747,7 +759,12 @@ def page_landing(slug):
         fig = f'<figure><img src="{src}" alt="{e(alt)}" loading="lazy" decoding="async" width="{w}" height="{h}"><figcaption>{e(cap)}</figcaption></figure>'
     steps = "".join(f'<div{" class=\"ok\"" if i == len(R["steps"]) - 1 else ""}><span>{e(k)}</span><p>{v}</p></div>' for i, (k, v) in enumerate(R["steps"]))
     links = "".join(f'<a class="ea-btn ea-outline" href="{h}">{e(t)} →</a>' for h, t in R.get("links", []))
-    out.append(f"""<section class="ea-section ea-x-dark" id="solution"><div class="ea-wrap"><span class="ea-eyebrow">{e(R["eyebrow"])}</span><div class="ea-x-head"><h2>{e(R["title"])}</h2><p>{e(R["p"])}</p></div><div class="ea-x-case{"" if fig else " ea-x-nofig"}">{fig}<div class="ea-x-steps">{steps}<blockquote>{R["quote"]}<cite>{e(R["cite"])}</cite></blockquote></div></div><div class="ea-x-master">{expert_lead(R["expert"])}</div><div class="ea-actions ea-x-links">{links}</div></div></section>""")
+    vid = ""
+    if R.get("video"):
+        vsrc, vposter, vcap = R["video"]
+        vid = (f'<figure class="ea-video"><video src="assets/img/{vsrc}" poster="assets/img/{vposter}" autoplay muted loop playsinline preload="metadata" '
+               f'width="1280" height="720" aria-label="{e(vcap)}"></video><figcaption>{e(vcap)}</figcaption></figure>')
+    out.append(f"""<section class="ea-section ea-x-dark" id="solution"><div class="ea-wrap"><span class="ea-eyebrow">{e(R["eyebrow"])}</span><div class="ea-x-head"><h2>{e(R["title"])}</h2><p>{e(R["p"])}</p></div>{vid}<div class="ea-x-case{"" if fig else " ea-x-nofig"}">{fig}<div class="ea-x-steps">{steps}<blockquote>{R["quote"]}<cite>{e(R["cite"])}</cite></blockquote></div></div><div class="ea-x-master">{expert_lead(R["expert"])}</div><div class="ea-actions ea-x-links">{links}</div></div></section>""")
 
     P = d["process"]
     tags = "".join(f"<span>{e(x)}</span>" for x in P["tags"])
