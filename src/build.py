@@ -699,7 +699,7 @@ def page_landing(slug):
     if H.get("photos"):  # 실제 현장 사진 구성
         figs = "".join(f'<figure class="ea-ph {cls}"><img src="assets/img/{src}" alt="{e(cap)}" width="{w}" height="{h}" decoding="async"{" fetchpriority=\"high\"" if cls == "main" else ""}><figcaption>{e(cap)}</figcaption></figure>'
                        for src, w, h, cap, cls in H["photos"])
-        visual = f'<div class="ea-photo-scene">{figs}<div class="ea-signal-tag">{H["tag"]}</div><span class="ea-diagram-note">실제 점검 현장의 수신기</span></div>'
+        visual = f'<div class="ea-photo-scene">{figs}<div class="ea-signal-tag">{H["tag"]}</div><span class="ea-diagram-note">{e(H.get("photo_note", "실제 점검 현장의 수신기"))}</span></div>'
     else:
         visual = (f'<div class="ea-rack-scene" role="img" aria-label="{e(H["rack_aria"])}"><div class="ea-rack"><div class="ea-rack-top">{e(H["rack_top"])}</div>{"".join(units)}</div>'
                   f'<div class="ea-signal-tag">{H["tag"]}</div><span class="ea-diagram-note">설비 구성 이해를 위한 개념 일러스트</span></div>')
